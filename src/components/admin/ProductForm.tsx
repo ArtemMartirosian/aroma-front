@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -21,6 +21,19 @@ import {
 } from "@/lib/dictionaries";
 import { mockBrands, mockCategories } from "@/lib/mock-data";
 import { Brand, Category } from "@/types/catalog";
+
+const optionalNumber = z.preprocess(
+  (value) => (value === "" || value === null ? undefined : value),
+  z.coerce.number().min(0).optional(),
+);
+
+const variantSchema = z.object({
+  volume: z.string().min(1),
+  price: z.coerce.number().min(0),
+  oldPrice: optionalNumber,
+  isAvailable: z.boolean(),
+  stockStatus: z.string().min(1),
+});
 
 const productSchema = z.object({
   name: z.string().min(2),
@@ -44,6 +57,7 @@ const productSchema = z.object({
   country: z.string().optional(),
   releaseYear: z.coerce.number().optional(),
   stockStatus: z.string().min(1),
+  variants: z.array(variantSchema).min(1),
   isAvailable: z.boolean(),
   isFeatured: z.boolean(),
   isNew: z.boolean(),
@@ -63,6 +77,7 @@ export function ProductForm({ productId }: { productId?: string }) {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { isSubmitting },
   } = useForm<ProductInput, unknown, ProductValues>({
     resolver: zodResolver(productSchema),
@@ -78,11 +93,20 @@ export function ProductForm({ productId }: { productId?: string }) {
       description: "",
       mainImage: "/images/perfume-hero.png",
       stockStatus: "В наличии",
+      variants: [
+        { volume: "20ml", price: 18000, isAvailable: true, stockStatus: "В наличии" },
+        { volume: "50ml", price: 39000, isAvailable: true, stockStatus: "В наличии" },
+        { volume: "100ml", price: 59000, isAvailable: true, stockStatus: "В наличии" },
+      ],
       isAvailable: true,
       isFeatured: false,
       isNew: false,
       isActive: true,
     },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "variants",
   });
 
   useEffect(() => {
@@ -101,6 +125,21 @@ export function ProductForm({ productId }: { productId?: string }) {
             ...product,
             price: Number(product.price),
             oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
+            variants: product.variants?.length
+              ? product.variants.map((variant) => ({
+                  ...variant,
+                  price: Number(variant.price),
+                  oldPrice: variant.oldPrice ? Number(variant.oldPrice) : undefined,
+                }))
+              : [
+                  {
+                    volume: product.volume,
+                    price: Number(product.price),
+                    oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
+                    isAvailable: product.isAvailable,
+                    stockStatus: product.stockStatus,
+                  },
+                ],
           });
         })
         .catch(() => setMessage("Не удалось загрузить товар из API."));
@@ -110,9 +149,15 @@ export function ProductForm({ productId }: { productId?: string }) {
   async function onSubmit(values: ProductValues) {
     setMessage("");
     try {
+      const primaryVariant = values.variants[0];
       await saveProduct(
         {
           ...values,
+          price: primaryVariant.price,
+          oldPrice: primaryVariant.oldPrice,
+          volume: primaryVariant.volume,
+          isAvailable: primaryVariant.isAvailable,
+          stockStatus: primaryVariant.stockStatus,
           galleryImages: values.mainImage ? [values.mainImage] : [],
         },
         productId,
@@ -155,9 +200,9 @@ export function ProductForm({ productId }: { productId?: string }) {
               </option>
             ))}
           </Select>
-          <Input label="Цена" type="number" {...register("price")} />
+          <Input label="Основная цена" type="number" {...register("price")} />
           <Input label="Старая цена" type="number" {...register("oldPrice")} />
-          <Input label="Объем" {...register("volume")} />
+          <Input label="Основной объем" {...register("volume")} />
           <Input label="Главное изображение URL" {...register("mainImage")} />
           <Select label="Пол" {...register("gender")}>
             {genderOptions.map(([value, label]) => (
@@ -198,6 +243,56 @@ export function ProductForm({ productId }: { productId?: string }) {
           <Input label="Верхние ноты" {...register("topNotes")} />
           <Input label="Средние ноты" {...register("middleNotes")} />
           <Input label="Базовые ноты" {...register("baseNotes")} />
+        </div>
+        <div className="mt-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold text-zinc-950">Варианты объема</h2>
+              <p className="mt-1 text-sm text-zinc-500">
+                Один товар может иметь 20ml, 50ml, 100ml. У каждого варианта своя цена и наличие.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() =>
+                append({
+                  volume: "100ml",
+                  price: 0,
+                  isAvailable: true,
+                  stockStatus: "В наличии",
+                })
+              }
+              className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
+            >
+              Добавить объем
+            </button>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="grid gap-3 rounded-md border border-zinc-200 bg-white p-4 md:grid-cols-[1fr_1fr_1fr_1fr_auto]"
+              >
+                <Input label="Объем" {...register(`variants.${index}.volume`)} />
+                <Input label="Цена" type="number" {...register(`variants.${index}.price`)} />
+                <Input label="Старая цена" type="number" {...register(`variants.${index}.oldPrice`)} />
+                <Input label="Статус" {...register(`variants.${index}.stockStatus`)} />
+                <div className="flex items-end gap-3">
+                  <Checkbox label="Есть" {...register(`variants.${index}.isAvailable`)} />
+                  {fields.length > 1 ? (
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800"
+                    >
+                      Удалить
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="mt-6 grid gap-3 sm:grid-cols-4">
           <Checkbox label="В наличии" {...register("isAvailable")} />

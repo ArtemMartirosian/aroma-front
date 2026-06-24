@@ -35,6 +35,14 @@ export type Category = {
   updatedAt?: string;
 };
 
+export type ProductVariant = {
+  volume: string;
+  price: number | string;
+  oldPrice?: number | string;
+  isAvailable: boolean;
+  stockStatus: string;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -65,6 +73,7 @@ export type Product = {
   concentration?: string;
   country?: string;
   releaseYear?: number;
+  variants?: ProductVariant[];
   relatedProducts?: Product[];
   createdAt?: string;
   updatedAt?: string;
