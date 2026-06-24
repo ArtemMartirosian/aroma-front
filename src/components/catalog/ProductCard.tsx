@@ -1,27 +1,38 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { fragranceLabels, formatPrice } from "@/lib/dictionaries";
 import { imageUrl } from "@/lib/images";
 import { Product } from "@/types/catalog";
 
 export function ProductCard({ product }: { product: Product }) {
-  const variants = product.variants?.length
-    ? product.variants
-    : [
-        {
-          volume: product.volume,
-          price: product.price,
-          oldPrice: product.oldPrice,
-          isAvailable: product.isAvailable,
-        },
-      ];
-  const lowestVariant = [...variants].sort((a, b) => Number(a.price) - Number(b.price))[0];
+  const variants = useMemo(
+    () =>
+      product.variants?.length
+        ? product.variants
+        : [
+            {
+              volume: product.volume,
+              price: product.price,
+              oldPrice: product.oldPrice,
+              isAvailable: product.isAvailable,
+            },
+          ],
+    [product],
+  );
+  const lowestVariant = useMemo(
+    () => [...variants].sort((a, b) => Number(a.price) - Number(b.price))[0],
+    [variants],
+  );
+  const [selectedVolume, setSelectedVolume] = useState(lowestVariant.volume);
+  const selectedVariant = variants.find((variant) => variant.volume === selectedVolume) ?? lowestVariant;
   const hasMultipleVariants = variants.length > 1;
-  const oldPrice = lowestVariant.oldPrice ? Number(lowestVariant.oldPrice) : undefined;
+  const oldPrice = selectedVariant.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
   const discount =
-    oldPrice && oldPrice > Number(lowestVariant.price)
-      ? Math.round((1 - Number(lowestVariant.price) / oldPrice) * 100)
+    oldPrice && oldPrice > Number(selectedVariant.price)
+      ? Math.round((1 - Number(selectedVariant.price) / oldPrice) * 100)
       : 0;
 
   return (
@@ -69,16 +80,18 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
           {variants.slice(0, 4).map((variant) => (
-            <span
+            <button
               key={variant.volume}
+              type="button"
+              onClick={() => setSelectedVolume(variant.volume)}
               className={
-                variant.volume === lowestVariant.volume
+                variant.volume === selectedVariant.volume
                   ? "shrink-0 rounded-full bg-zinc-950 px-3 py-1.5 text-xs font-semibold text-white"
-                  : "shrink-0 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700"
+                  : "shrink-0 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:border-zinc-950"
               }
             >
               {variant.volume}
-            </span>
+            </button>
           ))}
         </div>
 
@@ -86,7 +99,7 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="min-w-0">
             <div className="flex flex-wrap items-baseline gap-2">
               <p className="text-2xl font-semibold text-zinc-950">
-                {formatPrice(lowestVariant.price)}
+                {formatPrice(selectedVariant.price)}
               </p>
               {oldPrice ? (
                 <p className="text-sm text-zinc-400 line-through">
