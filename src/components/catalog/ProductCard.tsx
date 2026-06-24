@@ -25,53 +25,59 @@ export function ProductCard({ product }: { product: Product }) {
       : 0;
 
   return (
-    <article className="group overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_48px_rgba(24,24,27,0.12)]">
-      <Link
-        href={`/products/${product.slug}`}
-        className="relative m-3 block aspect-[1.08] overflow-hidden rounded-lg bg-[#f5f3ef]"
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_52%_32%,rgba(255,255,255,0.98),rgba(245,243,239,0.52)_48%,rgba(224,216,203,0.45)_100%)]" />
-        <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2">
+    <article className="group overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_52px_rgba(24,24,27,0.14)]">
+      <div className="relative">
+        <Link
+          href={`/products/${product.slug}`}
+          className="relative block aspect-[1.18] overflow-hidden bg-[#f7f5f1]"
+        >
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(244,238,230,0.72))]" />
+          <div className="absolute bottom-5 left-1/2 h-10 w-36 -translate-x-1/2 rounded-full bg-zinc-950/10 blur-xl transition group-hover:bg-rose-900/15" />
+          <Image
+            src={imageUrl(product.mainImage)}
+            alt={product.name}
+            fill
+            sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+            className="object-contain p-7 transition duration-700 group-hover:scale-105"
+          />
+        </Link>
+
+        <div className="absolute left-4 top-4 z-10 flex max-w-[70%] flex-wrap gap-2">
+          {discount ? <Badge tone="red">-{discount}%</Badge> : null}
           {product.isNew ? <Badge tone="green">new</Badge> : null}
           {product.isFeatured ? <Badge tone="dark">hit</Badge> : null}
-          {discount ? <Badge tone="red">-{discount}%</Badge> : null}
         </div>
-        <span className="absolute right-4 top-3 z-10 text-3xl font-light leading-none text-zinc-400 transition group-hover:text-rose-700">
-          ♡
-        </span>
-        <Image
-          src={imageUrl(product.mainImage)}
-          alt={product.name}
-          fill
-          sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-          className="object-contain p-8 transition duration-700 group-hover:scale-105"
-        />
-      </Link>
 
-      <div className="px-5 pb-5 pt-1">
-        <div className="flex items-center justify-between gap-3">
-          <p className="truncate text-xs font-semibold uppercase tracking-[0.18em] text-rose-800">
+        <button
+          type="button"
+          aria-label="Добавить в избранное"
+          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl leading-none text-zinc-400 shadow-sm transition hover:text-rose-700"
+        >
+          ♡
+        </button>
+
+        <div className="absolute bottom-4 left-4 z-10 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-zinc-800 shadow-sm">
+          {hasMultipleVariants ? `${variants.length} объема` : product.volume}
+        </div>
+      </div>
+
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-4">
+          <p className="min-w-0 truncate text-xs font-semibold uppercase tracking-[0.18em] text-rose-800">
             {product.brand?.name}
           </p>
-          <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-600">
-            {hasMultipleVariants ? `${variants.length} объема` : product.volume}
-          </span>
+          <p className="shrink-0 text-xs font-medium text-zinc-500">
+            {product.category?.name || fragranceLabels[product.fragranceType]}
+          </p>
         </div>
 
-        <h3 className="mt-3 line-clamp-2 min-h-[3.5rem] text-xl font-semibold leading-7 text-zinc-950">
+        <h3 className="mt-2 line-clamp-2 min-h-[3.25rem] text-lg font-semibold leading-6 text-zinc-950">
           <Link href={`/products/${product.slug}`} className="hover:text-rose-800">
             {product.name}
           </Link>
         </h3>
 
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <p className="truncate text-sm text-zinc-500">
-            {product.category?.name || fragranceLabels[product.fragranceType]}
-          </p>
-          <span className="shrink-0 text-sm text-[#ff7a50]">★★★★★</span>
-        </div>
-
-        <div className="mt-4 flex gap-2 overflow-x-auto">
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
           {variants.slice(0, 4).map((variant) => (
             <span
               key={variant.volume}
@@ -86,12 +92,9 @@ export function ProductCard({ product }: { product: Product }) {
           ))}
         </div>
 
-        <div className="mt-5 flex items-end justify-between gap-4 border-t border-zinc-100 pt-4">
+        <div className="mt-4 flex items-center justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
-              {hasMultipleVariants ? "Цена от" : "Цена"}
-            </p>
-            <div className="mt-1 flex flex-wrap items-baseline gap-2">
+            <div className="flex flex-wrap items-baseline gap-2">
               <p className="text-2xl font-semibold text-zinc-950">
                 {formatPrice(lowestVariant.price)}
               </p>
@@ -104,7 +107,7 @@ export function ProductCard({ product }: { product: Product }) {
           </div>
           <Link
             href={`/products/${product.slug}`}
-            className="shrink-0 rounded-full bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-800"
+            className="shrink-0 rounded-full border border-zinc-950 px-4 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-950 hover:text-white"
           >
             Смотреть
           </Link>
