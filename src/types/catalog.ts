@@ -40,7 +40,7 @@ export type ProductVariant = {
   price: number | string;
   oldPrice?: number | string;
   isAvailable: boolean;
-  stockStatus: string;
+  stockStatus?: string;
 };
 
 export type Product = {
@@ -61,7 +61,7 @@ export type Product = {
   mainImage?: string;
   galleryImages: string[];
   isAvailable: boolean;
-  stockStatus: string;
+  stockStatus?: string;
   isFeatured: boolean;
   isNew: boolean;
   isActive: boolean;

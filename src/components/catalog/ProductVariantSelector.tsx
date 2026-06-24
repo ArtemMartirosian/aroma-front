@@ -15,13 +15,13 @@ export function ProductVariantSelector({ product }: { product: Product }) {
               price: product.price,
               oldPrice: product.oldPrice,
               isAvailable: product.isAvailable,
-              stockStatus: product.stockStatus,
             },
           ],
     [product],
   );
   const [selectedVolume, setSelectedVolume] = useState(variants[0]?.volume ?? product.volume);
   const selected = variants.find((variant) => variant.volume === selectedVolume) ?? variants[0];
+  const availabilityLabel = selected?.isAvailable ? "В наличии" : "Нет в наличии";
 
   return (
     <div className="mt-7 border-y border-zinc-100 py-6">
@@ -54,7 +54,7 @@ export function ProductVariantSelector({ product }: { product: Product }) {
               : "rounded-full bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-600"
           }
         >
-          {selected?.stockStatus ?? product.stockStatus}
+          {availabilityLabel}
         </p>
       </div>
 

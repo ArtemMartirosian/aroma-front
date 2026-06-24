@@ -33,7 +33,6 @@ const variantSchema = z.object({
   price: z.coerce.number().min(0),
   oldPrice: optionalNumber,
   isAvailable: z.boolean(),
-  stockStatus: z.string().min(1),
 });
 
 const productSchema = z.object({
@@ -41,9 +40,6 @@ const productSchema = z.object({
   slug: z.string().optional(),
   brandId: z.string().min(1),
   categoryId: z.string().min(1),
-  price: z.coerce.number().min(0),
-  oldPrice: z.coerce.number().optional(),
-  volume: z.string().min(1),
   gender: z.enum(["male", "female", "unisex"]),
   fragranceType: z.enum(["woody", "floral", "citrus", "oriental", "fresh", "sweet", "spicy"]),
   shortDescription: z.string().min(5),
@@ -57,9 +53,7 @@ const productSchema = z.object({
   concentration: z.string().optional(),
   country: z.string().optional(),
   releaseYear: z.coerce.number().optional(),
-  stockStatus: z.string().min(1),
   variants: z.array(variantSchema).min(1),
-  isAvailable: z.boolean(),
   isFeatured: z.boolean(),
   isNew: z.boolean(),
   isActive: z.boolean(),
@@ -87,20 +81,16 @@ export function ProductForm({ productId }: { productId?: string }) {
       name: "",
       brandId: mockBrands[0]?.id ?? "",
       categoryId: mockCategories[0]?.id ?? "",
-      price: 0,
-      volume: "100ml",
       gender: "unisex",
       fragranceType: "floral",
       shortDescription: "",
       description: "",
       mainImage: "/images/perfume-hero.png",
-      stockStatus: "В наличии",
       variants: [
-        { volume: "20ml", price: 18000, isAvailable: true, stockStatus: "В наличии" },
-        { volume: "50ml", price: 39000, isAvailable: true, stockStatus: "В наличии" },
-        { volume: "100ml", price: 59000, isAvailable: true, stockStatus: "В наличии" },
+        { volume: "20ml", price: 18000, isAvailable: true },
+        { volume: "50ml", price: 39000, isAvailable: true },
+        { volume: "100ml", price: 59000, isAvailable: true },
       ],
-      isAvailable: true,
       isFeatured: false,
       isNew: false,
       isActive: true,
@@ -126,13 +116,12 @@ export function ProductForm({ productId }: { productId?: string }) {
         .then((product) => {
           reset({
             ...product,
-            price: Number(product.price),
-            oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
             variants: product.variants?.length
               ? product.variants.map((variant) => ({
-                  ...variant,
+                  volume: variant.volume,
                   price: Number(variant.price),
                   oldPrice: variant.oldPrice ? Number(variant.oldPrice) : undefined,
+                  isAvailable: variant.isAvailable,
                 }))
               : [
                   {
@@ -140,7 +129,6 @@ export function ProductForm({ productId }: { productId?: string }) {
                     price: Number(product.price),
                     oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
                     isAvailable: product.isAvailable,
-                    stockStatus: product.stockStatus,
                   },
                 ],
           });
@@ -152,15 +140,9 @@ export function ProductForm({ productId }: { productId?: string }) {
   async function onSubmit(values: ProductValues) {
     setMessage("");
     try {
-      const primaryVariant = values.variants[0];
       await saveProduct(
         {
           ...values,
-          price: primaryVariant.price,
-          oldPrice: primaryVariant.oldPrice,
-          volume: primaryVariant.volume,
-          isAvailable: primaryVariant.isAvailable,
-          stockStatus: primaryVariant.stockStatus,
           galleryImages: values.mainImage ? [values.mainImage] : [],
         },
         productId,
@@ -203,9 +185,6 @@ export function ProductForm({ productId }: { productId?: string }) {
               </option>
             ))}
           </Select>
-          <Input label="Основная цена" type="number" {...register("price")} />
-          <Input label="Старая цена" type="number" {...register("oldPrice")} />
-          <Input label="Основной объем" {...register("volume")} />
           <Select label="Пол" {...register("gender")}>
             {genderOptions.map(([value, label]) => (
               <option key={value} value={value}>
@@ -223,7 +202,6 @@ export function ProductForm({ productId }: { productId?: string }) {
           <Input label="Концентрация" {...register("concentration")} />
           <Input label="Страна" {...register("country")} />
           <Input label="Год выпуска" type="number" {...register("releaseYear")} />
-          <Input label="Статус наличия" {...register("stockStatus")} />
           <Select label="Стойкость" {...register("longevity")}>
             <option value="">Не указано</option>
             {longevityOptions.map(([value, label]) => (
@@ -268,7 +246,6 @@ export function ProductForm({ productId }: { productId?: string }) {
                   volume: "100ml",
                   price: 0,
                   isAvailable: true,
-                  stockStatus: "В наличии",
                 })
               }
               className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
@@ -281,14 +258,13 @@ export function ProductForm({ productId }: { productId?: string }) {
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className="grid gap-3 rounded-md border border-zinc-200 bg-white p-4 md:grid-cols-[1fr_1fr_1fr_1fr_auto]"
+                className="grid gap-3 rounded-md border border-zinc-200 bg-white p-4 md:grid-cols-[1fr_1fr_1fr_auto]"
               >
                 <Input label="Объем" {...register(`variants.${index}.volume`)} />
                 <Input label="Цена" type="number" {...register(`variants.${index}.price`)} />
                 <Input label="Старая цена" type="number" {...register(`variants.${index}.oldPrice`)} />
-                <Input label="Статус" {...register(`variants.${index}.stockStatus`)} />
                 <div className="flex items-end gap-3">
-                  <Checkbox label="Есть" {...register(`variants.${index}.isAvailable`)} />
+                  <Checkbox label="В наличии" {...register(`variants.${index}.isAvailable`)} />
                   {fields.length > 1 ? (
                     <button
                       type="button"
@@ -303,8 +279,7 @@ export function ProductForm({ productId }: { productId?: string }) {
             ))}
           </div>
         </div>
-        <div className="mt-6 grid gap-3 sm:grid-cols-4">
-          <Checkbox label="В наличии" {...register("isAvailable")} />
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
           <Checkbox label="Популярный" {...register("isFeatured")} />
           <Checkbox label="Новинка" {...register("isNew")} />
           <Checkbox label="Показывать" {...register("isActive")} />

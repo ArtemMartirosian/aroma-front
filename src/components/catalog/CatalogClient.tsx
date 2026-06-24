@@ -45,13 +45,16 @@ export function CatalogClient() {
     return products
       .filter((product) => {
         const price = Number(product.price);
+        const productVolumes = product.variants?.length
+          ? product.variants.map((variant) => variant.volume)
+          : [product.volume];
         return (
           (!normalizedSearch || product.name.toLowerCase().includes(normalizedSearch)) &&
           (!brand || product.brand?.slug === brand) &&
           (!category || product.category?.slug === category) &&
           (!gender || product.gender === gender) &&
           (!type || product.fragranceType === type) &&
-          (!volume || product.volume === volume) &&
+          (!volume || productVolumes.includes(volume)) &&
           (!maxPrice || price <= Number(maxPrice)) &&
           product.isActive
         );
@@ -64,7 +67,15 @@ export function CatalogClient() {
       });
   }, [brand, category, gender, maxPrice, products, search, sort, type, volume]);
 
-  const volumes = Array.from(new Set(products.map((product) => product.volume)));
+  const volumes = Array.from(
+    new Set(
+      products.flatMap((product) =>
+        product.variants?.length
+          ? product.variants.map((variant) => variant.volume)
+          : [product.volume],
+      ),
+    ),
+  );
   const activeFilters = [search, brand, category, gender, type, volume, maxPrice].filter(Boolean).length;
 
   function resetFilters() {

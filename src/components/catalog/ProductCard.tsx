@@ -13,11 +13,11 @@ export function ProductCard({ product }: { product: Product }) {
           price: product.price,
           oldPrice: product.oldPrice,
           isAvailable: product.isAvailable,
-          stockStatus: product.stockStatus,
         },
       ];
   const lowestVariant = [...variants].sort((a, b) => Number(a.price) - Number(b.price))[0];
   const hasMultipleVariants = variants.length > 1;
+  const availabilityLabel = product.isAvailable ? "В наличии" : "Нет в наличии";
 
   return (
     <article className="group overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-[0_22px_60px_rgba(24,24,27,0.13)]">
@@ -76,7 +76,7 @@ export function ProductCard({ product }: { product: Product }) {
                 ? "mt-1 inline-flex h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500 shadow-[0_0_0_5px_rgba(16,185,129,0.12)]"
                 : "mt-1 inline-flex h-2.5 w-2.5 shrink-0 rounded-full bg-zinc-300"
             }
-            aria-label={product.stockStatus}
+            aria-label={availabilityLabel}
           />
         </div>
 
@@ -121,7 +121,7 @@ export function ProductCard({ product }: { product: Product }) {
               ) : null}
             </div>
             <p className={product.isAvailable ? "mt-1 text-sm text-emerald-700" : "mt-1 text-sm text-zinc-500"}>
-              {product.stockStatus}
+              {availabilityLabel}
             </p>
           </div>
           <Link

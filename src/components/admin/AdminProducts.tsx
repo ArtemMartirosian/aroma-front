@@ -52,7 +52,7 @@ export function AdminProducts() {
                 <th className="py-3">Название</th>
                 <th>Бренд</th>
                 <th>Цена</th>
-                <th>Наличие</th>
+                <th>Объемы</th>
                 <th>Статусы</th>
                 <th className="text-right">Действия</th>
               </tr>
@@ -63,7 +63,11 @@ export function AdminProducts() {
                   <td className="py-4 font-semibold text-zinc-950">{product.name}</td>
                   <td>{product.brand?.name}</td>
                   <td>{formatPrice(product.price)}</td>
-                  <td>{product.stockStatus}</td>
+                  <td>
+                    {product.variants?.length
+                      ? product.variants.map((variant) => variant.volume).join(", ")
+                      : product.volume}
+                  </td>
                   <td>
                     {product.isFeatured ? "Popular " : ""}
                     {product.isNew ? "New " : ""}
