@@ -20,87 +20,91 @@ export function ProductCard({ product }: { product: Product }) {
   const availabilityLabel = product.isAvailable ? "В наличии" : "Нет в наличии";
 
   return (
-    <article className="group overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-[0_22px_60px_rgba(24,24,27,0.13)]">
-      <Link
-        href={`/products/${product.slug}`}
-        className="relative block aspect-[4/4.6] overflow-hidden bg-[#f4f1ed]"
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.95),rgba(244,241,237,0.18)_45%,rgba(24,24,27,0.08)_100%)]" />
-        <Image
-          src={imageUrl(product.mainImage)}
-          alt={product.name}
-          fill
-          sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-          className="object-cover mix-blend-multiply transition duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
-          <div className="flex flex-wrap gap-2">
-            {product.isNew ? (
-              <span className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-rose-800 shadow-sm">
-                New
-              </span>
-            ) : null}
-            {product.isFeatured ? (
-              <span className="rounded-full bg-zinc-950 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-white shadow-sm">
-                Hit
-              </span>
-            ) : null}
+    <article className="group overflow-hidden rounded-lg border border-zinc-200 bg-[#fffefd] shadow-sm transition duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-[0_24px_70px_rgba(24,24,27,0.14)]">
+      <Link href={`/products/${product.slug}`} className="block">
+        <div className="relative m-3 aspect-[4/4.5] overflow-hidden rounded-lg bg-[#f5f1eb]">
+          <div className="absolute inset-x-8 bottom-8 h-12 rounded-full bg-zinc-950/10 blur-2xl transition duration-500 group-hover:bg-rose-900/15" />
+          <Image
+            src={imageUrl(product.mainImage)}
+            alt={product.name}
+            fill
+            sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+            className="object-contain p-8 transition duration-700 group-hover:scale-105"
+          />
+
+          <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4">
+            <div className="flex flex-wrap gap-2">
+              {product.isNew ? (
+                <span className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-rose-800 shadow-sm">
+                  New
+                </span>
+              ) : null}
+              {product.isFeatured ? (
+                <span className="rounded-full bg-zinc-950 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white shadow-sm">
+                  Hit
+                </span>
+              ) : null}
+            </div>
+            <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-zinc-950 shadow-sm">
+              {hasMultipleVariants ? `${variants.length} объема` : product.volume}
+            </span>
           </div>
-          <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-zinc-950 shadow-sm">
-            {hasMultipleVariants ? `${variants.length} объема` : product.volume}
-          </span>
-        </div>
-        <div className="absolute inset-x-4 bottom-4 translate-y-3 rounded-lg bg-white/90 px-4 py-3 opacity-0 shadow-xl backdrop-blur transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
-            Быстрый просмотр
-          </p>
-          <p className="mt-1 text-sm font-medium text-zinc-900">
-            Открыть аромат и выбрать объем
-          </p>
+
+          <div className="absolute inset-x-4 bottom-4 flex translate-y-3 items-center justify-between gap-3 rounded-lg border border-white/70 bg-white/90 px-4 py-3 opacity-0 shadow-xl backdrop-blur transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+              Подробнее
+            </span>
+            <span className="rounded-full bg-zinc-950 px-3 py-1 text-xs font-semibold text-white">
+              Выбрать
+            </span>
+          </div>
         </div>
       </Link>
 
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-800">
-              {product.brand?.name}
-            </p>
-            <h3 className="mt-2 line-clamp-2 min-h-[3.5rem] text-xl font-semibold leading-7 text-zinc-950">
-              {product.name}
-            </h3>
-          </div>
+      <div className="px-5 pb-5 pt-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="truncate text-xs font-semibold uppercase tracking-[0.22em] text-rose-800">
+            {product.brand?.name}
+          </p>
           <span
             className={
               product.isAvailable
-                ? "mt-1 inline-flex h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500 shadow-[0_0_0_5px_rgba(16,185,129,0.12)]"
-                : "mt-1 inline-flex h-2.5 w-2.5 shrink-0 rounded-full bg-zinc-300"
+                ? "inline-flex shrink-0 items-center rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700"
+                : "inline-flex shrink-0 items-center rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-500"
             }
             aria-label={availabilityLabel}
-          />
+          >
+            {availabilityLabel}
+          </span>
         </div>
 
-        <p className="mt-3 line-clamp-2 min-h-[3rem] text-sm leading-6 text-zinc-600">
+        <h3 className="mt-3 line-clamp-2 min-h-[3.5rem] text-xl font-semibold leading-7 text-zinc-950">
+          <Link href={`/products/${product.slug}`} className="hover:text-rose-800">
+            {product.name}
+          </Link>
+        </h3>
+
+        <p className="mt-2 line-clamp-2 min-h-[3rem] text-sm leading-6 text-zinc-600">
           {product.shortDescription}
         </p>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700">
+          <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
             {genderLabels[product.gender]}
           </span>
-          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700">
+          <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
             {fragranceLabels[product.fragranceType]}
           </span>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 grid grid-cols-3 gap-2">
           {variants.slice(0, 4).map((variant) => (
             <span
               key={variant.volume}
               className={
                 variant.volume === lowestVariant.volume
-                  ? "rounded-md border border-zinc-950 bg-zinc-950 px-2.5 py-1 text-xs font-semibold text-white"
-                  : "rounded-md border border-zinc-200 bg-white px-2.5 py-1 text-xs font-semibold text-zinc-700"
+                  ? "rounded-md border border-zinc-950 bg-zinc-950 px-2.5 py-2 text-center text-xs font-semibold text-white"
+                  : "rounded-md border border-zinc-200 bg-white px-2.5 py-2 text-center text-xs font-semibold text-zinc-700"
               }
             >
               {variant.volume}
@@ -108,11 +112,14 @@ export function ProductCard({ product }: { product: Product }) {
           ))}
         </div>
 
-        <div className="mt-5 flex items-end justify-between gap-4 border-t border-zinc-100 pt-4">
+        <div className="mt-5 flex items-center justify-between gap-4 border-t border-zinc-100 pt-4">
           <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
+              {hasMultipleVariants ? "Цена от" : "Цена"}
+            </p>
             <div className="flex flex-wrap items-baseline gap-2">
               <p className="text-2xl font-semibold tracking-tight text-zinc-950">
-                {hasMultipleVariants ? `от ${formatPrice(lowestVariant.price)}` : formatPrice(product.price)}
+                {formatPrice(lowestVariant.price)}
               </p>
               {lowestVariant.oldPrice ? (
                 <p className="text-sm text-zinc-400 line-through">
@@ -120,19 +127,15 @@ export function ProductCard({ product }: { product: Product }) {
                 </p>
               ) : null}
             </div>
-            <p className={product.isAvailable ? "mt-1 text-sm text-emerald-700" : "mt-1 text-sm text-zinc-500"}>
-              {availabilityLabel}
-            </p>
           </div>
           <Link
             href={`/products/${product.slug}`}
-            className="shrink-0 rounded-full bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-rose-800"
+            className="shrink-0 rounded-full bg-zinc-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-800 hover:shadow-lg"
           >
             Смотреть
           </Link>
         </div>
       </div>
-
     </article>
   );
 }
