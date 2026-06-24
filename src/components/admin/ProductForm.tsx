@@ -32,7 +32,6 @@ const variantSchema = z.object({
   volume: z.string().min(1),
   price: z.coerce.number().min(0),
   oldPrice: optionalNumber,
-  isAvailable: z.boolean(),
 });
 
 const productSchema = z.object({
@@ -87,9 +86,9 @@ export function ProductForm({ productId }: { productId?: string }) {
       description: "",
       mainImage: "/images/perfume-hero.png",
       variants: [
-        { volume: "20ml", price: 18000, isAvailable: true },
-        { volume: "50ml", price: 39000, isAvailable: true },
-        { volume: "100ml", price: 59000, isAvailable: true },
+        { volume: "20ml", price: 18000 },
+        { volume: "50ml", price: 39000 },
+        { volume: "100ml", price: 59000 },
       ],
       isFeatured: false,
       isNew: false,
@@ -121,14 +120,12 @@ export function ProductForm({ productId }: { productId?: string }) {
                   volume: variant.volume,
                   price: Number(variant.price),
                   oldPrice: variant.oldPrice ? Number(variant.oldPrice) : undefined,
-                  isAvailable: variant.isAvailable,
                 }))
               : [
                   {
                     volume: product.volume,
                     price: Number(product.price),
                     oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
-                    isAvailable: product.isAvailable,
                   },
                 ],
           });
@@ -245,7 +242,6 @@ export function ProductForm({ productId }: { productId?: string }) {
                 append({
                   volume: "100ml",
                   price: 0,
-                  isAvailable: true,
                 })
               }
               className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
@@ -264,7 +260,6 @@ export function ProductForm({ productId }: { productId?: string }) {
                 <Input label="Цена" type="number" {...register(`variants.${index}.price`)} />
                 <Input label="Старая цена" type="number" {...register(`variants.${index}.oldPrice`)} />
                 <div className="flex items-end gap-3">
-                  <Checkbox label="В наличии" {...register(`variants.${index}.isAvailable`)} />
                   {fields.length > 1 ? (
                     <button
                       type="button"

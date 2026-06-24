@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Brand, Category, DashboardStats, Product, ProductsResponse } from "@/types/catalog";
+import { Brand, Category, DashboardStats, Product, ProductVariant, ProductsResponse } from "@/types/catalog";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -60,7 +60,11 @@ export async function getAdminProduct(id: string) {
   return data;
 }
 
-export async function saveProduct(payload: Partial<Product>, id?: string) {
+type ProductSavePayload = Partial<Omit<Product, "variants">> & {
+  variants?: Array<Partial<ProductVariant> & Pick<ProductVariant, "volume" | "price">>;
+};
+
+export async function saveProduct(payload: ProductSavePayload, id?: string) {
   const { data } = id
     ? await api.patch<Product>(`/admin/products/${id}`, payload)
     : await api.post<Product>("/admin/products", payload);
