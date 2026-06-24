@@ -86,12 +86,21 @@ export default function Home() {
             <Link
               href={`/catalog?brand=${brand.slug}`}
               key={brand.id}
-              className="rounded-lg border border-zinc-200 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+              className="overflow-hidden rounded-lg border border-zinc-200 bg-white text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
             >
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-zinc-950 text-lg font-semibold text-white">
-                {brand.logo}
+              <div className="relative aspect-[4/3] bg-zinc-100">
+                <Image
+                  src={brand.image || "/images/perfume-hero.png"}
+                  alt={brand.name}
+                  fill
+                  sizes="(min-width: 768px) 25vw, 50vw"
+                  className="object-cover"
+                />
+                <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-sm font-semibold text-zinc-950 shadow-sm">
+                  {brand.logo}
+                </div>
               </div>
-              <p className="mt-4 font-semibold text-zinc-950">{brand.name}</p>
+              <p className="p-5 font-semibold text-zinc-950">{brand.name}</p>
             </Link>
           ))}
         </div>
@@ -112,7 +121,7 @@ export default function Home() {
             </p>
             <p>
               В первой версии покупки нет: карточка товара ведет к контакту в
-              WhatsApp, где можно уточнить наличие и детали.
+              WhatsApp, где можно уточнить наличие и оформить бесплатную доставку.
             </p>
           </div>
         </div>

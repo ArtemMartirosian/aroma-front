@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/catalog/ProductCard";
+import { API_URL } from "@/lib/api";
 import {
   fragranceLabels,
   formatPrice,
@@ -9,6 +10,7 @@ import {
   sillageLabels,
 } from "@/lib/dictionaries";
 import { mockProducts } from "@/lib/mock-data";
+import { Product } from "@/types/catalog";
 
 export default async function ProductPage({
   params,
@@ -16,12 +18,15 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = mockProducts.find((item) => item.slug === slug);
+  const product = await loadProduct(slug);
   if (!product) notFound();
 
-  const related = mockProducts
-    .filter((item) => item.categoryId === product.categoryId && item.id !== product.id)
-    .slice(0, 3);
+  const related =
+    product.relatedProducts?.length
+      ? product.relatedProducts
+      : mockProducts
+          .filter((item) => item.categoryId === product.categoryId && item.id !== product.id)
+          .slice(0, 3);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -91,12 +96,22 @@ export default async function ProductPage({
               </p>
             </div>
           </div>
-          <a
-            href={`https://wa.me/37400000000?text=${encodeURIComponent(`Здравствуйте, интересует ${product.name}`)}`}
-            className="mt-6 inline-flex w-full justify-center rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-800"
-          >
-            Написать в WhatsApp
-          </a>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <a
+              href={`https://wa.me/37433696009?text=${encodeURIComponent(`Здравствуйте, интересует ${product.name}`)}`}
+              className="inline-flex justify-center rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-800"
+            >
+              Написать в WhatsApp
+            </a>
+            <a
+              href="https://instagram.com/aroma__parfume"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex justify-center rounded-full border border-zinc-300 px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
+            >
+              Написать в Instagram
+            </a>
+          </div>
         </section>
       </div>
 
@@ -110,6 +125,21 @@ export default async function ProductPage({
       </section>
     </div>
   );
+}
+
+async function loadProduct(slug: string): Promise<Product | undefined> {
+  try {
+    const response = await fetch(`${API_URL}/products/${slug}`, {
+      cache: "no-store",
+    });
+    if (response.ok) {
+      return response.json();
+    }
+  } catch {
+    return mockProducts.find((item) => item.slug === slug);
+  }
+
+  return mockProducts.find((item) => item.slug === slug);
 }
 
 function Info({ label, value }: { label: string; value: string }) {

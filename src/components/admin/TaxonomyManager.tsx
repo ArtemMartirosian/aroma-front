@@ -21,6 +21,7 @@ export function TaxonomyManager({ mode }: { mode: Mode }) {
   const isBrands = mode === "brands";
   const [items, setItems] = useState<Array<Brand | Category>>([]);
   const [name, setName] = useState("");
+  const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
 
@@ -40,11 +41,12 @@ export function TaxonomyManager({ mode }: { mode: Mode }) {
 
   async function createItem() {
     if (!name.trim()) return;
-    const payload = { name, description, isActive: true };
+    const payload = { name, description, image, isActive: true };
     try {
       const created = isBrands ? await saveBrand(payload) : await saveCategory(payload);
       setItems((current) => [...current, created]);
       setName("");
+      setImage("");
       setDescription("");
     } catch {
       setMessage("Не удалось сохранить. Проверьте backend и JWT.");
@@ -73,11 +75,17 @@ export function TaxonomyManager({ mode }: { mode: Mode }) {
           {isBrands ? "Бренды" : "Категории"}
         </h1>
         {message ? <p className="mt-4 rounded-md bg-zinc-50 p-3 text-sm text-zinc-600">{message}</p> : null}
-        <div className="mt-6 grid gap-3 md:grid-cols-[240px_1fr_auto]">
+        <div className="mt-6 grid gap-3 md:grid-cols-[220px_220px_1fr_auto]">
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder="Название"
+            className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-rose-700"
+          />
+          <input
+            value={image}
+            onChange={(event) => setImage(event.target.value)}
+            placeholder="URL картинки"
             className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-rose-700"
           />
           <input
@@ -97,9 +105,23 @@ export function TaxonomyManager({ mode }: { mode: Mode }) {
         <div className="mt-6 divide-y divide-zinc-100">
           {items.map((item) => (
             <div key={item.id} className="flex items-center justify-between gap-4 py-4">
-              <div>
-                <p className="font-semibold text-zinc-950">{item.name}</p>
-                <p className="text-sm text-zinc-500">{item.description}</p>
+              <div className="flex items-center gap-4">
+                {item.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="h-16 w-24 rounded-md border border-zinc-200 object-cover"
+                  />
+                ) : (
+                  <div className="flex h-16 w-24 items-center justify-center rounded-md border border-dashed border-zinc-300 text-xs text-zinc-400">
+                    No image
+                  </div>
+                )}
+                <div>
+                  <p className="font-semibold text-zinc-950">{item.name}</p>
+                  <p className="text-sm text-zinc-500">{item.description}</p>
+                </div>
               </div>
               <button
                 type="button"

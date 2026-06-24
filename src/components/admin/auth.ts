@@ -26,17 +26,27 @@ export function clearToken() {
 
 export function useAdminToken() {
   const router = useRouter();
+  const hydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
   const token = useSyncExternalStore(subscribeToToken, getStoredToken, () => null);
 
   useEffect(() => {
+    if (!hydrated) {
+      return;
+    }
+
     if (!token) {
+      setAuthToken(null);
       router.replace("/admin/login");
       return;
     }
     setAuthToken(token);
-  }, [router, token]);
+  }, [hydrated, router, token]);
 
-  return { token, ready: Boolean(token) };
+  return { token, ready: hydrated && Boolean(token) };
+}
+
+function subscribeToHydration() {
+  return () => {};
 }
 
 function subscribeToToken(callback: () => void) {

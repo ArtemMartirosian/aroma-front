@@ -15,6 +15,7 @@ export type Brand = {
   name: string;
   slug: string;
   logo?: string;
+  image?: string;
   description?: string;
   isActive: boolean;
   products?: Product[];

@@ -16,8 +16,8 @@ export function SiteFooter() {
         <div>
           <p className="text-xl font-semibold tracking-[0.18em]">AROMA</p>
           <p className="mt-3 max-w-sm text-sm leading-6 text-zinc-300">
-            Премиальный каталог оригинальной парфюмерии без онлайн-оплаты: выбирайте
-            аромат и связывайтесь с нами удобным способом.
+            Онлайн-каталог оригинальной парфюмерии без онлайн-оплаты: выбирайте
+            аромат, связывайтесь с нами и получайте бесплатную доставку.
           </p>
         </div>
         <div className="text-sm text-zinc-300">
@@ -30,9 +30,10 @@ export function SiteFooter() {
         </div>
         <div className="text-sm text-zinc-300">
           <p className="font-semibold text-white">Связь</p>
-          <p className="mt-3">WhatsApp: +374 00 000 000</p>
-          <p>Instagram: @aroma.perfume</p>
-          <p>Email: hello@aroma.local</p>
+          <p className="mt-3">WhatsApp: +374 33 69 60 09</p>
+          <p>Телефон: +374 33 69 60 09</p>
+          <p>Instagram: @aroma__parfume</p>
+          <p>Доставка: бесплатно</p>
         </div>
       </div>
     </footer>
