@@ -29,16 +29,14 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative">
         <Link
           href={`/products/${product.slug}`}
-          className="relative block aspect-[1.18] overflow-hidden bg-[#f7f5f1]"
+          className="relative block aspect-[1.18] overflow-hidden bg-white"
         >
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(244,238,230,0.72))]" />
-          <div className="absolute bottom-5 left-1/2 h-10 w-36 -translate-x-1/2 rounded-full bg-zinc-950/10 blur-xl transition group-hover:bg-rose-900/15" />
           <Image
             src={imageUrl(product.mainImage)}
             alt={product.name}
             fill
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-            className="object-contain p-7 transition duration-700 group-hover:scale-105"
+            className="object-contain p-4 transition duration-700 group-hover:scale-105"
           />
         </Link>
 
@@ -47,14 +45,6 @@ export function ProductCard({ product }: { product: Product }) {
           {product.isNew ? <Badge tone="green">new</Badge> : null}
           {product.isFeatured ? <Badge tone="dark">hit</Badge> : null}
         </div>
-
-        <button
-          type="button"
-          aria-label="Добавить в избранное"
-          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-2xl leading-none text-zinc-400 shadow-sm transition hover:text-rose-700"
-        >
-          ♡
-        </button>
 
         <div className="absolute bottom-4 left-4 z-10 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-zinc-800 shadow-sm">
           {hasMultipleVariants ? `${variants.length} объема` : product.volume}
