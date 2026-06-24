@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/catalog/ProductCard";
+import { imageUrl } from "@/lib/images";
 import { mockBrands, mockCategories, mockProducts } from "@/lib/mock-data";
 
 export default function Home() {
@@ -90,7 +91,7 @@ export default function Home() {
             >
               <div className="relative aspect-[4/3] bg-zinc-100">
                 <Image
-                  src={brand.image || "/images/perfume-hero.png"}
+                  src={imageUrl(brand.image)}
                   alt={brand.name}
                   fill
                   sizes="(min-width: 768px) 25vw, 50vw"

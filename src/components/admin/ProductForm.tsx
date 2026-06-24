@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { useAdminToken } from "@/components/admin/auth";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import {
   getAdminBrands,
   getAdminCategories,
@@ -78,6 +79,7 @@ export function ProductForm({ productId }: { productId?: string }) {
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { isSubmitting },
   } = useForm<ProductInput, unknown, ProductValues>({
     resolver: zodResolver(productSchema),
@@ -108,6 +110,7 @@ export function ProductForm({ productId }: { productId?: string }) {
     control,
     name: "variants",
   });
+  const mainImage = useWatch({ control, name: "mainImage" });
 
   useEffect(() => {
     if (!ready) return;
@@ -203,7 +206,6 @@ export function ProductForm({ productId }: { productId?: string }) {
           <Input label="Основная цена" type="number" {...register("price")} />
           <Input label="Старая цена" type="number" {...register("oldPrice")} />
           <Input label="Основной объем" {...register("volume")} />
-          <Input label="Главное изображение URL" {...register("mainImage")} />
           <Select label="Пол" {...register("gender")}>
             {genderOptions.map(([value, label]) => (
               <option key={value} value={value}>
@@ -243,6 +245,13 @@ export function ProductForm({ productId }: { productId?: string }) {
           <Input label="Верхние ноты" {...register("topNotes")} />
           <Input label="Средние ноты" {...register("middleNotes")} />
           <Input label="Базовые ноты" {...register("baseNotes")} />
+        </div>
+        <div className="mt-6">
+          <ImageUploadField
+            label="Главное изображение"
+            value={mainImage}
+            onChange={(value) => setValue("mainImage", value, { shouldDirty: true })}
+          />
         </div>
         <div className="mt-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">

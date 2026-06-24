@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { API_URL } from "@/lib/api";
+import { imageUrl } from "@/lib/images";
 import { mockBrands, mockProducts } from "@/lib/mock-data";
 import { Brand } from "@/types/catalog";
 
@@ -21,7 +22,7 @@ export default async function BrandsPage() {
             <div className="grid sm:grid-cols-[190px_1fr]">
               <div className="relative min-h-44 bg-zinc-100">
                 <Image
-                  src={brand.image || "/images/perfume-hero.png"}
+                  src={imageUrl(brand.image)}
                   alt={brand.name}
                   fill
                   sizes="(min-width: 768px) 190px, 100vw"

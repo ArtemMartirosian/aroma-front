@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { fragranceLabels, formatPrice, genderLabels } from "@/lib/dictionaries";
+import { imageUrl } from "@/lib/images";
 import { Product } from "@/types/catalog";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -21,7 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="group relative min-h-[560px] overflow-hidden rounded-lg bg-zinc-950 shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-[0_28px_70px_rgba(24,24,27,0.22)]">
       <Link href={`/products/${product.slug}`} className="absolute inset-0">
         <Image
-          src={product.mainImage || "/images/perfume-hero.png"}
+          src={imageUrl(product.mainImage)}
           alt={product.name}
           fill
           sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"

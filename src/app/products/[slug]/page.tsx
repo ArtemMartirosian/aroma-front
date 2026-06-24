@@ -9,6 +9,7 @@ import {
   longevityLabels,
   sillageLabels,
 } from "@/lib/dictionaries";
+import { imageUrl } from "@/lib/images";
 import { mockProducts } from "@/lib/mock-data";
 import { Product } from "@/types/catalog";
 
@@ -56,7 +57,7 @@ export default async function ProductPage({
                 ) : null}
               </div>
               <Image
-                src={product.mainImage || "/images/perfume-hero.png"}
+                src={imageUrl(product.mainImage)}
                 alt={product.name}
                 fill
                 priority
@@ -65,23 +66,22 @@ export default async function ProductPage({
               />
             </div>
             <div className="grid grid-cols-3 gap-3">
-              {(product.galleryImages.length
-                ? product.galleryImages
-                : [product.mainImage || "/images/perfume-hero.png"]
-              ).map((image, index) => (
+              {(product.galleryImages.length ? product.galleryImages : [product.mainImage]).map(
+                (image, index) => (
                   <div
                     key={`${image}-${index}`}
                     className="relative aspect-[4/3] overflow-hidden rounded-lg border border-zinc-200 bg-white"
                   >
                     <Image
-                      src={image}
+                      src={imageUrl(image)}
                       alt={`${product.name} gallery`}
                       fill
                       sizes="(min-width: 1024px) 16vw, 33vw"
                       className="object-cover"
                     />
                   </div>
-                ))}
+                ),
+              )}
             </div>
           </div>
 

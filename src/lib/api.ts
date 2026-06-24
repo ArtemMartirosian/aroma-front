@@ -67,6 +67,21 @@ export async function saveProduct(payload: Partial<Product>, id?: string) {
   return data;
 }
 
+export async function uploadImage(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const { data } = await api.post<{ url: string; filename: string }>(
+    "/admin/products/upload-image",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+  return data;
+}
+
 export async function deleteProduct(id: string) {
   await api.delete(`/admin/products/${id}`);
 }
