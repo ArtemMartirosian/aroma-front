@@ -98,24 +98,24 @@ export function CatalogClient() {
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-45"
+          className="object-cover opacity-35"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/78 to-zinc-950/20" />
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/82 to-zinc-950/30" />
+        <div className="relative mx-auto flex min-h-[360px] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 lg:px-8">
+          <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-rose-200">
-              curated perfume catalog
+              online perfume catalog
             </p>
-            <h1 className="mt-4 text-5xl font-semibold leading-tight md:text-7xl">
-              Ароматы, которые выглядят так же дорого, как звучат
+            <h1 className="mt-4 text-4xl font-semibold leading-tight md:text-6xl">
+              Каталог ароматов
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-200">
-              Выберите бренд, настроение, объем и бюджет. Мы поможем оформить
-              заказ онлайн с бесплатной доставкой.
+            <p className="mt-5 max-w-xl text-base leading-8 text-zinc-200 md:text-lg">
+              Подберите бренд, настроение, объем и бюджет. Заказы оформляются
+              онлайн с бесплатной доставкой.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid gap-3 sm:max-w-3xl sm:grid-cols-3">
             <Stat label="Найдено" value={filteredProducts.length} />
             <Stat label="Брендов" value={brands.length} />
             <Stat label="Категорий" value={categories.length} />
@@ -123,30 +123,30 @@ export function CatalogClient() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="-mt-20 rounded-lg border border-white/60 bg-white p-4 shadow-2xl md:p-6">
-          <div className="flex flex-col justify-between gap-4 border-b border-zinc-100 pb-5 md:flex-row md:items-center">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[285px_minmax(0,1fr)] lg:px-8">
+        <aside className="h-fit rounded-lg border border-zinc-200 bg-white p-5 shadow-sm lg:sticky lg:top-24">
+          <div className="flex items-start justify-between gap-4 border-b border-zinc-100 pb-5">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
-                Найти аромат
+                Фильтры
               </p>
               <p className="mt-1 text-sm text-zinc-500">
-                {activeFilters ? `${activeFilters} фильтров активно` : "Можно искать по названию, бренду и типу"}
+                {activeFilters ? `${activeFilters} активно` : "Выберите параметры"}
               </p>
             </div>
             {activeFilters ? (
               <button
                 type="button"
                 onClick={resetFilters}
-                className="w-fit rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:border-zinc-950"
+                className="rounded-full border border-zinc-300 px-3 py-1.5 text-xs font-semibold text-zinc-900 transition hover:border-zinc-950"
               >
                 Сбросить
               </button>
             ) : null}
           </div>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <label className="md:col-span-2">
+          <div className="mt-5 space-y-4">
+            <label className="block">
               <span className="text-sm font-semibold text-zinc-800">Поиск</span>
               <input
                 value={search}
@@ -199,58 +199,89 @@ export function CatalogClient() {
               <input
                 value={maxPrice}
                 onChange={(event) => setMaxPrice(event.target.value)}
-                type="number"
-                placeholder="50000"
-                className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
-              />
-            </label>
-            <FilterSelect label="Сортировка" value={sort} onChange={(value) => setSort(value as Sort)}>
-              <option value="new">Новые</option>
-              <option value="price_asc">По цене: дешевые</option>
-              <option value="price_desc">По цене: дорогие</option>
-              <option value="popular">Популярные</option>
-            </FilterSelect>
+              type="number"
+              placeholder="50000"
+              className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+            />
+          </label>
           </div>
-        </div>
+        </aside>
 
-        <div className="mt-8">
-          <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
-                Collection
-              </p>
-              <h2 className="mt-2 text-4xl font-semibold text-zinc-950">Витрина ароматов</h2>
-              <p className="mt-2 text-zinc-600">
-                {filteredProducts.length} товаров найдено
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600">
-              {apiMode ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">Backend API</span> : null}
-              {sort === "new" ? <span className="rounded-full bg-rose-50 px-3 py-1 text-rose-900">Новые</span> : null}
-              {sort === "popular" ? <span className="rounded-full bg-rose-50 px-3 py-1 text-rose-900">Популярные</span> : null}
-              {maxPrice ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">до {maxPrice}</span> : null}
-            </div>
-          </div>
-
-          <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-            {!filteredProducts.length ? (
-              <div className="col-span-full rounded-lg border border-dashed border-zinc-300 bg-white p-12 text-center shadow-sm">
-                <p className="text-xl font-semibold text-zinc-950">Ничего не найдено</p>
-                <p className="mt-2 text-zinc-600">Попробуйте изменить фильтры или сбросить поиск.</p>
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  className="mt-5 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-800"
-                >
-                  Сбросить фильтры
-                </button>
+        <main className="min-w-0">
+          <div className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
+            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
+                  Collection
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold text-zinc-950 sm:text-4xl">
+                  Витрина ароматов
+                </h2>
+                <p className="mt-2 text-sm text-zinc-600">
+                  {filteredProducts.length} товаров найдено
+                </p>
               </div>
-            ) : null}
-          </section>
-        </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 sm:max-w-sm sm:justify-end">
+                  {apiMode ? <span className="rounded-full bg-zinc-100 px-3 py-1">Backend API</span> : null}
+                  {activeFilters ? (
+                    <span className="rounded-full bg-rose-50 px-3 py-1 text-rose-900">
+                      {activeFilters} фильтров
+                    </span>
+                  ) : null}
+                  {maxPrice ? <span className="rounded-full bg-zinc-100 px-3 py-1">до {maxPrice}</span> : null}
+                </div>
+
+                <label className="block min-w-[190px]">
+                  <span className="text-sm font-semibold text-zinc-800">Сортировка</span>
+                  <select
+                    value={sort}
+                    onChange={(event) => setSort(event.target.value as Sort)}
+                    className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+                  >
+                    <option value="new">Новые</option>
+                    <option value="price_asc">По цене: дешевые</option>
+                    <option value="price_desc">По цене: дорогие</option>
+                    <option value="popular">Популярные</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <div className="mb-5 flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-600">
+              {brand ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{brands.find((item) => item.slug === brand)?.name}</span> : null}
+              {category ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{categories.find((item) => item.slug === category)?.name}</span> : null}
+              {gender ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{genderOptions.find(([value]) => value === gender)?.[1]}</span> : null}
+              {type ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{fragranceOptions.find(([value]) => value === type)?.[1]}</span> : null}
+              {volume ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{volume}</span> : null}
+              {search ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">“{search}”</span> : null}
+            </div>
+
+            <div>
+              <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+                {!filteredProducts.length ? (
+                  <div className="col-span-full rounded-lg border border-dashed border-zinc-300 bg-white p-12 text-center shadow-sm">
+                    <p className="text-xl font-semibold text-zinc-950">Ничего не найдено</p>
+                    <p className="mt-2 text-zinc-600">Попробуйте изменить фильтры или сбросить поиск.</p>
+                    <button
+                      type="button"
+                      onClick={resetFilters}
+                      className="mt-5 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-800"
+                    >
+                      Сбросить фильтры
+                    </button>
+                  </div>
+                ) : null}
+              </section>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
