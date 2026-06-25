@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { fragranceOptions, genderOptions } from "@/lib/dictionaries";
@@ -90,41 +89,12 @@ export function CatalogClient() {
   }
 
   return (
-    <div className="bg-[#fbfaf8]">
-      <section className="relative overflow-hidden bg-zinc-950 text-white">
-        <Image
-          src="/images/perfume-hero.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover opacity-35"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/82 to-zinc-950/30" />
-        <div className="relative mx-auto flex min-h-[360px] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-rose-200">
-              online perfume catalog
-            </p>
-            <h1 className="mt-4 text-4xl font-semibold leading-tight md:text-6xl">
-              Каталог ароматов
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-8 text-zinc-200 md:text-lg">
-              Подберите бренд, настроение, объем и бюджет. Заказы оформляются
-              онлайн с бесплатной доставкой.
-            </p>
-          </div>
+    <div className="relative overflow-hidden bg-[#f7f2eb]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top_left,rgba(215,170,129,0.26),transparent_36%),radial-gradient(circle_at_top_right,rgba(255,255,255,0.95),transparent_30%)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-40 h-80 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.7),transparent_50%)]" />
 
-          <div className="mt-8 grid gap-3 sm:max-w-3xl sm:grid-cols-3">
-            <Stat label="Найдено" value={filteredProducts.length} />
-            <Stat label="Брендов" value={brands.length} />
-            <Stat label="Категорий" value={categories.length} />
-          </div>
-        </div>
-      </section>
-
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[285px_minmax(0,1fr)] lg:px-8">
-        <aside className="h-fit rounded-lg border border-zinc-200 bg-white p-5 shadow-sm lg:sticky lg:top-24">
+      <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[285px_minmax(0,1fr)] lg:px-8 lg:py-10">
+        <aside className="h-fit rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur lg:sticky lg:top-24">
           <div className="flex items-start justify-between gap-4 border-b border-zinc-100 pb-5">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
@@ -199,41 +169,47 @@ export function CatalogClient() {
               <input
                 value={maxPrice}
                 onChange={(event) => setMaxPrice(event.target.value)}
-              type="number"
-              placeholder="50000"
-              className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
-            />
-          </label>
+                type="number"
+                placeholder="50000"
+                className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+              />
+            </label>
           </div>
         </aside>
 
         <main className="min-w-0">
-          <div className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm sm:p-5">
-            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+          <div className="rounded-[30px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(250,240,230,0.92))] p-5 shadow-[0_24px_60px_rgba(132,93,63,0.12)] sm:p-7">
+            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
-                  Collection
+                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-rose-800">
+                  Aroma Parfume
                 </p>
-                <h2 className="mt-2 text-3xl font-semibold text-zinc-950 sm:text-4xl">
-                  Витрина ароматов
-                </h2>
-                <p className="mt-2 text-sm text-zinc-600">
-                  {filteredProducts.length} товаров найдено
+                <h1 className="mt-3 text-3xl font-semibold leading-tight text-zinc-950 sm:text-5xl">
+                  Каталог ароматов
+                </h1>
+                <p className="mt-3 max-w-2xl text-sm leading-7 text-zinc-600 sm:text-base">
+                  Выбирайте любимые ноты, бренды и объемы. Все заказы оформляются онлайн,
+                  а доставка бесплатная.
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-                <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 sm:max-w-sm sm:justify-end">
-                  {apiMode ? <span className="rounded-full bg-zinc-100 px-3 py-1">Backend API</span> : null}
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-end">
+                <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 sm:justify-end">
+                  <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
+                    {filteredProducts.length} товаров
+                  </span>
+                  <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
+                    Бесплатная доставка
+                  </span>
                   {activeFilters ? (
-                    <span className="rounded-full bg-rose-50 px-3 py-1 text-rose-900">
+                    <span className="rounded-full bg-rose-50 px-3 py-1.5 text-rose-900">
                       {activeFilters} фильтров
                     </span>
                   ) : null}
-                  {maxPrice ? <span className="rounded-full bg-zinc-100 px-3 py-1">до {maxPrice}</span> : null}
+                  {apiMode ? <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">Backend API</span> : null}
                 </div>
 
-                <label className="block min-w-[190px]">
+                <label className="block min-w-[210px]">
                   <span className="text-sm font-semibold text-zinc-800">Сортировка</span>
                   <select
                     value={sort}
@@ -252,12 +228,12 @@ export function CatalogClient() {
 
           <div className="mt-6">
             <div className="mb-5 flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-600">
-              {brand ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{brands.find((item) => item.slug === brand)?.name}</span> : null}
-              {category ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{categories.find((item) => item.slug === category)?.name}</span> : null}
-              {gender ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{genderOptions.find(([value]) => value === gender)?.[1]}</span> : null}
-              {type ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{fragranceOptions.find(([value]) => value === type)?.[1]}</span> : null}
-              {volume ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">{volume}</span> : null}
-              {search ? <span className="rounded-full bg-white px-3 py-1 shadow-sm">“{search}”</span> : null}
+              {brand ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{brands.find((item) => item.slug === brand)?.name}</span> : null}
+              {category ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{categories.find((item) => item.slug === category)?.name}</span> : null}
+              {gender ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{genderOptions.find(([value]) => value === gender)?.[1]}</span> : null}
+              {type ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{fragranceOptions.find(([value]) => value === type)?.[1]}</span> : null}
+              {volume ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{volume}</span> : null}
+              {search ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">“{search}”</span> : null}
             </div>
 
             <div>
@@ -283,15 +259,6 @@ export function CatalogClient() {
           </div>
         </main>
       </div>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="rounded-lg border border-white/20 bg-white/10 px-5 py-4 backdrop-blur">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">{label}</p>
-      <p className="mt-2 text-3xl font-semibold text-white">{value}</p>
     </div>
   );
 }
