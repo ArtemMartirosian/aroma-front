@@ -66,10 +66,11 @@ type PendingDelete =
 
 export function ProductForm({ productId }: { productId?: string }) {
   const router = useRouter();
-  const { ready } = useAdminToken();
+  const { ready, token } = useAdminToken();
   const [brands, setBrands] = useState<Brand[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [message, setMessage] = useState("");
+  const [isBootstrapping, setIsBootstrapping] = useState(Boolean(productId));
   const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null);
   const {
     register,
@@ -98,71 +99,104 @@ export function ProductForm({ productId }: { productId?: string }) {
       isActive: true,
     },
   });
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "variants",
   });
   const watchedVariants = useWatch({ control, name: "variants" });
 
   useEffect(() => {
-    if (!ready) return;
-    Promise.all([getAdminBrands(), getAdminCategories()])
-      .then(([brandItems, categoryItems]) => {
+    if (!ready || !token) return;
+
+    let cancelled = false;
+
+    async function bootstrapForm() {
+      setMessage("");
+      setIsBootstrapping(Boolean(productId));
+
+      try {
+        const [brandItems, categoryItems, product] = await Promise.all([
+          getAdminBrands(),
+          getAdminCategories(),
+          productId ? getAdminProduct(productId) : Promise.resolve(null),
+        ]);
+
+        if (cancelled) {
+          return;
+        }
+
         setBrands(brandItems);
         setCategories(categoryItems);
-        if (!productId) {
+
+        if (!product) {
           setValue("brandId", brandItems[0]?.id ?? "", { shouldDirty: false });
           setValue("categoryId", categoryItems[0]?.id ?? "", { shouldDirty: false });
+          return;
         }
-      })
-      .catch(() => {
+
+        const normalizedVariants = product.variants?.length
+          ? product.variants.map((variant) => ({
+              volume: variant.volume,
+              price: Number(variant.price),
+              oldPrice: variant.oldPrice ? Number(variant.oldPrice) : undefined,
+              images: variant.images?.length ? variant.images : ["/images/products/perfume-card-1.png"],
+            }))
+          : [
+              {
+                volume: product.volume,
+                price: Number(product.price),
+                oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
+                images: ["/images/products/perfume-card-1.png"],
+              },
+            ];
+
+        reset({
+          name: product.name ?? "",
+          brandId: product.brandId ?? product.brand?.id ?? "",
+          categoryId: product.categoryId ?? product.category?.id ?? "",
+          gender: product.gender ?? "unisex",
+          fragranceType: product.fragranceType ?? "floral",
+          shortDescription: product.shortDescription ?? "",
+          description: product.description ?? "",
+          topNotes: product.topNotes ?? "",
+          middleNotes: product.middleNotes ?? "",
+          baseNotes: product.baseNotes ?? "",
+          longevity: product.longevity ?? undefined,
+          sillage: product.sillage ?? undefined,
+          concentration: product.concentration ?? "",
+          country: product.country ?? "",
+          releaseYear: product.releaseYear ?? undefined,
+          isFeatured: Boolean(product.isFeatured),
+          isNew: Boolean(product.isNew),
+          isActive: product.isActive ?? true,
+          variants: normalizedVariants,
+        });
+        replace(normalizedVariants);
+      } catch {
+        if (cancelled) {
+          return;
+        }
+
         setBrands([]);
         setCategories([]);
-        setMessage("Չհաջողվեց բեռնել բրենդներն ու կատեգորիաները backend-ից։");
-      });
-
-    if (productId) {
-      getAdminProduct(productId)
-        .then((product) => {
-          reset({
-            name: product.name ?? "",
-            brandId: product.brandId ?? product.brand?.id ?? "",
-            categoryId: product.categoryId ?? product.category?.id ?? "",
-            gender: product.gender ?? "unisex",
-            fragranceType: product.fragranceType ?? "floral",
-            shortDescription: product.shortDescription ?? "",
-            description: product.description ?? "",
-            topNotes: product.topNotes ?? "",
-            middleNotes: product.middleNotes ?? "",
-            baseNotes: product.baseNotes ?? "",
-            longevity: product.longevity ?? undefined,
-            sillage: product.sillage ?? undefined,
-            concentration: product.concentration ?? "",
-            country: product.country ?? "",
-            releaseYear: product.releaseYear ?? undefined,
-            isFeatured: Boolean(product.isFeatured),
-            isNew: Boolean(product.isNew),
-            isActive: product.isActive ?? true,
-            variants: product.variants?.length
-              ? product.variants.map((variant) => ({
-                  volume: variant.volume,
-                  price: Number(variant.price),
-                  oldPrice: variant.oldPrice ? Number(variant.oldPrice) : undefined,
-                  images: variant.images?.length ? variant.images : ["/images/products/perfume-card-1.png"],
-                }))
-              : [
-                  {
-                    volume: product.volume,
-                    price: Number(product.price),
-                    oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
-                    images: ["/images/products/perfume-card-1.png"],
-                  },
-                ],
-          });
-        })
-        .catch(() => setMessage("Չհաջողվեց բեռնել ապրանքը API-ից։"));
+        setMessage(
+          productId
+            ? "Չհաջողվեց բեռնել ապրանքի տվյալները backend-ից։"
+            : "Չհաջողվեց բեռնել բրենդներն ու կատեգորիաները backend-ից։",
+        );
+      } finally {
+        if (!cancelled) {
+          setIsBootstrapping(false);
+        }
+      }
     }
-  }, [productId, ready, reset, setValue]);
+
+    void bootstrapForm();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [productId, ready, replace, reset, setValue, token]);
 
   async function onSubmit(values: ProductValues) {
     setMessage("");
@@ -209,6 +243,20 @@ export function ProductForm({ productId }: { productId?: string }) {
   }
 
   if (!ready) return null;
+
+  if (productId && isBootstrapping) {
+    return (
+      <AdminShell>
+        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+          <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Խմբագրել ապրանքը</p>
+          <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Բեռնվում են տվյալները...</h1>
+          <p className="mt-4 text-sm text-zinc-500">
+            Սպասեք մի պահ, բեռնում ենք ապրանքի ընթացիկ տվյալները։
+          </p>
+        </div>
+      </AdminShell>
+    );
+  }
 
   return (
     <AdminShell>

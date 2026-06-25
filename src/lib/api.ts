@@ -2,9 +2,30 @@ import axios from "axios";
 import { Brand, Category, DashboardStats, Product, ProductVariant, ProductsResponse } from "@/types/catalog";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+const ADMIN_TOKEN_STORAGE_KEY = "aroma_admin_token";
 
 export const api = axios.create({
   baseURL: API_URL,
+});
+
+api.interceptors.request.use((config) => {
+  if (typeof window === "undefined") {
+    return config;
+  }
+
+  const hasAuthorizationHeader = Boolean(config.headers?.Authorization);
+  if (hasAuthorizationHeader) {
+    return config;
+  }
+
+  const token = window.localStorage.getItem(ADMIN_TOKEN_STORAGE_KEY);
+  if (!token) {
+    return config;
+  }
+
+  config.headers = config.headers ?? {};
+  config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
 export function setAuthToken(token?: string | null) {

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BrandCard } from "@/components/catalog/BrandCard";
-import { ProductCard } from "@/components/catalog/ProductCard";
+import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { API_URL } from "@/lib/api";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
 
@@ -52,11 +52,7 @@ export default async function Home() {
 
       <Section title="Հանրաճանաչ ապրանքներ" href="/catalog">
         {featured.length ? (
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-            {featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <HomeProductCarousel products={featured} />
         ) : (
           <EmptyState text="Հանրաճանաչ ապրանքները կհայտնվեն backend-ից տվյալների բեռնումից հետո։" />
         )}
@@ -64,11 +60,7 @@ export default async function Home() {
 
       <Section title="Նոր տեսականի" href="/catalog">
         {newest.length ? (
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-            {newest.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <HomeProductCarousel products={newest} />
         ) : (
           <EmptyState text="Նոր ապրանքները կհայտնվեն backend-ից տվյալների բեռնումից հետո։" />
         )}
@@ -146,8 +138,8 @@ async function loadHomeData(): Promise<{
     const products = productsData.items;
 
     return {
-      featured: products.filter((product) => product.isFeatured).slice(0, 3),
-      newest: products.filter((product) => product.isNew).slice(0, 3),
+      featured: products.filter((product) => product.isFeatured),
+      newest: products.filter((product) => product.isNew),
       brands,
       categories,
     };
