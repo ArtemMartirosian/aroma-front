@@ -47,7 +47,7 @@ export function ProductCard({ product }: { product: Product }) {
             alt={product.name}
             fill
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-            className="object-contain p-5 transition duration-700 group-hover:scale-105"
+            className="object-contain object-top px-0 pb-6 pt-0 transition duration-700 group-hover:scale-105"
           />
         </Link>
 
