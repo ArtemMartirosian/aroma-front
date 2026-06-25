@@ -40,24 +40,24 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative">
         <Link
           href={`/products/${product.slug}`}
-          className="relative block aspect-[1.18] overflow-hidden bg-white"
+          className="relative mx-4 mt-4 block aspect-[247/264] overflow-hidden rounded-[24px] bg-white"
         >
           <Image
             src={imageUrl(product.mainImage)}
             alt={product.name}
             fill
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-            className="object-contain p-4 transition duration-700 group-hover:scale-105"
+            className="object-contain p-5 transition duration-700 group-hover:scale-105"
           />
         </Link>
 
-        <div className="absolute left-4 top-4 z-10 flex max-w-[70%] flex-wrap gap-2">
+        <div className="absolute left-7 top-7 z-10 flex max-w-[70%] flex-wrap gap-2">
           {discount ? <Badge tone="red">-{discount}%</Badge> : null}
           {product.isNew ? <Badge tone="green">new</Badge> : null}
           {product.isFeatured ? <Badge tone="dark">hit</Badge> : null}
         </div>
 
-        <div className="absolute bottom-4 left-4 z-10 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-zinc-800 shadow-sm">
+        <div className="absolute bottom-3 left-7 z-10 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-zinc-800 shadow-sm">
           {hasMultipleVariants ? `${variants.length} объема` : product.volume}
         </div>
       </div>
