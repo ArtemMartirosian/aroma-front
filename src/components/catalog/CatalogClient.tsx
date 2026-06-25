@@ -90,6 +90,91 @@ export function CatalogClient() {
     setSort("new");
   }
 
+  const filterPanel = (
+    <>
+      <div className="flex items-start justify-between gap-4 border-b border-zinc-100 pb-5">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
+            Фильтры
+          </p>
+          <p className="mt-1 text-sm text-zinc-500">
+            {activeFilters ? `${activeFilters} активно` : "Выберите параметры"}
+          </p>
+        </div>
+        {activeFilters ? (
+          <button
+            type="button"
+            onClick={resetFilters}
+            className="rounded-full border border-zinc-300 px-3 py-1.5 text-xs font-semibold text-zinc-900 transition hover:border-zinc-950"
+          >
+            Сбросить
+          </button>
+        ) : null}
+      </div>
+
+      <div className="mt-5 space-y-4">
+        <label className="block">
+          <span className="text-sm font-semibold text-zinc-800">Поиск</span>
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Dior, Chanel, Oud..."
+            className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+          />
+        </label>
+        <FilterSelect label="Бренд" value={brand} onChange={setBrand}>
+          {brands.map((item) => (
+            <option key={item.id} value={item.slug}>
+              {item.name}
+            </option>
+          ))}
+        </FilterSelect>
+        <FilterSelect label="Категория" value={category} onChange={setCategory}>
+          {categories.map((item) => (
+            <option key={item.id} value={item.slug}>
+              {item.name}
+            </option>
+          ))}
+        </FilterSelect>
+        <FilterSelect label="Пол" value={gender} onChange={(value) => setGender(value as Gender | "")}>
+          {genderOptions.map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </FilterSelect>
+        <FilterSelect
+          label="Тип аромата"
+          value={type}
+          onChange={(value) => setType(value as FragranceType | "")}
+        >
+          {fragranceOptions.map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </FilterSelect>
+        <FilterSelect label="Объем" value={volume} onChange={setVolume}>
+          {volumes.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </FilterSelect>
+        <label className="block">
+          <span className="text-sm font-semibold text-zinc-800">Цена до</span>
+          <input
+            value={maxPrice}
+            onChange={(event) => setMaxPrice(event.target.value)}
+            type="number"
+            placeholder="50000"
+            className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+          />
+        </label>
+      </div>
+    </>
+  );
+
   return (
     <div className="relative overflow-hidden bg-white">
       <Image
@@ -105,104 +190,8 @@ export function CatalogClient() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-white/80" />
 
       <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[285px_minmax(0,1fr)] lg:px-8 lg:py-10">
-        <div className="lg:hidden">
-          <button
-            type="button"
-            onClick={() => setIsFiltersOpen((current) => !current)}
-            className="flex w-full items-center justify-between rounded-[22px] border border-white/80 bg-white/90 px-5 py-4 text-left font-semibold text-zinc-950 shadow-[0_16px_36px_rgba(132,93,63,0.08)] backdrop-blur"
-          >
-            <span>Фильтры</span>
-            <span className="text-sm text-zinc-500">
-              {activeFilters ? `${activeFilters} активно` : isFiltersOpen ? "Скрыть" : "Открыть"}
-            </span>
-          </button>
-        </div>
-
-        <aside
-          className={`h-fit rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur lg:sticky lg:top-8 lg:block ${
-            isFiltersOpen ? "block" : "hidden"
-          }`}
-        >
-          <div className="flex items-start justify-between gap-4 border-b border-zinc-100 pb-5">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
-                Фильтры
-              </p>
-              <p className="mt-1 text-sm text-zinc-500">
-                {activeFilters ? `${activeFilters} активно` : "Выберите параметры"}
-              </p>
-            </div>
-            {activeFilters ? (
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="rounded-full border border-zinc-300 px-3 py-1.5 text-xs font-semibold text-zinc-900 transition hover:border-zinc-950"
-              >
-                Сбросить
-              </button>
-            ) : null}
-          </div>
-
-          <div className="mt-5 space-y-4">
-            <label className="block">
-              <span className="text-sm font-semibold text-zinc-800">Поиск</span>
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Dior, Chanel, Oud..."
-                className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
-              />
-            </label>
-            <FilterSelect label="Бренд" value={brand} onChange={setBrand}>
-              {brands.map((item) => (
-                <option key={item.id} value={item.slug}>
-                  {item.name}
-                </option>
-              ))}
-            </FilterSelect>
-            <FilterSelect label="Категория" value={category} onChange={setCategory}>
-              {categories.map((item) => (
-                <option key={item.id} value={item.slug}>
-                  {item.name}
-                </option>
-              ))}
-            </FilterSelect>
-            <FilterSelect label="Пол" value={gender} onChange={(value) => setGender(value as Gender | "")}>
-              {genderOptions.map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </FilterSelect>
-            <FilterSelect
-              label="Тип аромата"
-              value={type}
-              onChange={(value) => setType(value as FragranceType | "")}
-            >
-              {fragranceOptions.map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </FilterSelect>
-            <FilterSelect label="Объем" value={volume} onChange={setVolume}>
-              {volumes.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </FilterSelect>
-            <label className="block">
-              <span className="text-sm font-semibold text-zinc-800">Цена до</span>
-              <input
-                value={maxPrice}
-                onChange={(event) => setMaxPrice(event.target.value)}
-                type="number"
-                placeholder="50000"
-                className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
-              />
-            </label>
-          </div>
+        <aside className="hidden h-fit rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur lg:sticky lg:top-8 lg:block">
+          {filterPanel}
         </aside>
 
         <main className="min-w-0">
@@ -251,6 +240,24 @@ export function CatalogClient() {
                 </label>
               </div>
             </div>
+          </div>
+
+          <div className="mt-4 lg:hidden">
+            <button
+              type="button"
+              onClick={() => setIsFiltersOpen((current) => !current)}
+              className="flex w-full items-center justify-between rounded-[22px] border border-white/80 bg-white/90 px-5 py-4 text-left font-semibold text-zinc-950 shadow-[0_16px_36px_rgba(132,93,63,0.08)] backdrop-blur"
+            >
+              <span>Фильтры</span>
+              <span className="text-sm text-zinc-500">
+                {activeFilters ? `${activeFilters} активно` : isFiltersOpen ? "Скрыть" : "Открыть"}
+              </span>
+            </button>
+            {isFiltersOpen ? (
+              <div className="mt-3 rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur">
+                {filterPanel}
+              </div>
+            ) : null}
           </div>
 
           <div className="mt-6">
