@@ -104,7 +104,7 @@ export function CatalogClient() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-white/80" />
 
       <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[285px_minmax(0,1fr)] lg:px-8 lg:py-10">
-        <aside className="h-fit rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur lg:sticky lg:top-24">
+        <aside className="h-fit rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur lg:sticky lg:top-8">
           <div className="flex items-start justify-between gap-4 border-b border-zinc-100 pb-5">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
