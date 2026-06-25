@@ -179,7 +179,7 @@ export function CatalogClient() {
 
         <main className="min-w-0">
           <div className="rounded-[30px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(250,240,230,0.92))] p-5 shadow-[0_24px_60px_rgba(132,93,63,0.12)] sm:p-7">
-            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-rose-800">
                   Aroma Parfume
@@ -193,7 +193,7 @@ export function CatalogClient() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-end">
+              <div className="flex flex-col gap-3 md:self-start sm:flex-row sm:flex-wrap sm:justify-end">
                 <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 sm:justify-end">
                   <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
                     {filteredProducts.length} товаров
