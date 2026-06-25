@@ -35,11 +35,11 @@ export function ProductCard({ product }: { product: Product }) {
       : 0;
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-[#e9ddcf] bg-white shadow-[0_18px_50px_rgba(83,56,30,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(83,56,30,0.12)]">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-[#e9ddcf] bg-white shadow-[0_14px_36px_rgba(83,56,30,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(83,56,30,0.12)]">
       <div className="relative overflow-hidden bg-[#f4ece4]">
         <Link
           href={`/products/${product.slug}`}
-          className="relative block aspect-[247/272] overflow-hidden"
+          className="relative block aspect-[4/3] overflow-hidden"
         >
           <Image
             src={imageUrl(product.mainImage)}
@@ -58,7 +58,7 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
+      <div className="flex flex-1 flex-col p-3.5 sm:p-4">
         <div className="flex items-center justify-between gap-3">
           <p className="min-w-0 truncate text-[10px] font-semibold uppercase tracking-[0.28em] text-[#8f3b2d] sm:text-[11px]">
             {product.brand?.name}
@@ -68,15 +68,15 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
 
-        <h3 className="mt-3 line-clamp-2 min-h-[2.8rem] font-serif text-[16px] leading-5 text-zinc-950 sm:min-h-[3.4rem] sm:text-[1.52rem] sm:leading-8">
+        <h3 className="mt-2.5 line-clamp-2 min-h-[2.55rem] font-serif text-[15px] leading-5 text-zinc-950 sm:min-h-[2.8rem] sm:text-[1.22rem] sm:leading-6">
           <Link href={`/products/${product.slug}`} className="transition group-hover:text-[#8f3b2d]">
             {product.name}
           </Link>
         </h3>
 
-        <div className="mt-4 h-px w-12 bg-[#d9c8b8]" />
+        <div className="mt-3 h-px w-10 bg-[#d9c8b8]" />
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
           {variants.slice(0, 4).map((variant) => (
             <button
               key={variant.volume}
@@ -93,25 +93,25 @@ export function ProductCard({ product }: { product: Product }) {
           ))}
         </div>
 
-        <div className="mt-auto pt-5">
-          <div className="rounded-[22px] bg-[#fbf7f2] p-3.5 ring-1 ring-[#efe4d8] sm:p-4">
-            {oldPrice ? (
-              <p className="text-[11px] text-zinc-400 line-through sm:text-xs">
-                {formatPrice(oldPrice)}
-              </p>
-            ) : null}
-            <div className="mt-1 flex items-end justify-between gap-3">
-              <p className="text-[20px] font-semibold leading-none tracking-tight text-zinc-950 sm:text-[1.9rem]">
+        <div className="mt-auto pt-4">
+          <div className="flex items-end justify-between gap-3 border-t border-[#eadfce] pt-3">
+            <div className="min-w-0">
+              {oldPrice ? (
+                <p className="text-[10px] text-zinc-400 line-through sm:text-[11px]">
+                  {formatPrice(oldPrice)}
+                </p>
+              ) : null}
+              <p className="mt-1 text-[18px] font-semibold leading-none tracking-tight text-zinc-950 sm:text-[1.45rem]">
                 {formatPrice(selectedVariant.price)}
               </p>
-
-              <Link
-                href={`/products/${product.slug}`}
-                className="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-zinc-950 px-4 text-xs font-semibold text-white transition hover:bg-[#8f3b2d] sm:h-12 sm:px-5 sm:text-sm"
-              >
-                Смотреть
-              </Link>
             </div>
+
+            <Link
+              href={`/products/${product.slug}`}
+              className="inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-zinc-950 px-3.5 text-[11px] font-semibold text-white transition hover:bg-[#8f3b2d] sm:h-11 sm:px-4 sm:text-xs"
+            >
+              Смотреть
+            </Link>
           </div>
         </div>
       </div>

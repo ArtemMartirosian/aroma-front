@@ -243,7 +243,7 @@ export function CatalogClient() {
             </div>
 
             <div>
-              <section className="grid grid-cols-2 gap-3 sm:gap-6 xl:grid-cols-3">
+              <section className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}

@@ -51,7 +51,7 @@ export default function Home() {
       </section>
 
       <Section title="Популярные товары" href="/catalog">
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -59,7 +59,7 @@ export default function Home() {
       </Section>
 
       <Section title="Новые поступления" href="/catalog">
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {newest.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
