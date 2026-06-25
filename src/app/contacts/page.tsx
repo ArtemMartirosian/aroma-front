@@ -1,7 +1,7 @@
 export default function ContactsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Contacts</p>
+      <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Contacts</p>
       <h1 className="mt-2 text-4xl font-semibold text-zinc-950">Контакты</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-600">
         Магазин работает только онлайн. Напишите или позвоните нам, чтобы подобрать
@@ -16,7 +16,7 @@ export default function ContactsPage() {
           <Contact label="Доставка" value="Бесплатно" />
         </div>
         <div className="rounded-lg border border-zinc-200 bg-white p-8 shadow-sm">
-          <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Online only</p>
+          <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Online only</p>
           <h2 className="mt-3 text-3xl font-semibold text-zinc-950">
             Без офлайн-магазина, с бесплатной доставкой
           </h2>
@@ -27,7 +27,7 @@ export default function ContactsPage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href="https://wa.me/37433696009"
-              className="inline-flex rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-800"
+              className="inline-flex rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
             >
               Написать в WhatsApp
             </a>

@@ -24,8 +24,8 @@ export function ProductCard({ product }: { product: Product }) {
       : 0;
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-[#e9ddcf] bg-white shadow-[0_14px_36px_rgba(83,56,30,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(83,56,30,0.12)] sm:rounded-[24px]">
-      <div className="relative overflow-hidden bg-[#f4ece4]">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--surface)] shadow-[0_14px_36px_rgba(71,58,44,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(71,58,44,0.12)] sm:rounded-[24px]">
+      <div className="relative overflow-hidden bg-[var(--surface-muted)]">
         <Link
           href={`/products/${product.slug}`}
           className="relative block aspect-[3.5/4] overflow-hidden sm:aspect-[4/3]"
@@ -49,18 +49,18 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="flex flex-1 flex-col p-2.5 sm:p-4">
         <div className="flex items-center justify-between gap-3">
-          <p className="min-w-0 truncate text-[9px] font-semibold uppercase tracking-[0.26em] text-[#8f3b2d] sm:text-[11px]">
+          <p className="min-w-0 truncate text-[9px] font-semibold uppercase tracking-[0.26em] text-[var(--accent)] sm:text-[11px]">
             {product.brand?.name}
           </p>
         </div>
 
         <h3 className="mt-1.5 line-clamp-3 font-serif text-[14px] leading-[1.28] text-zinc-950 sm:mt-2.5 sm:min-h-[2.8rem] sm:text-[1.22rem] sm:leading-6">
-          <Link href={`/products/${product.slug}`} className="transition group-hover:text-[#8f3b2d]">
+          <Link href={`/products/${product.slug}`} className="transition group-hover:text-[var(--accent)]">
             {product.name}
           </Link>
         </h3>
 
-        <div className="mt-2.5 h-px w-12 bg-[#d9c8b8]" />
+        <div className="mt-2.5 h-px w-12 bg-[var(--line-strong)]" />
 
         <div className="mt-2.5 flex flex-wrap gap-2">
           {variants.slice(0, 4).map((variant, index) => (
@@ -71,7 +71,7 @@ export function ProductCard({ product }: { product: Product }) {
               className={
                 variant.volume === selectedVariant.volume
                   ? "shrink-0 rounded-full bg-zinc-950 px-3 py-1.5 text-[10px] font-semibold text-white shadow-sm sm:px-3 sm:text-xs"
-                  : "shrink-0 rounded-full border border-[#ded2c4] bg-[#fbf8f4] px-3 py-1.5 text-[10px] font-semibold text-zinc-700 transition hover:border-zinc-950 hover:bg-white sm:px-3 sm:text-xs"
+                  : "shrink-0 rounded-full border border-[var(--line)] bg-[#fbf8f4] px-3 py-1.5 text-[10px] font-semibold text-zinc-700 transition hover:border-zinc-950 hover:bg-white sm:px-3 sm:text-xs"
               }
             >
               {variant.volume}
@@ -80,7 +80,7 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
 
         <div className="mt-auto pt-3">
-          <div className="flex flex-col gap-2.5 border-t border-[#eadfce] pt-2.5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-2.5 sm:flex-row sm:items-end sm:justify-between">
             <div className="min-w-0">
               {oldPrice ? (
                 <p className="text-[10px] text-zinc-400 line-through sm:text-[11px]">
@@ -94,7 +94,7 @@ export function ProductCard({ product }: { product: Product }) {
 
             <Link
               href={`/products/${product.slug}`}
-              className="inline-flex h-10 w-full items-center justify-center rounded-full bg-zinc-950 px-3.5 text-[11px] font-semibold text-white transition hover:bg-[#8f3b2d] sm:h-11 sm:w-auto sm:px-4 sm:text-xs"
+              className="inline-flex h-10 w-full items-center justify-center rounded-full bg-zinc-950 px-3.5 text-[11px] font-semibold text-white transition hover:bg-[var(--accent)] sm:h-11 sm:w-auto sm:px-4 sm:text-xs"
             >
               Смотреть
             </Link>
@@ -108,9 +108,9 @@ export function ProductCard({ product }: { product: Product }) {
 function Badge({ children, tone }: { children: ReactNode; tone: "green" | "dark" | "red" }) {
   const className =
     tone === "green"
-      ? "bg-emerald-100/95 text-emerald-800"
+      ? "bg-[var(--sage-soft)] text-[var(--sage-strong)]"
       : tone === "red"
-        ? "bg-rose-100/95 text-rose-800"
+        ? "bg-[var(--sale-soft)] text-[var(--sale-strong)]"
         : "bg-zinc-950/95 text-white";
 
   return (

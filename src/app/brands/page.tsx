@@ -8,13 +8,13 @@ export default async function BrandsPage() {
   const totalProducts = brands.reduce((sum, brand) => sum + (brand.products?.length ?? 0), 0);
 
   return (
-    <div className="bg-[linear-gradient(180deg,#fbf2e9_0%,#fffaf6_30%,#fffdfa_100%)]">
+    <div className="bg-[linear-gradient(180deg,#f4f1ec_0%,#fbf8f3_32%,#fffdf9_100%)]">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <section className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(247,236,224,0.96))] px-6 py-8 shadow-[0_28px_80px_rgba(99,64,32,0.1)] sm:px-8 sm:py-10 lg:px-10">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(190,115,74,0.16),transparent_26%),radial-gradient(circle_at_84%_22%,rgba(231,210,188,0.6),transparent_24%)]" />
+        <section className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(243,238,231,0.96))] px-6 py-8 shadow-[0_28px_80px_rgba(71,58,44,0.08)] sm:px-8 sm:py-10 lg:px-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(116,101,86,0.12),transparent_26%),radial-gradient(circle_at_84%_22%,rgba(221,212,201,0.55),transparent_24%)]" />
           <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.32em] text-rose-800">Brand library</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">Brand library</p>
               <h1 className="mt-4 font-serif text-4xl leading-tight text-zinc-950 sm:text-5xl lg:text-6xl">
                 Бренды с характером и красивым шлейфом
               </h1>

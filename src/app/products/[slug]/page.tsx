@@ -17,13 +17,13 @@ export default async function ProductPage({
   const related = product.relatedProducts?.slice(0, 3) ?? [];
 
   return (
-    <div className="bg-[linear-gradient(180deg,#fbf2e9_0%,#fffaf5_34%,#fbfaf8_100%)]">
+    <div className="bg-[linear-gradient(180deg,#f4f1eb_0%,#faf7f2_34%,#fcfbf8_100%)]">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <ProductDetails product={product} />
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.86fr]">
           <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">Fragrance notes</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Fragrance notes</p>
             <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Пирамида аромата</h2>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               <NoteCard label="Верхние ноты" value={product.topNotes || "Не указано"} />
@@ -33,7 +33,7 @@ export default async function ProductPage({
           </div>
 
           <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">Details</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Details</p>
             <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Характеристики</h2>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <Info label="Стойкость" value={product.longevity ? longevityLabels[product.longevity] : "Средняя"} />
@@ -47,7 +47,7 @@ export default async function ProductPage({
         <section className="py-14">
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">You may also like</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">You may also like</p>
               <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Похожие товары</h2>
             </div>
           </div>

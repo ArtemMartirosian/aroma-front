@@ -10,7 +10,7 @@ export default function AboutPage() {
     <div className="bg-white">
       <section className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-8">
         <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-rose-800">About</p>
+          <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">About</p>
           <h1 className="mt-3 text-5xl font-semibold leading-tight text-zinc-950">
             Красивый каталог парфюмерии для спокойного выбора
           </h1>

@@ -22,7 +22,7 @@ export default async function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-white/5" />
         <div className="relative mx-auto flex min-h-[680px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-rose-800">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--accent)]">
               Premium perfume catalog
             </p>
             <h1 className="mt-5 text-5xl font-semibold leading-tight text-zinc-950 md:text-7xl">
@@ -35,7 +35,7 @@ export default async function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/catalog"
-                className="rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-800"
+                className="rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
               >
                 Смотреть каталог
               </Link>
@@ -102,7 +102,7 @@ export default async function Home() {
       <section className="bg-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-8">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-rose-800">О нас</p>
+            <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">О нас</p>
             <h2 className="mt-3 text-4xl font-semibold text-zinc-950">
               Подбираем аромат по характеру, сезону и настроению
             </h2>
@@ -174,7 +174,7 @@ function Section({
     <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
       <div className="mb-8 flex items-end justify-between gap-4">
         <h2 className="text-3xl font-semibold text-zinc-950">{title}</h2>
-        <Link href={href} className="text-sm font-semibold text-rose-800 hover:text-zinc-950">
+        <Link href={href} className="text-sm font-semibold text-[var(--accent)] hover:text-zinc-950">
           Смотреть все
         </Link>
       </div>

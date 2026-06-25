@@ -27,8 +27,8 @@ export function ProductDetails({ product }: { product: Product }) {
   }
 
   return (
-    <section className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[#fffaf5] p-4 shadow-[0_28px_80px_rgba(99,64,32,0.12)] sm:p-6 lg:p-8">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(190,115,74,0.16),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.86),rgba(250,241,232,0.76))]" />
+    <section className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[#fcfaf6] p-4 shadow-[0_28px_80px_rgba(71,58,44,0.1)] sm:p-6 lg:p-8">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(116,101,86,0.12),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.86),rgba(242,237,230,0.78))]" />
       <div className="relative">
         <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm font-medium text-zinc-500">
           <Link href="/" className="transition hover:text-zinc-950">
@@ -70,7 +70,7 @@ export function ProductDetails({ product }: { product: Product }) {
 
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
-            <div className="relative aspect-[1/1.02] overflow-hidden rounded-[30px] border border-[#eadaca] bg-white shadow-[0_24px_65px_rgba(80,52,24,0.12)]">
+            <div className="relative aspect-[1/1.02] overflow-hidden rounded-[30px] border border-[var(--line)] bg-white shadow-[0_24px_65px_rgba(71,58,44,0.1)]">
               <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2 sm:left-6 sm:top-6">
                 {product.isNew ? <Badge>new</Badge> : null}
                 {product.isFeatured ? <Badge tone="dark">hit</Badge> : null}
@@ -98,7 +98,7 @@ export function ProductDetails({ product }: { product: Product }) {
                   className={
                     index === selectedImageIndex
                       ? "relative aspect-square overflow-hidden rounded-2xl border border-zinc-950 bg-white shadow-sm"
-                      : "relative aspect-square overflow-hidden rounded-2xl border border-[#eadaca] bg-white opacity-75 transition hover:opacity-100"
+                      : "relative aspect-square overflow-hidden rounded-2xl border border-[var(--line)] bg-white opacity-75 transition hover:opacity-100"
                   }
                 >
                   <Image
@@ -115,7 +115,7 @@ export function ProductDetails({ product }: { product: Product }) {
           </div>
 
           <div className="rounded-[30px] border border-white/90 bg-white/86 p-5 shadow-[0_22px_60px_rgba(80,52,24,0.08)] backdrop-blur sm:p-7 lg:p-9">
-            <p className="text-xs font-bold uppercase tracking-[0.34em] text-[#9b123f]">
+            <p className="text-xs font-bold uppercase tracking-[0.34em] text-[var(--accent)]">
               {product.brand?.name ?? "Aroma Parfume"}
             </p>
             <h1 className="mt-4 font-serif text-4xl leading-[1.02] text-zinc-950 sm:text-5xl lg:text-6xl">
@@ -126,16 +126,16 @@ export function ProductDetails({ product }: { product: Product }) {
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-zinc-700">
-              <span className="rounded-full bg-[#f6eee5] px-3 py-1.5">{genderLabels[product.gender]}</span>
-              <span className="rounded-full bg-[#f6eee5] px-3 py-1.5">
+              <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1.5">{genderLabels[product.gender]}</span>
+              <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1.5">
                 {fragranceLabels[product.fragranceType]}
               </span>
-              <span className="rounded-full bg-[#f6eee5] px-3 py-1.5">
+              <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1.5">
                 {product.concentration || "Eau de Parfum"}
               </span>
             </div>
 
-            <div className="mt-8 border-y border-[#eadaca] py-6">
+            <div className="mt-8 border-y border-[var(--line)] py-6">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Выберите объем</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {variants.map((variant, index) => (
@@ -146,7 +146,7 @@ export function ProductDetails({ product }: { product: Product }) {
                     className={
                       variant.volume === selectedVariant.volume
                         ? "rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(0,0,0,0.2)]"
-                        : "rounded-full border border-[#dfcebc] bg-white px-5 py-2.5 text-sm font-semibold text-zinc-800 transition hover:border-zinc-950"
+                        : "rounded-full border border-[var(--line)] bg-white px-5 py-2.5 text-sm font-semibold text-zinc-800 transition hover:border-zinc-950"
                     }
                   >
                     {variant.volume}
@@ -174,7 +174,7 @@ export function ProductDetails({ product }: { product: Product }) {
                 href={`https://wa.me/37433696009?text=${encodeURIComponent(
                   `Здравствуйте, интересует ${product.name} ${selectedVariant.volume}`,
                 )}`}
-                className="inline-flex justify-center rounded-full bg-zinc-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#9b123f]"
+                className="inline-flex justify-center rounded-full bg-zinc-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
               >
                 Написать в WhatsApp
               </a>
@@ -215,8 +215,8 @@ function Badge({ children, tone = "soft" }: { children: ReactNode; tone?: "soft"
     tone === "dark"
       ? "bg-zinc-950 text-white"
       : tone === "sale"
-        ? "bg-rose-100 text-rose-800"
-        : "bg-emerald-100 text-emerald-800";
+        ? "bg-[var(--sale-soft)] text-[var(--sale-strong)]"
+        : "bg-[var(--sage-soft)] text-[var(--sage-strong)]";
 
   return (
     <span className={`rounded-full px-3 py-1 text-xs font-bold lowercase shadow-sm ${className}`}>

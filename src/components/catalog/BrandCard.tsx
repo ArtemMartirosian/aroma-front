@@ -20,10 +20,10 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
     return (
       <Link
         href={href}
-        className="group overflow-hidden rounded-[30px] border border-[#ead9c7] bg-[linear-gradient(135deg,rgba(255,250,245,0.98),rgba(248,239,230,0.94))] shadow-[0_24px_70px_rgba(92,60,30,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_34px_90px_rgba(92,60,30,0.14)]"
+        className="group overflow-hidden rounded-[30px] border border-[var(--line)] bg-[linear-gradient(135deg,rgba(255,253,249,0.98),rgba(243,238,231,0.94))] shadow-[0_24px_70px_rgba(71,58,44,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_34px_90px_rgba(71,58,44,0.12)]"
       >
         <div className="grid lg:grid-cols-[240px_1fr]">
-          <div className="relative min-h-[260px] overflow-hidden bg-[#efe4d6]">
+          <div className="relative min-h-[260px] overflow-hidden bg-[var(--surface-muted)]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageUrl(brand.image)}
@@ -38,7 +38,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
 
           <div className="flex flex-col justify-between gap-6 p-6 sm:p-8">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#9c5038]">Maison</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[var(--accent)]">Maison</p>
               <h2 className="mt-3 font-serif text-3xl leading-tight text-zinc-950 sm:text-[2.2rem]">
                 {brand.name}
               </h2>
@@ -47,16 +47,16 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#e7d8c8] pt-5">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line)] pt-5">
               <div className="flex flex-wrap gap-2">
-                <span className="rounded-full border border-[#deccb9] bg-white/85 px-3 py-1.5 text-xs font-semibold text-zinc-700">
+                <span className="rounded-full border border-[var(--line)] bg-white/85 px-3 py-1.5 text-xs font-semibold text-zinc-700">
                   {productCount} товаров
                 </span>
-                <span className="rounded-full border border-[#deccb9] bg-white/85 px-3 py-1.5 text-xs font-semibold text-zinc-700">
+                <span className="rounded-full border border-[var(--line)] bg-white/85 px-3 py-1.5 text-xs font-semibold text-zinc-700">
                   Luxury scents
                 </span>
               </div>
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-950 transition group-hover:text-[#9c5038]">
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-950 transition group-hover:text-[var(--accent)]">
                 Смотреть ароматы
                 <ArrowMark />
               </span>
@@ -70,9 +70,9 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
   return (
     <Link
       href={href}
-      className="group overflow-hidden rounded-[26px] border border-[#ead9c7] bg-[linear-gradient(180deg,#fffdf9_0%,#fbf3ea_100%)] shadow-[0_18px_45px_rgba(92,60,30,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(92,60,30,0.12)]"
+      className="group overflow-hidden rounded-[26px] border border-[var(--line)] bg-[linear-gradient(180deg,#fffdf9_0%,#f6f2eb_100%)] shadow-[0_18px_45px_rgba(71,58,44,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(71,58,44,0.12)]"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-[#efe4d6]">
+      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--surface-muted)]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={imageUrl(brand.image)}
@@ -93,11 +93,11 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
         <p className="line-clamp-2 min-h-[3rem] text-sm leading-6 text-zinc-600">
           {description}
         </p>
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#e7d8c8] pt-4">
-          <span className="rounded-full border border-[#deccb9] bg-white/90 px-3 py-1.5 text-xs font-semibold text-zinc-700">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-[var(--line)] pt-4">
+          <span className="rounded-full border border-[var(--line)] bg-white/90 px-3 py-1.5 text-xs font-semibold text-zinc-700">
             {productCount} товаров
           </span>
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-950 transition group-hover:text-[#9c5038]">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-950 transition group-hover:text-[var(--accent)]">
             Каталог
             <ArrowMark />
           </span>
