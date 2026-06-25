@@ -48,7 +48,6 @@ export function SiteFooter() {
             >
               Digitalize
             </a>
-            ).
           </p>
         </div>
       </div>
