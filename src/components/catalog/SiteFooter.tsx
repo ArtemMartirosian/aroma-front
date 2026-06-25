@@ -48,15 +48,6 @@ export function SiteFooter() {
             >
               Digitalize
             </a>
-            {" "}(
-            <a
-              href="https://digitalize.am"
-              target="_blank"
-              rel="noreferrer"
-              className="font-semibold text-white transition hover:text-zinc-300"
-            >
-              digitalize.am
-            </a>
             ).
           </p>
         </div>
