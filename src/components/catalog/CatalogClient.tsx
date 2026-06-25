@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { fragranceOptions, genderOptions } from "@/lib/dictionaries";
@@ -89,9 +90,18 @@ export function CatalogClient() {
   }
 
   return (
-    <div className="relative overflow-hidden bg-[#f7f2eb]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(circle_at_top_left,rgba(215,170,129,0.26),transparent_36%),radial-gradient(circle_at_top_right,rgba(255,255,255,0.95),transparent_30%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-40 h-80 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.7),transparent_50%)]" />
+    <div className="relative overflow-hidden bg-white">
+      <Image
+        src="/images/perfume-hero.png"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center opacity-20"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white via-white/88 to-white/72" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.96),transparent_48%),radial-gradient(circle_at_top_right,rgba(246,233,220,0.52),transparent_32%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-white/80" />
 
       <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[285px_minmax(0,1fr)] lg:px-8 lg:py-10">
         <aside className="h-fit rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur lg:sticky lg:top-24">
