@@ -17,7 +17,7 @@ export function ProductCard({ product }: { product: Product }) {
               volume: product.volume,
               price: product.price,
               oldPrice: product.oldPrice,
-              isAvailable: product.isAvailable,
+              images: ["/images/products/perfume-card-1.png"],
             },
           ],
     [product],
@@ -28,6 +28,7 @@ export function ProductCard({ product }: { product: Product }) {
   );
   const [selectedVolume, setSelectedVolume] = useState(lowestVariant.volume);
   const selectedVariant = variants.find((variant) => variant.volume === selectedVolume) ?? lowestVariant;
+  const selectedImage = selectedVariant.images[0] ?? "/images/products/perfume-card-1.png";
   const oldPrice = selectedVariant.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
   const discount =
     oldPrice && oldPrice > Number(selectedVariant.price)
@@ -42,7 +43,7 @@ export function ProductCard({ product }: { product: Product }) {
           className="relative block aspect-[4/3] overflow-hidden"
         >
           <Image
-            src={imageUrl(product.mainImage)}
+            src={imageUrl(selectedImage)}
             alt={product.name}
             fill
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"

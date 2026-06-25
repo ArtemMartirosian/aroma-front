@@ -4,8 +4,8 @@ export default function ContactsPage() {
       <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Contacts</p>
       <h1 className="mt-2 text-4xl font-semibold text-zinc-950">Контакты</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-600">
-        Магазин работает только онлайн. Напишите или позвоните нам, чтобы уточнить
-        наличие, подобрать аромат и оформить доставку.
+        Магазин работает только онлайн. Напишите или позвоните нам, чтобы подобрать
+        аромат, выбрать объем и оформить доставку.
       </p>
       <div className="mt-8 grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
         <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
@@ -21,8 +21,8 @@ export default function ContactsPage() {
             Без офлайн-магазина, с бесплатной доставкой
           </h2>
           <p className="mt-4 leading-7 text-zinc-600">
-            Заказ оформляется через WhatsApp или по телефону. Мы подтверждаем
-            наличие, согласовываем детали и отправляем заказ доставкой бесплатно.
+            Заказ оформляется через WhatsApp или по телефону. Мы согласовываем
+            детали, помогаем выбрать объем и отправляем заказ доставкой бесплатно.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a

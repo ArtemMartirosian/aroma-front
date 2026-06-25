@@ -26,8 +26,6 @@ export function AdminDashboard() {
       .catch(() => {
         setStats({
           totalProducts: 0,
-          availableProducts: 0,
-          unavailableProducts: 0,
           featuredProducts: 0,
           newProducts: 0,
           latestProducts: [],
@@ -44,9 +42,8 @@ export function AdminDashboard() {
     ["Товары", stats?.totalProducts ?? 0],
     ["Бренды", brandCount],
     ["Категории", categoryCount],
-    ["В наличии", stats?.availableProducts ?? 0],
-    ["Нет в наличии", stats?.unavailableProducts ?? 0],
     ["Новинки", stats?.newProducts ?? 0],
+    ["Популярные", stats?.featuredProducts ?? 0],
   ];
 
   return (

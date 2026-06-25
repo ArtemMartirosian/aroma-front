@@ -14,18 +14,17 @@ export function ProductVariantSelector({ product }: { product: Product }) {
               volume: product.volume,
               price: product.price,
               oldPrice: product.oldPrice,
-              isAvailable: product.isAvailable,
+              images: ["/images/products/perfume-card-1.png"],
             },
           ],
     [product],
   );
   const [selectedVolume, setSelectedVolume] = useState(variants[0]?.volume ?? product.volume);
   const selected = variants.find((variant) => variant.volume === selectedVolume) ?? variants[0];
-  const availabilityLabel = selected?.isAvailable ? "В наличии" : "Нет в наличии";
 
   return (
     <div className="mt-7 border-y border-zinc-100 py-6">
-      <div className="flex items-center justify-between gap-4">
+      <div>
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-zinc-500">
             Объем
@@ -47,15 +46,6 @@ export function ProductVariantSelector({ product }: { product: Product }) {
             ))}
           </div>
         </div>
-        <p
-          className={
-            selected?.isAvailable
-              ? "rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700"
-              : "rounded-full bg-zinc-100 px-4 py-2 text-sm font-semibold text-zinc-600"
-          }
-        >
-          {availabilityLabel}
-        </p>
       </div>
 
       <div className="mt-6 flex flex-wrap items-end justify-between gap-4">

@@ -55,7 +55,7 @@ export function AdminProducts() {
                 <th>Бренд</th>
                 <th>Цена</th>
                 <th>Объемы</th>
-                <th>Статусы</th>
+                <th>Метки</th>
                 <th className="text-right">Действия</th>
               </tr>
             </thead>

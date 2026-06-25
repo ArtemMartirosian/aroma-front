@@ -31,6 +31,7 @@ const variantSchema = z.object({
   volume: z.string().min(1),
   price: z.coerce.number().min(0),
   oldPrice: optionalNumber,
+  images: z.array(z.string().min(1)).min(1),
 });
 
 const productSchema = z.object({
@@ -42,7 +43,6 @@ const productSchema = z.object({
   fragranceType: z.enum(["woody", "floral", "citrus", "oriental", "fresh", "sweet", "spicy"]),
   shortDescription: z.string().min(5),
   description: z.string().min(10),
-  mainImage: z.string().optional(),
   topNotes: z.string().optional(),
   middleNotes: z.string().optional(),
   baseNotes: z.string().optional(),
@@ -83,11 +83,10 @@ export function ProductForm({ productId }: { productId?: string }) {
       fragranceType: "floral",
       shortDescription: "",
       description: "",
-      mainImage: "/images/perfume-hero.png",
       variants: [
-        { volume: "20ml", price: 18000 },
-        { volume: "50ml", price: 39000 },
-        { volume: "100ml", price: 59000 },
+        { volume: "20ml", price: 18000, images: ["/images/products/perfume-card-1.png"] },
+        { volume: "50ml", price: 39000, images: ["/images/products/perfume-card-2.png"] },
+        { volume: "100ml", price: 59000, images: ["/images/products/perfume-card-3.png"] },
       ],
       isFeatured: false,
       isNew: false,
@@ -98,7 +97,7 @@ export function ProductForm({ productId }: { productId?: string }) {
     control,
     name: "variants",
   });
-  const mainImage = useWatch({ control, name: "mainImage" });
+  const watchedVariants = useWatch({ control, name: "variants" });
 
   useEffect(() => {
     if (!ready) return;
@@ -127,12 +126,14 @@ export function ProductForm({ productId }: { productId?: string }) {
                   volume: variant.volume,
                   price: Number(variant.price),
                   oldPrice: variant.oldPrice ? Number(variant.oldPrice) : undefined,
+                  images: variant.images?.length ? variant.images : ["/images/products/perfume-card-1.png"],
                 }))
               : [
                   {
                     volume: product.volume,
                     price: Number(product.price),
                     oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
+                    images: ["/images/products/perfume-card-1.png"],
                   },
                 ],
           });
@@ -144,16 +145,30 @@ export function ProductForm({ productId }: { productId?: string }) {
   async function onSubmit(values: ProductValues) {
     setMessage("");
     try {
-      await saveProduct(
-        {
-          ...values,
-          galleryImages: values.mainImage ? [values.mainImage] : [],
-        },
-        productId,
-      );
+      await saveProduct(values, productId);
       router.push("/admin/products");
     } catch {
       setMessage("Не удалось сохранить. Проверьте backend, JWT и обязательные поля.");
+    }
+  }
+
+  function setVariantImages(index: number, images: string[]) {
+    setValue(`variants.${index}.images`, images.filter(Boolean), {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }
+
+  function updateVariantImage(index: number, imageIndex: number, value: string) {
+    const images = [...(watchedVariants?.[index]?.images ?? [])];
+    if (value) {
+      images[imageIndex] = value;
+      setVariantImages(index, images);
+    } else {
+      setVariantImages(
+        index,
+        images.filter((_, currentIndex) => currentIndex !== imageIndex),
+      );
     }
   }
 
@@ -230,19 +245,12 @@ export function ProductForm({ productId }: { productId?: string }) {
           <Input label="Средние ноты" {...register("middleNotes")} />
           <Input label="Базовые ноты" {...register("baseNotes")} />
         </div>
-        <div className="mt-6">
-          <ImageUploadField
-            label="Главное изображение"
-            value={mainImage}
-            onChange={(value) => setValue("mainImage", value, { shouldDirty: true })}
-          />
-        </div>
         <div className="mt-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-semibold text-zinc-950">Варианты объема</h2>
               <p className="mt-1 text-sm text-zinc-500">
-                Один товар может иметь 20ml, 50ml, 100ml. У каждого варианта своя цена и наличие.
+                Один товар может иметь 20ml, 50ml, 100ml. У каждого варианта своя цена и несколько картинок.
               </p>
             </div>
             <button
@@ -251,6 +259,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                 append({
                   volume: "100ml",
                   price: 0,
+                  images: ["/images/products/perfume-card-1.png"],
                 })
               }
               className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
@@ -260,27 +269,73 @@ export function ProductForm({ productId }: { productId?: string }) {
           </div>
 
           <div className="mt-4 space-y-3">
-            {fields.map((field, index) => (
+            {fields.map((field, index) => {
+              const variantImages = watchedVariants?.[index]?.images?.length
+                ? watchedVariants[index].images
+                : [""];
+
+              return (
               <div
                 key={field.id}
-                className="grid gap-3 rounded-md border border-zinc-200 bg-white p-4 md:grid-cols-[1fr_1fr_1fr_auto]"
+                className="rounded-md border border-zinc-200 bg-white p-4"
               >
-                <Input label="Объем" {...register(`variants.${index}.volume`)} />
-                <Input label="Цена" type="number" {...register(`variants.${index}.price`)} />
-                <Input label="Старая цена" type="number" {...register(`variants.${index}.oldPrice`)} />
-                <div className="flex items-end gap-3">
-                  {fields.length > 1 ? (
+                <div className="grid gap-3 md:grid-cols-[1fr_1fr_1fr_auto]">
+                  <Input label="Объем" {...register(`variants.${index}.volume`)} />
+                  <Input label="Цена" type="number" {...register(`variants.${index}.price`)} />
+                  <Input label="Старая цена" type="number" {...register(`variants.${index}.oldPrice`)} />
+                  <div className="flex items-end gap-3">
+                    {fields.length > 1 ? (
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800"
+                      >
+                        Удалить объем
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="mt-4 border-t border-zinc-100 pt-4">
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                    <h3 className="text-sm font-semibold text-zinc-950">Картинки для этого объема</h3>
                     <button
                       type="button"
-                      onClick={() => remove(index)}
-                      className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800"
+                      onClick={() =>
+                        setVariantImages(index, [
+                          ...(watchedVariants?.[index]?.images ?? []),
+                          "/images/products/perfume-card-1.png",
+                        ])
+                      }
+                      className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
                     >
-                      Удалить
+                      Добавить картинку
                     </button>
-                  ) : null}
+                  </div>
+                  <div className="space-y-3">
+                    {variantImages.map((image, imageIndex) => (
+                      <div key={`${field.id}-${imageIndex}`} className="grid gap-3 lg:grid-cols-[1fr_auto]">
+                        <ImageUploadField
+                          label={`Картинка ${imageIndex + 1}`}
+                          value={image}
+                          onChange={(value) => updateVariantImage(index, imageIndex, value)}
+                        />
+                        {variantImages.length > 1 ? (
+                          <button
+                            type="button"
+                            onClick={() => updateVariantImage(index, imageIndex, "")}
+                            className="h-fit rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800 lg:self-center"
+                          >
+                            Удалить картинку
+                          </button>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">

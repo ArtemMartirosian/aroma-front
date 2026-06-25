@@ -39,8 +39,7 @@ export type ProductVariant = {
   volume: string;
   price: number | string;
   oldPrice?: number | string;
-  isAvailable: boolean;
-  stockStatus?: string;
+  images: string[];
 };
 
 export type Product = {
@@ -58,10 +57,6 @@ export type Product = {
   fragranceType: FragranceType;
   description: string;
   shortDescription: string;
-  mainImage?: string;
-  galleryImages: string[];
-  isAvailable: boolean;
-  stockStatus?: string;
   isFeatured: boolean;
   isNew: boolean;
   isActive: boolean;
@@ -91,8 +86,6 @@ export type ProductsResponse = {
 
 export type DashboardStats = {
   totalProducts: number;
-  availableProducts: number;
-  unavailableProducts: number;
   featuredProducts: number;
   newProducts: number;
   latestProducts: Product[];
