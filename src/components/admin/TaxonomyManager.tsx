@@ -12,7 +12,6 @@ import {
   saveBrand,
   saveCategory,
 } from "@/lib/api";
-import { mockBrands, mockCategories } from "@/lib/mock-data";
 import { imageUrl } from "@/lib/images";
 import { Brand, Category } from "@/types/catalog";
 
@@ -31,10 +30,13 @@ export function TaxonomyManager({ mode }: { mode: Mode }) {
   const loadItems = useCallback(() => {
     const loader = isBrands ? getAdminBrands : getAdminCategories;
     loader()
-      .then(setItems)
+      .then((loadedItems) => {
+        setItems(loadedItems);
+        setMessage("");
+      })
       .catch(() => {
-        setItems(isBrands ? mockBrands : mockCategories);
-        setMessage("Backend недоступен, показаны демо-данные.");
+        setItems([]);
+        setMessage(`Не удалось загрузить ${isBrands ? "бренды" : "категории"} из backend.`);
       });
   }, [isBrands]);
 
@@ -88,10 +90,10 @@ export function TaxonomyManager({ mode }: { mode: Mode }) {
     try {
       if (isBrands) await deleteBrand(id);
       else await deleteCategory(id);
+      setItems((current) => current.filter((item) => item.id !== id));
     } catch {
-      setMessage("Удаление в demo mode выполнено только на экране.");
+      setMessage("Не удалось удалить запись в backend.");
     }
-    setItems((current) => current.filter((item) => item.id !== id));
   }
 
   if (!ready) return null;
@@ -165,6 +167,11 @@ export function TaxonomyManager({ mode }: { mode: Mode }) {
               </button>
             </div>
           ))}
+          {!items.length ? (
+            <div className="py-8 text-center text-sm text-zinc-500">
+              {isBrands ? "Бренды" : "Категории"} не загружены из backend.
+            </div>
+          ) : null}
         </div>
       </div>
     </AdminShell>

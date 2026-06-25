@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { API_URL } from "@/lib/api";
 import { imageUrl } from "@/lib/images";
-import { mockBrands, mockProducts } from "@/lib/mock-data";
 import { Brand } from "@/types/catalog";
 
 export default async function BrandsPage() {
@@ -35,16 +34,17 @@ export default async function BrandsPage() {
               <div className="p-6">
                 <h2 className="text-2xl font-semibold text-zinc-950">{brand.name}</h2>
                 <p className="mt-2 leading-7 text-zinc-600">{brand.description}</p>
-                <p className="mt-4 text-sm font-semibold text-rose-800">
-                  {brand.products?.length ??
-                    mockProducts.filter((product) => product.brandId === brand.id).length}{" "}
-                  товаров
-                </p>
+                <p className="mt-4 text-sm font-semibold text-rose-800">{brand.products?.length ?? 0} товаров</p>
               </div>
             </div>
           </Link>
         ))}
       </div>
+      {!brands.length ? (
+        <div className="mt-8 rounded-lg border border-dashed border-zinc-300 bg-white p-10 text-center text-zinc-500">
+          Бренды пока не загружены из backend.
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -56,8 +56,8 @@ async function loadBrands(): Promise<Brand[]> {
       return response.json();
     }
   } catch {
-    return mockBrands;
+    return [];
   }
 
-  return mockBrands;
+  return [];
 }

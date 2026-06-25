@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/catalog/ProductCard";
+import { API_URL } from "@/lib/api";
 import { imageUrl } from "@/lib/images";
-import { mockBrands, mockCategories, mockProducts } from "@/lib/mock-data";
+import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
 
-export default function Home() {
-  const featured = mockProducts.filter((product) => product.isFeatured).slice(0, 3);
-  const newest = mockProducts.filter((product) => product.isNew).slice(0, 3);
+export default async function Home() {
+  const { featured, newest, brands, categories } = await loadHomeData();
 
   return (
     <div>
@@ -51,24 +51,32 @@ export default function Home() {
       </section>
 
       <Section title="Популярные товары" href="/catalog">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {featured.length ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {featured.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState text="Популярные товары появятся после загрузки данных из backend." />
+        )}
       </Section>
 
       <Section title="Новые поступления" href="/catalog">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {newest.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {newest.length ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {newest.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState text="Новые товары появятся после загрузки данных из backend." />
+        )}
       </Section>
 
       <Section title="Категории" href="/catalog">
         <div className="grid gap-4 md:grid-cols-4">
-          {mockCategories.map((category) => (
+          {categories.map((category) => (
             <Link
               href={`/catalog?category=${category.slug}`}
               key={category.id}
@@ -79,11 +87,12 @@ export default function Home() {
             </Link>
           ))}
         </div>
+        {!categories.length ? <EmptyState text="Категории пока не загружены из backend." /> : null}
       </Section>
 
       <Section title="Бренды" href="/brands">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-          {mockBrands.map((brand) => (
+          {brands.map((brand) => (
             <Link
               href={`/catalog?brand=${brand.slug}`}
               key={brand.id}
@@ -105,6 +114,7 @@ export default function Home() {
             </Link>
           ))}
         </div>
+        {!brands.length ? <EmptyState text="Бренды пока не загружены из backend." /> : null}
       </Section>
 
       <section className="bg-white">
@@ -131,6 +141,44 @@ export default function Home() {
   );
 }
 
+async function loadHomeData(): Promise<{
+  featured: Product[];
+  newest: Product[];
+  brands: Brand[];
+  categories: Category[];
+}> {
+  try {
+    const [productsResponse, brandsResponse, categoriesResponse] = await Promise.all([
+      fetch(`${API_URL}/products?limit=100`, { cache: "no-store" }),
+      fetch(`${API_URL}/brands`, { cache: "no-store" }),
+      fetch(`${API_URL}/categories`, { cache: "no-store" }),
+    ]);
+
+    if (!productsResponse.ok || !brandsResponse.ok || !categoriesResponse.ok) {
+      throw new Error("Backend response failed");
+    }
+
+    const productsData = (await productsResponse.json()) as ProductsResponse;
+    const brands = (await brandsResponse.json()) as Brand[];
+    const categories = (await categoriesResponse.json()) as Category[];
+    const products = productsData.items;
+
+    return {
+      featured: products.filter((product) => product.isFeatured).slice(0, 3),
+      newest: products.filter((product) => product.isNew).slice(0, 3),
+      brands,
+      categories,
+    };
+  } catch {
+    return {
+      featured: [],
+      newest: [],
+      brands: [],
+      categories: [],
+    };
+  }
+}
+
 function Section({
   title,
   href,
@@ -150,5 +198,13 @@ function Section({
       </div>
       {children}
     </section>
+  );
+}
+
+function EmptyState({ text }: { text: string }) {
+  return (
+    <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-8 text-center text-sm font-medium text-zinc-500">
+      {text}
+    </div>
   );
 }

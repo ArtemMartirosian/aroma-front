@@ -20,7 +20,6 @@ import {
   longevityOptions,
   sillageOptions,
 } from "@/lib/dictionaries";
-import { mockBrands, mockCategories } from "@/lib/mock-data";
 import { Brand, Category } from "@/types/catalog";
 
 const optionalNumber = z.preprocess(
@@ -64,8 +63,8 @@ type ProductValues = z.output<typeof productSchema>;
 export function ProductForm({ productId }: { productId?: string }) {
   const router = useRouter();
   const { ready } = useAdminToken();
-  const [brands, setBrands] = useState<Brand[]>(mockBrands);
-  const [categories, setCategories] = useState<Category[]>(mockCategories);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [message, setMessage] = useState("");
   const {
     register,
@@ -78,8 +77,8 @@ export function ProductForm({ productId }: { productId?: string }) {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
-      brandId: mockBrands[0]?.id ?? "",
-      categoryId: mockCategories[0]?.id ?? "",
+      brandId: "",
+      categoryId: "",
       gender: "unisex",
       fragranceType: "floral",
       shortDescription: "",
@@ -107,8 +106,16 @@ export function ProductForm({ productId }: { productId?: string }) {
       .then(([brandItems, categoryItems]) => {
         setBrands(brandItems);
         setCategories(categoryItems);
+        if (!productId) {
+          setValue("brandId", brandItems[0]?.id ?? "", { shouldDirty: false });
+          setValue("categoryId", categoryItems[0]?.id ?? "", { shouldDirty: false });
+        }
       })
-      .catch(() => null);
+      .catch(() => {
+        setBrands([]);
+        setCategories([]);
+        setMessage("Не удалось загрузить бренды и категории из backend.");
+      });
 
     if (productId) {
       getAdminProduct(productId)
@@ -132,7 +139,7 @@ export function ProductForm({ productId }: { productId?: string }) {
         })
         .catch(() => setMessage("Не удалось загрузить товар из API."));
     }
-  }, [productId, ready, reset]);
+  }, [productId, ready, reset, setValue]);
 
   async function onSubmit(values: ProductValues) {
     setMessage("");
@@ -169,6 +176,7 @@ export function ProductForm({ productId }: { productId?: string }) {
           <Input label="Название" {...register("name")} />
           <Input label="Slug" {...register("slug")} />
           <Select label="Бренд" {...register("brandId")}>
+            <option value="">Выберите бренд</option>
             {brands.map((brand) => (
               <option key={brand.id} value={brand.id}>
                 {brand.name}
@@ -176,6 +184,7 @@ export function ProductForm({ productId }: { productId?: string }) {
             ))}
           </Select>
           <Select label="Категория" {...register("categoryId")}>
+            <option value="">Выберите категорию</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}

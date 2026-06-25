@@ -6,7 +6,6 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { useAdminToken } from "@/components/admin/auth";
 import { deleteProduct, getAdminProducts } from "@/lib/api";
 import { formatPrice } from "@/lib/dictionaries";
-import { mockProducts } from "@/lib/mock-data";
 import { Product } from "@/types/catalog";
 
 export function AdminProducts() {
@@ -16,10 +15,13 @@ export function AdminProducts() {
 
   function loadProducts() {
     getAdminProducts()
-      .then((response) => setProducts(response.items))
+      .then((response) => {
+        setProducts(response.items);
+        setMessage("");
+      })
       .catch(() => {
-        setProducts(mockProducts);
-        setMessage("Backend недоступен, показаны демо-товары.");
+        setProducts([]);
+        setMessage("Не удалось загрузить товары из backend.");
       });
   }
 
@@ -92,6 +94,9 @@ export function AdminProducts() {
               ))}
             </tbody>
           </table>
+          {!products.length ? (
+            <div className="py-8 text-center text-sm text-zinc-500">Товары не загружены из backend.</div>
+          ) : null}
         </div>
       </div>
     </AdminShell>

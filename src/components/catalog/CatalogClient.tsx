@@ -5,15 +5,16 @@ import { useEffect, useMemo, useState } from "react";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { fragranceOptions, genderOptions } from "@/lib/dictionaries";
 import { getBrands, getCategories, getProducts } from "@/lib/api";
-import { mockBrands, mockCategories, mockProducts } from "@/lib/mock-data";
 import { Brand, Category, FragranceType, Gender, Product } from "@/types/catalog";
 
 type Sort = "new" | "price_asc" | "price_desc" | "popular";
 
 export function CatalogClient() {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [brands, setBrands] = useState<Brand[]>(mockBrands);
-  const [categories, setCategories] = useState<Category[]>(mockCategories);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [search, setSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
@@ -31,10 +32,12 @@ export function CatalogClient() {
         setCategories(categoriesResponse);
       })
       .catch(() => {
-        setProducts(mockProducts);
-        setBrands(mockBrands);
-        setCategories(mockCategories);
-      });
+        setProducts([]);
+        setBrands([]);
+        setCategories([]);
+        setLoadError("Не удалось загрузить данные из backend. Проверьте, что API запущен.");
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -203,7 +206,7 @@ export function CatalogClient() {
               <div className="flex flex-col gap-3 md:self-center sm:flex-row sm:flex-wrap sm:justify-end">
                 <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 sm:justify-end">
                   <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
-                    {filteredProducts.length} товаров
+                    {isLoading ? "Загрузка..." : `${filteredProducts.length} товаров`}
                   </span>
                   <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
                     Бесплатная доставка
@@ -233,6 +236,11 @@ export function CatalogClient() {
           </div>
 
           <div className="mt-6">
+            {loadError ? (
+              <div className="mb-5 rounded-lg border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
+                {loadError}
+              </div>
+            ) : null}
             <div className="mb-5 flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-600">
               {brand ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{brands.find((item) => item.slug === brand)?.name}</span> : null}
               {category ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{categories.find((item) => item.slug === category)?.name}</span> : null}
@@ -249,8 +257,12 @@ export function CatalogClient() {
                 ))}
                 {!filteredProducts.length ? (
                   <div className="col-span-full rounded-lg border border-dashed border-zinc-300 bg-white p-12 text-center shadow-sm">
-                    <p className="text-xl font-semibold text-zinc-950">Ничего не найдено</p>
-                    <p className="mt-2 text-zinc-600">Попробуйте изменить фильтры или сбросить поиск.</p>
+                    <p className="text-xl font-semibold text-zinc-950">
+                      {isLoading ? "Загружаем товары" : "Ничего не найдено"}
+                    </p>
+                    <p className="mt-2 text-zinc-600">
+                      {isLoading ? "Данные загружаются из backend." : "Попробуйте изменить фильтры или сбросить поиск."}
+                    </p>
                     <button
                       type="button"
                       onClick={resetFilters}

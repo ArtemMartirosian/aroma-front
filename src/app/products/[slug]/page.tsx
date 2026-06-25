@@ -10,7 +10,6 @@ import {
   sillageLabels,
 } from "@/lib/dictionaries";
 import { imageUrl } from "@/lib/images";
-import { mockProducts } from "@/lib/mock-data";
 import { Product } from "@/types/catalog";
 
 export default async function ProductPage({
@@ -22,12 +21,7 @@ export default async function ProductPage({
   const product = await loadProduct(slug);
   if (!product) notFound();
 
-  const related =
-    product.relatedProducts?.length
-      ? product.relatedProducts
-      : mockProducts
-          .filter((item) => item.categoryId === product.categoryId && item.id !== product.id)
-          .slice(0, 3);
+  const related = product.relatedProducts?.slice(0, 3) ?? [];
   const variantsCount = product.variants?.length ?? 0;
 
   return (
@@ -162,11 +156,17 @@ export default async function ProductPage({
               <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Похожие товары</h2>
             </div>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {related.map((item) => (
-              <ProductCard key={item.id} product={item} />
-            ))}
-          </div>
+          {related.length ? (
+            <div className="grid gap-6 md:grid-cols-3">
+              {related.map((item) => (
+                <ProductCard key={item.id} product={item} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-10 text-center text-zinc-500">
+              Похожие товары пока не загружены из backend.
+            </div>
+          )}
         </section>
       </div>
     </div>
@@ -182,10 +182,10 @@ async function loadProduct(slug: string): Promise<Product | undefined> {
       return response.json();
     }
   } catch {
-    return mockProducts.find((item) => item.slug === slug);
+    return undefined;
   }
 
-  return mockProducts.find((item) => item.slug === slug);
+  return undefined;
 }
 
 function Info({ label, value }: { label: string; value: string }) {

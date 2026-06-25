@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { useAdminToken } from "@/components/admin/auth";
 import { getAdminBrands, getAdminCategories, getAdminDashboard } from "@/lib/api";
-import { mockProducts } from "@/lib/mock-data";
 import { formatPrice } from "@/lib/dictionaries";
 import { DashboardStats } from "@/types/catalog";
 
@@ -13,6 +12,7 @@ export function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [brandCount, setBrandCount] = useState(0);
   const [categoryCount, setCategoryCount] = useState(0);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!ready) return;
@@ -21,16 +21,20 @@ export function AdminDashboard() {
         setStats(dashboard);
         setBrandCount(brands.length);
         setCategoryCount(categories.length);
+        setMessage("");
       })
       .catch(() => {
         setStats({
-          totalProducts: mockProducts.length,
-          availableProducts: mockProducts.filter((item) => item.isAvailable).length,
-          unavailableProducts: mockProducts.filter((item) => !item.isAvailable).length,
-          featuredProducts: mockProducts.filter((item) => item.isFeatured).length,
-          newProducts: mockProducts.filter((item) => item.isNew).length,
-          latestProducts: mockProducts.slice(0, 4),
+          totalProducts: 0,
+          availableProducts: 0,
+          unavailableProducts: 0,
+          featuredProducts: 0,
+          newProducts: 0,
+          latestProducts: [],
         });
+        setBrandCount(0);
+        setCategoryCount(0);
+        setMessage("Не удалось загрузить dashboard из backend.");
       });
   }, [ready]);
 
@@ -52,6 +56,7 @@ export function AdminDashboard() {
           <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Overview</p>
           <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Dashboard</h1>
         </div>
+        {message ? <p className="rounded-md bg-rose-50 p-3 text-sm text-rose-800">{message}</p> : null}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {cards.map(([label, value]) => (
             <div key={label} className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
