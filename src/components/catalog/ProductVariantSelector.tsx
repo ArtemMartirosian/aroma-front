@@ -15,7 +15,7 @@ export function ProductVariantSelector({ product }: { product: Product }) {
       <div>
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-zinc-500">
-            Объем
+            Ծավալ
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {variants.map((variant, index) => (
@@ -38,7 +38,7 @@ export function ProductVariantSelector({ product }: { product: Product }) {
 
       <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-zinc-500">Цена</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-zinc-500">Գին</p>
           <div className="mt-1 flex items-baseline gap-3">
             <p className="text-4xl font-semibold tracking-tight text-zinc-950">
               {formatPrice(selected?.price ?? product.price)}

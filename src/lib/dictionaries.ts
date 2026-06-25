@@ -1,33 +1,33 @@
 import { FragranceType, Gender, Longevity, Sillage } from "@/types/catalog";
 
 export const genderLabels: Record<Gender, string> = {
-  male: "Мужской",
-  female: "Женский",
-  unisex: "Унисекс",
+  male: "Արական",
+  female: "Իգական",
+  unisex: "Ունիսեքս",
 };
 
 export const fragranceLabels: Record<FragranceType, string> = {
-  woody: "Древесный",
-  floral: "Цветочный",
-  citrus: "Цитрусовый",
-  oriental: "Восточный",
-  fresh: "Свежий",
-  sweet: "Сладкий",
-  spicy: "Пряный",
+  woody: "Փայտային",
+  floral: "Ծաղկային",
+  citrus: "Ցիտրուսային",
+  oriental: "Արևելյան",
+  fresh: "Թարմ",
+  sweet: "Քաղցր",
+  spicy: "Կծու",
 };
 
 export const longevityLabels: Record<Longevity, string> = {
-  low: "Низкая",
-  medium: "Средняя",
-  high: "Высокая",
-  very_high: "Очень высокая",
+  low: "Ցածր",
+  medium: "Միջին",
+  high: "Բարձր",
+  very_high: "Շատ բարձր",
 };
 
 export const sillageLabels: Record<Sillage, string> = {
-  soft: "Мягкий",
-  medium: "Средний",
-  strong: "Сильный",
-  very_strong: "Очень сильный",
+  soft: "Փափուկ",
+  medium: "Միջին",
+  strong: "Ուժեղ",
+  very_strong: "Շատ ուժեղ",
 };
 
 export const genderOptions = Object.entries(genderLabels);
@@ -36,7 +36,7 @@ export const longevityOptions = Object.entries(longevityLabels);
 export const sillageOptions = Object.entries(sillageLabels);
 
 export function formatPrice(value: number | string) {
-  return new Intl.NumberFormat("ru-RU", {
+  return new Intl.NumberFormat("hy-AM", {
     style: "currency",
     currency: "AMD",
     maximumFractionDigits: 0,

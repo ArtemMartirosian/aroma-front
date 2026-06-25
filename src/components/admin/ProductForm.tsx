@@ -6,6 +6,7 @@ import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { useAdminToken } from "@/components/admin/auth";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import {
@@ -59,6 +60,9 @@ const productSchema = z.object({
 
 type ProductInput = z.input<typeof productSchema>;
 type ProductValues = z.output<typeof productSchema>;
+type PendingDelete =
+  | { type: "variant"; index: number; label: string }
+  | { type: "image"; index: number; imageIndex: number; label: string };
 
 export function ProductForm({ productId }: { productId?: string }) {
   const router = useRouter();
@@ -66,6 +70,7 @@ export function ProductForm({ productId }: { productId?: string }) {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [message, setMessage] = useState("");
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null);
   const {
     register,
     handleSubmit,
@@ -113,14 +118,31 @@ export function ProductForm({ productId }: { productId?: string }) {
       .catch(() => {
         setBrands([]);
         setCategories([]);
-        setMessage("Не удалось загрузить бренды и категории из backend.");
+        setMessage("Չհաջողվեց բեռնել բրենդներն ու կատեգորիաները backend-ից։");
       });
 
     if (productId) {
       getAdminProduct(productId)
         .then((product) => {
           reset({
-            ...product,
+            name: product.name ?? "",
+            brandId: product.brandId ?? product.brand?.id ?? "",
+            categoryId: product.categoryId ?? product.category?.id ?? "",
+            gender: product.gender ?? "unisex",
+            fragranceType: product.fragranceType ?? "floral",
+            shortDescription: product.shortDescription ?? "",
+            description: product.description ?? "",
+            topNotes: product.topNotes ?? "",
+            middleNotes: product.middleNotes ?? "",
+            baseNotes: product.baseNotes ?? "",
+            longevity: product.longevity ?? undefined,
+            sillage: product.sillage ?? undefined,
+            concentration: product.concentration ?? "",
+            country: product.country ?? "",
+            releaseYear: product.releaseYear ?? undefined,
+            isFeatured: Boolean(product.isFeatured),
+            isNew: Boolean(product.isNew),
+            isActive: product.isActive ?? true,
             variants: product.variants?.length
               ? product.variants.map((variant) => ({
                   volume: variant.volume,
@@ -138,7 +160,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                 ],
           });
         })
-        .catch(() => setMessage("Не удалось загрузить товар из API."));
+        .catch(() => setMessage("Չհաջողվեց բեռնել ապրանքը API-ից։"));
     }
   }, [productId, ready, reset, setValue]);
 
@@ -148,7 +170,7 @@ export function ProductForm({ productId }: { productId?: string }) {
       await saveProduct(values, productId);
       router.push("/admin/products");
     } catch {
-      setMessage("Не удалось сохранить. Проверьте backend, JWT и обязательные поля.");
+      setMessage("Չհաջողվեց պահպանել։ Ստուգեք backend-ը, JWT-ն և պարտադիր դաշտերը։");
     }
   }
 
@@ -172,6 +194,20 @@ export function ProductForm({ productId }: { productId?: string }) {
     }
   }
 
+  function confirmDeleteAction() {
+    if (!pendingDelete) {
+      return;
+    }
+
+    if (pendingDelete.type === "variant") {
+      remove(pendingDelete.index);
+    } else {
+      updateVariantImage(pendingDelete.index, pendingDelete.imageIndex, "");
+    }
+
+    setPendingDelete(null);
+  }
+
   if (!ready) return null;
 
   return (
@@ -181,76 +217,75 @@ export function ProductForm({ productId }: { productId?: string }) {
         className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm"
       >
         <p className="text-sm uppercase tracking-[0.2em] text-rose-800">
-          {productId ? "Edit product" : "Create product"}
+          {productId ? "Խմբագրել ապրանքը" : "Ստեղծել ապրանք"}
         </p>
         <h1 className="mt-2 text-3xl font-semibold text-zinc-950">
-          {productId ? "Редактировать товар" : "Создать товар"}
+          {productId ? "Խմբագրել ապրանքը" : "Ստեղծել ապրանք"}
         </h1>
         {message ? <p className="mt-4 rounded-md bg-rose-50 p-3 text-sm text-rose-800">{message}</p> : null}
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <Input label="Название" {...register("name")} />
-          <Input label="Slug" {...register("slug")} />
-          <Select label="Бренд" {...register("brandId")}>
-            <option value="">Выберите бренд</option>
+          <Input label="Անվանում" {...register("name")} />
+          <Select label="Բրենդ" {...register("brandId")}>
+            <option value="">Ընտրեք բրենդը</option>
             {brands.map((brand) => (
               <option key={brand.id} value={brand.id}>
                 {brand.name}
               </option>
             ))}
           </Select>
-          <Select label="Категория" {...register("categoryId")}>
-            <option value="">Выберите категорию</option>
+          <Select label="Կատեգորիա" {...register("categoryId")}>
+            <option value="">Ընտրեք կատեգորիան</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
             ))}
           </Select>
-          <Select label="Пол" {...register("gender")}>
+          <Select label="Սեռ" {...register("gender")}>
             {genderOptions.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
           </Select>
-          <Select label="Тип аромата" {...register("fragranceType")}>
+          <Select label="Բույրի տեսակ" {...register("fragranceType")}>
             {fragranceOptions.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
           </Select>
-          <Input label="Концентрация" {...register("concentration")} />
-          <Input label="Страна" {...register("country")} />
-          <Input label="Год выпуска" type="number" {...register("releaseYear")} />
-          <Select label="Стойкость" {...register("longevity")}>
-            <option value="">Не указано</option>
+          <Input label="Կոնցենտրացիա" {...register("concentration")} />
+          <Input label="Երկիր" {...register("country")} />
+          <Input label="Թողարկման տարի" type="number" {...register("releaseYear")} />
+          <Select label="Երկարակեցություն" {...register("longevity")}>
+            <option value="">Նշված չէ</option>
             {longevityOptions.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
           </Select>
-          <Select label="Шлейф" {...register("sillage")}>
-            <option value="">Не указано</option>
+          <Select label="Շլեյֆ" {...register("sillage")}>
+            <option value="">Նշված չէ</option>
             {sillageOptions.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
           </Select>
-          <Textarea label="Краткое описание" {...register("shortDescription")} />
-          <Textarea label="Описание" {...register("description")} />
-          <Input label="Верхние ноты" {...register("topNotes")} />
-          <Input label="Средние ноты" {...register("middleNotes")} />
-          <Input label="Базовые ноты" {...register("baseNotes")} />
+          <Textarea label="Կարճ նկարագրություն" {...register("shortDescription")} />
+          <Textarea label="Նկարագրություն" {...register("description")} />
+          <Input label="Վերին նոտաներ" {...register("topNotes")} />
+          <Input label="Միջին նոտաներ" {...register("middleNotes")} />
+          <Input label="Բազային նոտաներ" {...register("baseNotes")} />
         </div>
         <div className="mt-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg font-semibold text-zinc-950">Варианты объема</h2>
+              <h2 className="text-lg font-semibold text-zinc-950">Ծավալի տարբերակներ</h2>
               <p className="mt-1 text-sm text-zinc-500">
-                Один товар может иметь 20ml, 50ml, 100ml. У каждого варианта своя цена и несколько картинок.
+                Մեկ ապրանքը կարող է ունենալ 20ml, 50ml, 100ml։ Յուրաքանչյուր տարբերակ ունի իր գինը և մի քանի նկար։
               </p>
             </div>
             <button
@@ -264,7 +299,7 @@ export function ProductForm({ productId }: { productId?: string }) {
               }
               className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
             >
-              Добавить объем
+              Ավելացնել ծավալ
             </button>
           </div>
 
@@ -280,17 +315,23 @@ export function ProductForm({ productId }: { productId?: string }) {
                 className="rounded-md border border-zinc-200 bg-white p-4"
               >
                 <div className="grid gap-3 md:grid-cols-[1fr_1fr_1fr_auto]">
-                  <Input label="Объем" {...register(`variants.${index}.volume`)} />
-                  <Input label="Цена" type="number" {...register(`variants.${index}.price`)} />
-                  <Input label="Старая цена" type="number" {...register(`variants.${index}.oldPrice`)} />
+                  <Input label="Ծավալ" {...register(`variants.${index}.volume`)} />
+                  <Input label="Գին" type="number" {...register(`variants.${index}.price`)} />
+                  <Input label="Հին գին" type="number" {...register(`variants.${index}.oldPrice`)} />
                   <div className="flex items-end gap-3">
                     {fields.length > 1 ? (
                       <button
                         type="button"
-                        onClick={() => remove(index)}
+                        onClick={() =>
+                          setPendingDelete({
+                            type: "variant",
+                            index,
+                            label: watchedVariants?.[index]?.volume || `#${index + 1}`,
+                          })
+                        }
                         className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800"
                       >
-                        Удалить объем
+                        Ջնջել ծավալը
                       </button>
                     ) : null}
                   </div>
@@ -298,7 +339,7 @@ export function ProductForm({ productId }: { productId?: string }) {
 
                 <div className="mt-4 border-t border-zinc-100 pt-4">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                    <h3 className="text-sm font-semibold text-zinc-950">Картинки для этого объема</h3>
+                    <h3 className="text-sm font-semibold text-zinc-950">Նկարներ այս ծավալի համար</h3>
                     <button
                       type="button"
                       onClick={() =>
@@ -309,24 +350,31 @@ export function ProductForm({ productId }: { productId?: string }) {
                       }
                       className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
                     >
-                      Добавить картинку
+                      Ավելացնել նկար
                     </button>
                   </div>
                   <div className="space-y-3">
                     {variantImages.map((image, imageIndex) => (
                       <div key={`${field.id}-${imageIndex}`} className="grid gap-3 lg:grid-cols-[1fr_auto]">
                         <ImageUploadField
-                          label={`Картинка ${imageIndex + 1}`}
+                          label={`Նկար ${imageIndex + 1}`}
                           value={image}
                           onChange={(value) => updateVariantImage(index, imageIndex, value)}
                         />
                         {variantImages.length > 1 ? (
                           <button
                             type="button"
-                            onClick={() => updateVariantImage(index, imageIndex, "")}
+                            onClick={() =>
+                              setPendingDelete({
+                                type: "image",
+                                index,
+                                imageIndex,
+                                label: watchedVariants?.[index]?.volume || `#${index + 1}`,
+                              })
+                            }
                             className="h-fit rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800 lg:self-center"
                           >
-                            Удалить картинку
+                            Ջնջել նկարը
                           </button>
                         ) : null}
                       </div>
@@ -339,17 +387,35 @@ export function ProductForm({ productId }: { productId?: string }) {
           </div>
         </div>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <Checkbox label="Популярный" {...register("isFeatured")} />
-          <Checkbox label="Новинка" {...register("isNew")} />
-          <Checkbox label="Показывать" {...register("isActive")} />
+          <Checkbox label="Հանրաճանաչ" {...register("isFeatured")} />
+          <Checkbox label="Նորույթ" {...register("isNew")} />
+          <Checkbox label="Ցուցադրել" {...register("isActive")} />
         </div>
         <button
           disabled={isSubmitting}
           className="mt-6 rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-800 disabled:opacity-60"
         >
-          {isSubmitting ? "Сохранение..." : "Сохранить"}
+          {isSubmitting ? "Պահպանում..." : "Պահպանել"}
         </button>
       </form>
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        title={
+          pendingDelete?.type === "variant"
+            ? "Ջնջե՞լ ծավալի տարբերակը"
+            : "Ջնջե՞լ նկարը"
+        }
+        description={
+          pendingDelete?.type === "variant"
+            ? `Դուք պատրաստվում եք ջնջել «${pendingDelete.label}» ծավալի տարբերակը։ Շարունակե՞լ։`
+            : pendingDelete
+              ? `Դուք պատրաստվում եք ջնջել «${pendingDelete.label}» ծավալի նկարը։ Շարունակե՞լ։`
+              : ""
+        }
+        confirmLabel="Այո, ջնջել"
+        onConfirm={confirmDeleteAction}
+        onCancel={() => setPendingDelete(null)}
+      />
     </AdminShell>
   );
 }

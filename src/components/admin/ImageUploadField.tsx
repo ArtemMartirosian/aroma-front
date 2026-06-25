@@ -22,7 +22,7 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
       const uploaded = await uploadImage(file);
       onChange(uploaded.url);
     } catch {
-      setError("Не удалось загрузить картинку.");
+      setError("Չհաջողվեց բեռնել նկարը։");
     } finally {
       setUploading(false);
     }
@@ -37,23 +37,15 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
             <img src={imageUrl(value)} alt="" className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs text-zinc-400">
-              No image
+              Նկար չկա
             </div>
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <label className="block">
-            <span className="text-sm font-medium text-zinc-700">{label}</span>
-            <input
-              value={value ?? ""}
-              onChange={(event) => onChange(event.target.value)}
-              placeholder="/uploads/image.jpg или URL"
-              className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-rose-700"
-            />
-          </label>
+          <p className="text-sm font-medium text-zinc-700">{label}</p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <label className="inline-flex cursor-pointer rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-800">
-              {uploading ? "Загрузка..." : "Загрузить картинку"}
+              {uploading ? "Բեռնում..." : "Բեռնել նկարը"}
               <input
                 type="file"
                 accept="image/*"
@@ -68,7 +60,7 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
                 onClick={() => onChange("")}
                 className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800"
               >
-                Убрать
+                Հեռացնել
               </button>
             ) : null}
           </div>

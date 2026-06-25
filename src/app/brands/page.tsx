@@ -14,18 +14,18 @@ export default async function BrandsPage() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(116,101,86,0.12),transparent_26%),radial-gradient(circle_at_84%_22%,rgba(221,212,201,0.55),transparent_24%)]" />
           <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">Brand library</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">Բրենդների հավաքածու</p>
               <h1 className="mt-4 font-serif text-4xl leading-tight text-zinc-950 sm:text-5xl lg:text-6xl">
-                Бренды с характером и красивым шлейфом
+                Բրենդներ՝ բնավորությամբ և գեղեցիկ շլեյֆով
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-600 sm:text-lg">
-                Собрали любимые дома парфюмерии в одной витрине: от нишевых акцентов до узнаваемой классики.
+                Մեկ վիտրինայում հավաքել ենք սիրելի օծանելիքի տները՝ նիշային շեշտերից մինչև ճանաչելի դասականը։
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:min-w-[320px]">
-              <StatCard label="Брендов" value={String(brands.length)} />
-              <StatCard label="Ароматов" value={String(totalProducts)} />
+              <StatCard label="Բրենդ" value={String(brands.length)} />
+              <StatCard label="Բույր" value={String(totalProducts)} />
             </div>
           </div>
         </section>
@@ -37,7 +37,7 @@ export default async function BrandsPage() {
         </div>
         {!brands.length ? (
           <div className="mt-8 rounded-[28px] border border-dashed border-zinc-300 bg-white p-10 text-center text-zinc-500 shadow-sm">
-            Бренды пока не загружены из backend.
+            Բրենդները դեռ չեն բեռնվել backend-ից։
           </div>
         ) : null}
 
@@ -46,7 +46,7 @@ export default async function BrandsPage() {
             href="/catalog"
             className="inline-flex items-center gap-2 rounded-full border border-[#deccb9] bg-white px-6 py-3 text-sm font-semibold text-zinc-950 shadow-sm transition hover:border-zinc-950"
           >
-            Открыть весь каталог
+            Բացել ամբողջ կատալոգը
             <span aria-hidden="true">/</span>
           </Link>
         </div>

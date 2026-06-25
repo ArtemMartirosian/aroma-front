@@ -13,7 +13,7 @@ export default async function Home() {
       <section className="relative min-h-[680px] overflow-hidden bg-white">
         <Image
           src="/images/perfume-hero.png"
-          alt="Premium perfume bottles"
+          alt="Պրեմիում օծանելիքի սրվակներ"
           fill
           priority
           sizes="100vw"
@@ -23,34 +23,34 @@ export default async function Home() {
         <div className="relative mx-auto flex min-h-[680px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--accent)]">
-              Premium perfume catalog
+              Պրեմիում օծանելիքի կատալոգ
             </p>
             <h1 className="mt-5 text-5xl font-semibold leading-tight text-zinc-950 md:text-7xl">
-              Discover your signature fragrance
+              Գտեք ձեր բնորոշ բույրը
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-zinc-700">
-              Современный каталог оригинальной парфюмерии: бренды, ноты,
-              объемы, цены и быстрый контакт без корзины и онлайн-оплаты.
+              Օրիգինալ օծանելիքի ժամանակակից կատալոգ՝ բրենդներ, նոտաներ,
+              ծավալներ, գներ և արագ կապ առանց զամբյուղի ու օնլայն վճարման։
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/catalog"
                 className="rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
               >
-                Смотреть каталог
+                Դիտել կատալոգը
               </Link>
               <Link
                 href="/contacts"
                 className="rounded-full border border-zinc-300 bg-white/80 px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
               >
-                Связаться
+                Կապվել
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <Section title="Популярные товары" href="/catalog">
+      <Section title="Հանրաճանաչ ապրանքներ" href="/catalog">
         {featured.length ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((product) => (
@@ -58,11 +58,11 @@ export default async function Home() {
             ))}
           </div>
         ) : (
-          <EmptyState text="Популярные товары появятся после загрузки данных из backend." />
+          <EmptyState text="Հանրաճանաչ ապրանքները կհայտնվեն backend-ից տվյալների բեռնումից հետո։" />
         )}
       </Section>
 
-      <Section title="Новые поступления" href="/catalog">
+      <Section title="Նոր տեսականի" href="/catalog">
         {newest.length ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {newest.map((product) => (
@@ -70,11 +70,11 @@ export default async function Home() {
             ))}
           </div>
         ) : (
-          <EmptyState text="Новые товары появятся после загрузки данных из backend." />
+          <EmptyState text="Նոր ապրանքները կհայտնվեն backend-ից տվյալների բեռնումից հետո։" />
         )}
       </Section>
 
-      <Section title="Категории" href="/catalog">
+      <Section title="Կատեգորիաներ" href="/catalog">
         <div className="grid gap-4 md:grid-cols-4">
           {categories.map((category) => (
             <Link
@@ -87,34 +87,34 @@ export default async function Home() {
             </Link>
           ))}
         </div>
-        {!categories.length ? <EmptyState text="Категории пока не загружены из backend." /> : null}
+        {!categories.length ? <EmptyState text="Կատեգորիաները դեռ չեն բեռնվել backend-ից։" /> : null}
       </Section>
 
-      <Section title="Бренды" href="/brands">
+      <Section title="Բրենդներ" href="/brands">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
           {brands.map((brand) => (
             <BrandCard key={brand.id} brand={brand} />
           ))}
         </div>
-        {!brands.length ? <EmptyState text="Бренды пока не загружены из backend." /> : null}
+        {!brands.length ? <EmptyState text="Բրենդները դեռ չեն բեռնվել backend-ից։" /> : null}
       </Section>
 
       <section className="bg-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-8">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">О нас</p>
+            <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Մեր մասին</p>
             <h2 className="mt-3 text-4xl font-semibold text-zinc-950">
-              Подбираем аромат по характеру, сезону и настроению
+              Օգնում ենք ընտրել բույրը ըստ բնավորության, սեզոնի և տրամադրության
             </h2>
           </div>
           <div className="space-y-4 text-zinc-600">
             <p>
-              AROMA помогает быстро найти нужный флакон: по бренду, полу, типу
-              аромата, цене и объему.
+              AROMA-ն օգնում է արագ գտնել ճիշտ շիշը՝ ըստ բրենդի, սեռի,
+              բույրի տեսակի, գնի և ծավալի։
             </p>
             <p>
-              В первой версии покупки нет: карточка товара ведет к контакту в
-              WhatsApp, где можно уточнить детали и оформить бесплатную доставку.
+              Առաջին տարբերակում գնում չկա․ ապրանքի քարտը տանում է դեպի
+              WhatsApp, որտեղ կարելի է ճշտել մանրամասները և ձևակերպել անվճար առաքումը։
             </p>
           </div>
         </div>
@@ -175,7 +175,7 @@ function Section({
       <div className="mb-8 flex items-end justify-between gap-4">
         <h2 className="text-3xl font-semibold text-zinc-950">{title}</h2>
         <Link href={href} className="text-sm font-semibold text-[var(--accent)] hover:text-zinc-950">
-          Смотреть все
+          Դիտել բոլորը
         </Link>
       </div>
       {children}

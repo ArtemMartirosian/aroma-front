@@ -36,7 +36,7 @@ export function CatalogClient() {
         setProducts([]);
         setBrands([]);
         setCategories([]);
-        setLoadError("Не удалось загрузить данные из backend. Проверьте, что API запущен.");
+        setLoadError("Չհաջողվեց բեռնել տվյալները backend-ից։ Ստուգեք, որ API-ն գործարկված է։");
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -95,10 +95,10 @@ export function CatalogClient() {
       <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] pb-5">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">
-            Фильтры
+            Ֆիլտրեր
           </p>
           <p className="mt-2 text-sm leading-6 text-zinc-500">
-            {activeFilters ? `${activeFilters} активно` : "Выберите параметры"}
+            {activeFilters ? `${activeFilters} ակտիվ` : "Ընտրեք պարամետրերը"}
           </p>
         </div>
         {activeFilters ? (
@@ -107,14 +107,14 @@ export function CatalogClient() {
             onClick={resetFilters}
             className="rounded-full border border-[#deccb9] bg-white/90 px-3 py-1.5 text-xs font-semibold text-zinc-900 shadow-sm transition hover:border-zinc-950"
           >
-            Сбросить
+            Զրոյացնել
           </button>
         ) : null}
       </div>
 
       <div className="mt-5 space-y-4">
         <label className="block">
-          <span className="text-sm font-semibold text-zinc-800">Поиск</span>
+          <span className="text-sm font-semibold text-zinc-800">Որոնում</span>
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -122,21 +122,21 @@ export function CatalogClient() {
             className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-[var(--accent)] focus:bg-white"
           />
         </label>
-        <FilterSelect label="Бренд" value={brand} onChange={setBrand}>
+        <FilterSelect label="Բրենդ" value={brand} onChange={setBrand}>
           {brands.map((item) => (
             <option key={item.id} value={item.slug}>
               {item.name}
             </option>
           ))}
         </FilterSelect>
-        <FilterSelect label="Категория" value={category} onChange={setCategory}>
+        <FilterSelect label="Կատեգորիա" value={category} onChange={setCategory}>
           {categories.map((item) => (
             <option key={item.id} value={item.slug}>
               {item.name}
             </option>
           ))}
         </FilterSelect>
-        <FilterSelect label="Пол" value={gender} onChange={(value) => setGender(value as Gender | "")}>
+        <FilterSelect label="Սեռ" value={gender} onChange={(value) => setGender(value as Gender | "")}>
           {genderOptions.map(([value, label]) => (
             <option key={value} value={value}>
               {label}
@@ -144,7 +144,7 @@ export function CatalogClient() {
           ))}
         </FilterSelect>
         <FilterSelect
-          label="Тип аромата"
+          label="Բույրի տեսակ"
           value={type}
           onChange={(value) => setType(value as FragranceType | "")}
         >
@@ -154,7 +154,7 @@ export function CatalogClient() {
             </option>
           ))}
         </FilterSelect>
-        <FilterSelect label="Объем" value={volume} onChange={setVolume}>
+        <FilterSelect label="Ծավալ" value={volume} onChange={setVolume}>
           {volumes.map((item) => (
             <option key={item} value={item}>
               {item}
@@ -162,7 +162,7 @@ export function CatalogClient() {
           ))}
         </FilterSelect>
         <label className="block">
-          <span className="text-sm font-semibold text-zinc-800">Цена до</span>
+          <span className="text-sm font-semibold text-zinc-800">Գինը մինչև</span>
           <input
             value={maxPrice}
             onChange={(event) => setMaxPrice(event.target.value)}
@@ -203,48 +203,48 @@ export function CatalogClient() {
                   Aroma Parfume
                 </p>
                 <h1 className="mt-4 font-serif text-4xl leading-tight text-zinc-950 sm:text-5xl lg:text-6xl">
-                  Каталог ароматов
+                  Բույրերի կատալոգ
                 </h1>
                 <p className="mt-5 max-w-2xl text-sm leading-8 text-zinc-600 sm:text-lg">
-                  Выбирайте любимые ноты, бренды и объемы. Все заказы оформляются онлайн,
-                  а доставка бесплатная.
+                  Ընտրեք սիրելի նոտաները, բրենդներն ու ծավալները։ Բոլոր պատվերները ձևակերպվում են օնլայն,
+                  իսկ առաքումն անվճար է։
                 </p>
               </div>
 
               <div className="flex flex-col gap-4 lg:min-w-[320px] lg:items-end">
                 <div className="grid grid-cols-2 gap-3 sm:min-w-[320px]">
                   <CatalogMetric
-                    label="Товаров"
+                    label="Ապրանքներ"
                     value={isLoading ? "..." : String(filteredProducts.length)}
                   />
-                  <CatalogMetric label="Доставка" value="Free" />
+                  <CatalogMetric label="Առաքում" value="Անվճար" />
                 </div>
 
                 <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 lg:justify-end">
                   <span className="rounded-full border border-white/80 bg-white/88 px-3 py-1.5 shadow-sm">
-                    {isLoading ? "Загрузка..." : `${filteredProducts.length} товаров`}
+                    {isLoading ? "Բեռնում..." : `${filteredProducts.length} ապրանք`}
                   </span>
                   <span className="rounded-full border border-white/80 bg-white/88 px-3 py-1.5 shadow-sm">
-                    Бесплатная доставка
+                    Անվճար առաքում
                   </span>
                   {activeFilters ? (
                     <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1.5 text-[var(--accent-strong)] shadow-sm">
-                      {activeFilters} фильтров
+                      {activeFilters} ֆիլտր
                     </span>
                   ) : null}
                 </div>
 
                 <label className="block min-w-[240px]">
-                  <span className="text-sm font-semibold text-zinc-800">Сортировка</span>
+                  <span className="text-sm font-semibold text-zinc-800">Տեսակավորում</span>
                   <select
                     value={sort}
                     onChange={(event) => setSort(event.target.value as Sort)}
                     className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-white/82 px-4 py-3 text-sm outline-none transition focus:border-[var(--accent)] focus:bg-white"
                   >
-                    <option value="new">Новые</option>
-                    <option value="price_asc">По цене: дешевые</option>
-                    <option value="price_desc">По цене: дорогие</option>
-                    <option value="popular">Популярные</option>
+                    <option value="new">Նորերը</option>
+                    <option value="price_asc">Ըստ գնի՝ էժանից</option>
+                    <option value="price_desc">Ըստ գնի՝ թանկից</option>
+                    <option value="popular">Հանրաճանաչ</option>
                   </select>
                 </label>
               </div>
@@ -258,7 +258,7 @@ export function CatalogClient() {
               onClick={() => setIsFiltersOpen((current) => !current)}
               className="flex w-full items-center justify-between rounded-[24px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(244,240,233,0.9))] px-5 py-4 text-left font-semibold text-zinc-950 shadow-[0_18px_44px_rgba(71,58,44,0.08)] backdrop-blur"
             >
-              <span>Фильтры</span>
+              <span>Ֆիլտրեր</span>
               <span className="flex items-center gap-2">
                 {activeFilters ? (
                   <span className="rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent-strong)]">
@@ -310,7 +310,7 @@ export function CatalogClient() {
                     onClick={resetFilters}
                     className="rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-xs font-semibold text-zinc-900 shadow-sm transition hover:border-zinc-950"
                   >
-                    Сбросить все
+                    Զրոյացնել բոլորը
                   </button>
                 </div>
               </div>
@@ -324,17 +324,17 @@ export function CatalogClient() {
                 {!filteredProducts.length ? (
                   <div className="col-span-full rounded-[28px] border border-dashed border-zinc-300 bg-white/92 p-12 text-center shadow-[0_16px_40px_rgba(92,60,30,0.06)]">
                     <p className="text-xl font-semibold text-zinc-950">
-                      {isLoading ? "Загружаем товары" : "Ничего не найдено"}
+                      {isLoading ? "Բեռնում ենք ապրանքները" : "Ոչինչ չի գտնվել"}
                     </p>
                     <p className="mt-2 text-zinc-600">
-                      {isLoading ? "Данные загружаются из backend." : "Попробуйте изменить фильтры или сбросить поиск."}
+                      {isLoading ? "Տվյալները բեռնվում են backend-ից։" : "Փորձեք փոխել ֆիլտրերը կամ զրոյացնել որոնումը։"}
                     </p>
                     <button
                       type="button"
                       onClick={resetFilters}
                     className="mt-5 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
                     >
-                      Сбросить фильтры
+                      Զրոյացնել ֆիլտրերը
                     </button>
                   </div>
                 ) : null}
@@ -366,7 +366,7 @@ function FilterSelect({
         onChange={(event) => onChange(event.target.value)}
         className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-[var(--accent)] focus:bg-white"
       >
-        <option value="">Все</option>
+        <option value="">Բոլորը</option>
         {children}
       </select>
     </label>

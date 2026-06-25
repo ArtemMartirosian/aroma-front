@@ -1,22 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginAdmin } from "@/lib/api";
-import { storeToken } from "@/components/admin/auth";
+import { storeToken, useAdminSession } from "@/components/admin/auth";
 
 const schema = z.object({
-  email: z.string().email("Введите email"),
-  password: z.string().min(6, "Минимум 6 символов"),
+  email: z.string().email("Մուտքագրեք email-ը"),
+  password: z.string().min(6, "Նվազագույնը 6 նիշ"),
 });
 
 type LoginValues = z.infer<typeof schema>;
 
 export function AdminLoginForm() {
   const router = useRouter();
+  const { hydrated, token } = useAdminSession();
   const [error, setError] = useState("");
   const {
     register,
@@ -37,8 +38,18 @@ export function AdminLoginForm() {
       storeToken(response.accessToken);
       router.replace("/admin/dashboard");
     } catch {
-      setError("Не удалось войти. Проверьте backend и данные администратора.");
+      setError("Չհաջողվեց մուտք գործել։ Ստուգեք backend-ը և ադմինի տվյալները։");
     }
+  }
+
+  useEffect(() => {
+    if (hydrated && token) {
+      router.replace("/admin/dashboard");
+    }
+  }, [hydrated, router, token]);
+
+  if (hydrated && token) {
+    return null;
   }
 
   return (
@@ -46,10 +57,10 @@ export function AdminLoginForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="mx-auto my-16 max-w-md rounded-lg border border-zinc-200 bg-white p-6 shadow-sm"
     >
-      <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Admin login</p>
-      <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Вход в админку</h1>
+      <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Ադմինի մուտք</p>
+      <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Մուտք ադմին վահանակ</h1>
       <label className="mt-6 block">
-        <span className="text-sm font-medium text-zinc-700">Email</span>
+        <span className="text-sm font-medium text-zinc-700">Էլ. փոստ</span>
         <input
           {...register("email")}
           className="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-rose-700"
@@ -57,7 +68,7 @@ export function AdminLoginForm() {
         {errors.email ? <span className="text-sm text-rose-700">{errors.email.message}</span> : null}
       </label>
       <label className="mt-4 block">
-        <span className="text-sm font-medium text-zinc-700">Пароль</span>
+        <span className="text-sm font-medium text-zinc-700">Գաղտնաբառ</span>
         <input
           {...register("password")}
           type="password"
@@ -72,7 +83,7 @@ export function AdminLoginForm() {
         disabled={isSubmitting}
         className="mt-6 w-full rounded-full bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-rose-800 disabled:opacity-60"
       >
-        {isSubmitting ? "Входим..." : "Войти"}
+        {isSubmitting ? "Մուտք..." : "Մուտք գործել"}
       </button>
     </form>
   );

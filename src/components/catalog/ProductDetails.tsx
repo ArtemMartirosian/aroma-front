@@ -32,11 +32,11 @@ export function ProductDetails({ product }: { product: Product }) {
       <div className="relative">
         <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm font-medium text-zinc-500">
           <Link href="/" className="transition hover:text-zinc-950">
-            Главная
+            Գլխավոր
           </Link>
           <BreadcrumbArrow />
           <Link href="/catalog" className="transition hover:text-zinc-950">
-            Каталог
+            Կատալոգ
           </Link>
           {product.category?.name && product.category?.slug ? (
             <>
@@ -72,8 +72,8 @@ export function ProductDetails({ product }: { product: Product }) {
           <div>
             <div className="relative aspect-[1/1.02] overflow-hidden rounded-[30px] border border-[var(--line)] bg-white shadow-[0_24px_65px_rgba(71,58,44,0.1)]">
               <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2 sm:left-6 sm:top-6">
-                {product.isNew ? <Badge>new</Badge> : null}
-                {product.isFeatured ? <Badge tone="dark">hit</Badge> : null}
+                {product.isNew ? <Badge>նոր</Badge> : null}
+                {product.isFeatured ? <Badge tone="dark">հիթ</Badge> : null}
                 {discount ? <Badge tone="sale">-{discount}%</Badge> : null}
               </div>
               <Image
@@ -136,7 +136,7 @@ export function ProductDetails({ product }: { product: Product }) {
             </div>
 
             <div className="mt-8 border-y border-[var(--line)] py-6">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Выберите объем</p>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Ընտրեք ծավալը</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {variants.map((variant, index) => (
                   <button
@@ -157,7 +157,7 @@ export function ProductDetails({ product }: { product: Product }) {
 
             <div className="mt-6 flex flex-wrap items-end justify-between gap-5">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Цена</p>
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Գին</p>
                 <div className="mt-2 flex flex-wrap items-baseline gap-3">
                   <p className="text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">
                     {formatPrice(selectedVariant?.price ?? product.price)}
@@ -172,11 +172,11 @@ export function ProductDetails({ product }: { product: Product }) {
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
               <a
                 href={`https://wa.me/37433696009?text=${encodeURIComponent(
-                  `Здравствуйте, интересует ${product.name} ${selectedVariant.volume}`,
+                  `Բարև ձեզ, հետաքրքրում է ${product.name} ${selectedVariant.volume}`,
                 )}`}
                 className="inline-flex justify-center rounded-full bg-zinc-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
               >
-                Написать в WhatsApp
+                Գրել WhatsApp-ով
               </a>
               <a
                 href="https://instagram.com/aroma__parfume"
@@ -184,10 +184,10 @@ export function ProductDetails({ product }: { product: Product }) {
                 rel="noreferrer"
                 className="inline-flex justify-center rounded-full border border-zinc-300 bg-white px-6 py-3.5 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
               >
-                Написать в Instagram
+                Գրել Instagram-ում
               </a>
             </div>
-            <p className="mt-4 text-sm text-zinc-500">Онлайн-заказ. Бесплатная доставка по договоренности.</p>
+            <p className="mt-4 text-sm text-zinc-500">Օնլայն պատվեր։ Անվճար առաքում՝ համաձայնությամբ։</p>
           </div>
         </div>
       </div>

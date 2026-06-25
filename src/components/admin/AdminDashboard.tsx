@@ -32,26 +32,26 @@ export function AdminDashboard() {
         });
         setBrandCount(0);
         setCategoryCount(0);
-        setMessage("Не удалось загрузить dashboard из backend.");
+        setMessage("Չհաջողվեց բեռնել վահանակը backend-ից։");
       });
   }, [ready]);
 
   if (!ready) return null;
 
   const cards = [
-    ["Товары", stats?.totalProducts ?? 0],
-    ["Бренды", brandCount],
-    ["Категории", categoryCount],
-    ["Новинки", stats?.newProducts ?? 0],
-    ["Популярные", stats?.featuredProducts ?? 0],
+    ["Ապրանքներ", stats?.totalProducts ?? 0],
+    ["Բրենդներ", brandCount],
+    ["Կատեգորիաներ", categoryCount],
+    ["Նորույթներ", stats?.newProducts ?? 0],
+    ["Հանրաճանաչ", stats?.featuredProducts ?? 0],
   ];
 
   return (
     <AdminShell>
       <div className="space-y-6">
         <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Overview</p>
-          <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Dashboard</h1>
+          <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Ընդհանուր տեսք</p>
+          <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Վահանակ</h1>
         </div>
         {message ? <p className="rounded-md bg-rose-50 p-3 text-sm text-rose-800">{message}</p> : null}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -63,7 +63,7 @@ export function AdminDashboard() {
           ))}
         </div>
         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-          <h2 className="text-xl font-semibold text-zinc-950">Последние товары</h2>
+          <h2 className="text-xl font-semibold text-zinc-950">Վերջին ապրանքները</h2>
           <div className="mt-4 divide-y divide-zinc-100">
             {(stats?.latestProducts ?? []).map((product) => (
               <div key={product.id} className="flex items-center justify-between py-3">

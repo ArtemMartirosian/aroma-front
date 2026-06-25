@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/catalog", label: "Каталог" },
-  { href: "/brands", label: "Бренды" },
-  { href: "/about", label: "О нас" },
-  { href: "/contacts", label: "Контакты" },
+  { href: "/catalog", label: "Կատալոգ" },
+  { href: "/brands", label: "Բրենդներ" },
+  { href: "/about", label: "Մեր մասին" },
+  { href: "/contacts", label: "Կոնտակտներ" },
 ];
 
 export function SiteHeader() {
@@ -34,7 +34,7 @@ export function SiteHeader() {
           href="/contacts"
           className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
         >
-          Связаться
+          Կապվել
         </Link>
       </div>
     </header>

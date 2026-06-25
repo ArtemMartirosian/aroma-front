@@ -13,7 +13,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
   const href = `/catalog?brand=${brand.slug}`;
   const logo = brand.logo || brand.name.slice(0, 2).toUpperCase();
   const description =
-    brand.description || "Избранная коллекция ароматов с выразительным характером и красивым шлейфом.";
+    brand.description || "Ընտրված բույրերի հավաքածու՝ արտահայտիչ բնավորությամբ և գեղեցիկ շլեյֆով։";
   const productCount = brand.products?.length ?? 0;
 
   if (variant === "showcase") {
@@ -38,7 +38,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
 
           <div className="flex flex-col justify-between gap-6 p-6 sm:p-8">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[var(--accent)]">Maison</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[var(--accent)]">Տուն</p>
               <h2 className="mt-3 font-serif text-3xl leading-tight text-zinc-950 sm:text-[2.2rem]">
                 {brand.name}
               </h2>
@@ -50,14 +50,14 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line)] pt-5">
               <div className="flex flex-wrap gap-2">
                 <span className="rounded-full border border-[var(--line)] bg-white/85 px-3 py-1.5 text-xs font-semibold text-zinc-700">
-                  {productCount} товаров
+                  {productCount} ապրանք
                 </span>
                 <span className="rounded-full border border-[var(--line)] bg-white/85 px-3 py-1.5 text-xs font-semibold text-zinc-700">
-                  Luxury scents
+                  Լյուքս բույրեր
                 </span>
               </div>
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-950 transition group-hover:text-[var(--accent)]">
-                Смотреть ароматы
+                Դիտել բույրերը
                 <ArrowMark />
               </span>
             </div>
@@ -84,21 +84,21 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
           {logo}
         </div>
         <div className="absolute inset-x-0 bottom-0 p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-white/75">Luxury house</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-white/75">Լյուքս բրենդ</p>
           <p className="mt-2 font-serif text-2xl leading-none text-white">{brand.name}</p>
         </div>
       </div>
 
       <div className="p-4">
-        <p className="line-clamp-2 min-h-[3rem] text-sm leading-6 text-zinc-600">
-          {description}
-        </p>
+          <p className="line-clamp-2 min-h-[3rem] text-sm leading-6 text-zinc-600">
+            {description}
+          </p>
         <div className="mt-4 flex items-center justify-between gap-3 border-t border-[var(--line)] pt-4">
           <span className="rounded-full border border-[var(--line)] bg-white/90 px-3 py-1.5 text-xs font-semibold text-zinc-700">
-            {productCount} товаров
+            {productCount} ապրանք
           </span>
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-950 transition group-hover:text-[var(--accent)]">
-            Каталог
+            Կատալոգ
             <ArrowMark />
           </span>
         </div>

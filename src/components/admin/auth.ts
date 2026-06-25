@@ -26,8 +26,7 @@ export function clearToken() {
 
 export function useAdminToken() {
   const router = useRouter();
-  const hydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
-  const token = useSyncExternalStore(subscribeToToken, getStoredToken, () => null);
+  const { hydrated, token } = useAdminSession();
 
   useEffect(() => {
     if (!hydrated) {
@@ -43,6 +42,12 @@ export function useAdminToken() {
   }, [hydrated, router, token]);
 
   return { token, ready: hydrated && Boolean(token) };
+}
+
+export function useAdminSession() {
+  const hydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
+  const token = useSyncExternalStore(subscribeToToken, getStoredToken, () => null);
+  return { hydrated, token };
 }
 
 function subscribeToHydration() {

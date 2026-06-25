@@ -41,8 +41,8 @@ export function ProductCard({ product }: { product: Product }) {
         </Link>
 
         <div className="absolute left-2.5 top-2.5 z-10 flex max-w-[75%] flex-wrap gap-1.5 sm:left-4 sm:top-4 sm:gap-2">
-          {product.isFeatured ? <Badge tone="dark">hit</Badge> : null}
-          {product.isNew ? <Badge tone="green">new</Badge> : null}
+          {product.isFeatured ? <Badge tone="dark">հիթ</Badge> : null}
+          {product.isNew ? <Badge tone="green">նոր</Badge> : null}
           {discount ? <Badge tone="red">-{discount}%</Badge> : null}
         </div>
       </div>
@@ -96,7 +96,7 @@ export function ProductCard({ product }: { product: Product }) {
               href={`/products/${product.slug}`}
               className="inline-flex h-10 w-full items-center justify-center rounded-full bg-zinc-950 px-3.5 text-[11px] font-semibold text-white transition hover:bg-[var(--accent)] sm:h-11 sm:w-auto sm:px-4 sm:text-xs"
             >
-              Смотреть
+              Դիտել
             </Link>
           </div>
         </div>

@@ -23,23 +23,23 @@ export default async function ProductPage({
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.86fr]">
           <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Fragrance notes</p>
-            <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Пирамида аромата</h2>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Բույրի նոտաներ</p>
+            <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Բույրի բուրգ</h2>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <NoteCard label="Верхние ноты" value={product.topNotes || "Не указано"} />
-              <NoteCard label="Средние ноты" value={product.middleNotes || "Не указано"} />
-              <NoteCard label="Базовые ноты" value={product.baseNotes || "Не указано"} />
+              <NoteCard label="Վերին նոտաներ" value={product.topNotes || "Նշված չէ"} />
+              <NoteCard label="Միջին նոտաներ" value={product.middleNotes || "Նշված չէ"} />
+              <NoteCard label="Բազային նոտաներ" value={product.baseNotes || "Նշված չէ"} />
             </div>
           </div>
 
           <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Details</p>
-            <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Характеристики</h2>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Մանրամասներ</p>
+            <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Բնութագրեր</h2>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <Info label="Стойкость" value={product.longevity ? longevityLabels[product.longevity] : "Средняя"} />
-              <Info label="Шлейф" value={product.sillage ? sillageLabels[product.sillage] : "Средний"} />
-              <Info label="Страна" value={product.country || "France"} />
-              <Info label="Год" value={product.releaseYear ? String(product.releaseYear) : "Не указан"} />
+              <Info label="Երկարակեցություն" value={product.longevity ? longevityLabels[product.longevity] : "Միջին"} />
+              <Info label="Շլեյֆ" value={product.sillage ? sillageLabels[product.sillage] : "Միջին"} />
+              <Info label="Երկիր" value={product.country || "France"} />
+              <Info label="Տարի" value={product.releaseYear ? String(product.releaseYear) : "Նշված չէ"} />
             </div>
           </div>
         </section>
@@ -47,8 +47,8 @@ export default async function ProductPage({
         <section className="py-14">
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">You may also like</p>
-              <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Похожие товары</h2>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Ձեզ կարող է դուր գալ նաև</p>
+              <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Նման ապրանքներ</h2>
             </div>
           </div>
           {related.length ? (
@@ -59,7 +59,7 @@ export default async function ProductPage({
             </div>
           ) : (
             <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-10 text-center text-zinc-500">
-              Похожие товары пока не загружены из backend.
+              Նման ապրանքները դեռ չեն բեռնվել backend-ից։
             </div>
           )}
         </section>

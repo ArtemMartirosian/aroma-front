@@ -16,30 +16,30 @@ export function SiteFooter() {
         <div>
           <p className="text-xl font-semibold tracking-[0.18em]">AROMA</p>
           <p className="mt-3 max-w-sm text-sm leading-6 text-zinc-300">
-            Онлайн-каталог оригинальной парфюмерии без онлайн-оплаты: выбирайте
-            аромат, связывайтесь с нами и получайте бесплатную доставку.
+            Օրիգինալ օծանելիքի օնլայն կատալոգ առանց օնլայն վճարման․ ընտրեք
+            բույրը, կապվեք մեզ հետ և ստացեք անվճար առաքում։
           </p>
         </div>
         <div className="text-sm text-zinc-300">
-          <p className="font-semibold text-white">Навигация</p>
+          <p className="font-semibold text-white">Նավիգացիա</p>
           <div className="mt-3 flex flex-col gap-2">
-            <Link href="/catalog">Каталог</Link>
-            <Link href="/brands">Бренды</Link>
-            <Link href="/contacts">Контакты</Link>
+            <Link href="/catalog">Կատալոգ</Link>
+            <Link href="/brands">Բրենդներ</Link>
+            <Link href="/contacts">Կոնտակտներ</Link>
           </div>
         </div>
         <div className="text-sm text-zinc-300">
-          <p className="font-semibold text-white">Связь</p>
+          <p className="font-semibold text-white">Կապ</p>
           <p className="mt-3">WhatsApp: +374 33 69 60 09</p>
-          <p>Телефон: +374 33 69 60 09</p>
+          <p>Հեռախոս՝ +374 33 69 60 09</p>
           <p>Instagram: @aroma__parfume</p>
-          <p>Доставка: бесплатно</p>
+          <p>Առաքում՝ անվճար</p>
         </div>
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-zinc-400 sm:px-6 sm:text-sm lg:px-8">
           <p>
-            Разработка сайта —{" "}
+            Կայքի մշակումը՝{" "}
             <a
               href="https://digitalize.am"
               target="_blank"
