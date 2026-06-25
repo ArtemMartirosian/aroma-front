@@ -92,12 +92,12 @@ export function CatalogClient() {
 
   const filterPanel = (
     <>
-      <div className="flex items-start justify-between gap-4 border-b border-zinc-100 pb-5">
+      <div className="flex items-start justify-between gap-4 border-b border-[#eadaca] pb-5">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-rose-800">
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#9b123f]">
             Фильтры
           </p>
-          <p className="mt-1 text-sm text-zinc-500">
+          <p className="mt-2 text-sm leading-6 text-zinc-500">
             {activeFilters ? `${activeFilters} активно` : "Выберите параметры"}
           </p>
         </div>
@@ -105,7 +105,7 @@ export function CatalogClient() {
           <button
             type="button"
             onClick={resetFilters}
-            className="rounded-full border border-zinc-300 px-3 py-1.5 text-xs font-semibold text-zinc-900 transition hover:border-zinc-950"
+            className="rounded-full border border-[#deccb9] bg-white/90 px-3 py-1.5 text-xs font-semibold text-zinc-900 shadow-sm transition hover:border-zinc-950"
           >
             Сбросить
           </button>
@@ -119,7 +119,7 @@ export function CatalogClient() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Dior, Chanel, Oud..."
-            className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+            className="mt-2 w-full rounded-2xl border border-[#dfcebc] bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-[#9b123f] focus:bg-white"
           />
         </label>
         <FilterSelect label="Бренд" value={brand} onChange={setBrand}>
@@ -168,7 +168,7 @@ export function CatalogClient() {
             onChange={(event) => setMaxPrice(event.target.value)}
             type="number"
             placeholder="50000"
-            className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+            className="mt-2 w-full rounded-2xl border border-[#dfcebc] bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-[#9b123f] focus:bg-white"
           />
         </label>
       </div>
@@ -176,61 +176,70 @@ export function CatalogClient() {
   );
 
   return (
-    <div className="relative overflow-hidden bg-white">
+    <div className="relative overflow-hidden bg-[linear-gradient(180deg,#fbf2e9_0%,#fffaf6_28%,#fffdfa_100%)]">
       <Image
         src="/images/perfume-hero.png"
         alt=""
         fill
         priority
         sizes="100vw"
-        className="object-cover object-center opacity-20"
+        className="object-cover object-center opacity-12"
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white via-white/88 to-white/72" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.96),transparent_48%),radial-gradient(circle_at_top_right,rgba(246,233,220,0.52),transparent_32%)]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-white/80" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,250,246,0.95),rgba(255,250,246,0.84),rgba(255,250,246,0.96))]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.96),transparent_48%),radial-gradient(circle_at_top_right,rgba(239,220,200,0.56),transparent_32%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-b from-transparent to-white/85" />
 
-      <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[285px_minmax(0,1fr)] lg:px-8 lg:py-10">
-        <aside className="hidden h-fit rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur lg:sticky lg:top-8 lg:block">
+      <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-8 lg:py-10">
+        <aside className="hidden h-fit rounded-[32px] border border-[#f1e5d8] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(248,238,228,0.9))] p-6 shadow-[0_26px_70px_rgba(92,60,30,0.08)] backdrop-blur lg:sticky lg:top-8 lg:block">
           {filterPanel}
         </aside>
 
         <main className="min-w-0">
-          <div className="rounded-[30px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(250,240,230,0.92))] p-5 shadow-[0_24px_60px_rgba(132,93,63,0.12)] sm:p-7">
-            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-rose-800">
+          <div className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(247,236,224,0.96))] p-5 shadow-[0_28px_80px_rgba(99,64,32,0.1)] sm:p-7 lg:p-8">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(190,115,74,0.16),transparent_28%),radial-gradient(circle_at_84%_22%,rgba(231,210,188,0.5),transparent_24%)]" />
+            <div className="relative flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
+              <div className="max-w-3xl">
+                <p className="text-sm font-semibold uppercase tracking-[0.32em] text-rose-800">
                   Aroma Parfume
                 </p>
-                <h1 className="mt-3 text-3xl font-semibold leading-tight text-zinc-950 sm:text-5xl">
+                <h1 className="mt-4 font-serif text-4xl leading-tight text-zinc-950 sm:text-5xl lg:text-6xl">
                   Каталог ароматов
                 </h1>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-zinc-600 sm:text-base">
+                <p className="mt-5 max-w-2xl text-sm leading-8 text-zinc-600 sm:text-lg">
                   Выбирайте любимые ноты, бренды и объемы. Все заказы оформляются онлайн,
                   а доставка бесплатная.
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 md:self-center sm:flex-row sm:flex-wrap sm:justify-end">
-                <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 sm:justify-end">
-                  <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
+              <div className="flex flex-col gap-4 lg:min-w-[320px] lg:items-end">
+                <div className="grid grid-cols-2 gap-3 sm:min-w-[320px]">
+                  <CatalogMetric
+                    label="Товаров"
+                    value={isLoading ? "..." : String(filteredProducts.length)}
+                  />
+                  <CatalogMetric label="Доставка" value="Free" />
+                </div>
+
+                <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 lg:justify-end">
+                  <span className="rounded-full border border-white/80 bg-white/88 px-3 py-1.5 shadow-sm">
                     {isLoading ? "Загрузка..." : `${filteredProducts.length} товаров`}
                   </span>
-                  <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
+                  <span className="rounded-full border border-white/80 bg-white/88 px-3 py-1.5 shadow-sm">
                     Бесплатная доставка
                   </span>
                   {activeFilters ? (
-                    <span className="rounded-full bg-rose-50 px-3 py-1.5 text-rose-900">
+                    <span className="rounded-full bg-rose-50 px-3 py-1.5 text-rose-900 shadow-sm">
                       {activeFilters} фильтров
                     </span>
                   ) : null}
                 </div>
 
-                <label className="block min-w-[210px]">
+                <label className="block min-w-[240px]">
                   <span className="text-sm font-semibold text-zinc-800">Сортировка</span>
                   <select
                     value={sort}
                     onChange={(event) => setSort(event.target.value as Sort)}
-                    className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+                    className="mt-2 w-full rounded-2xl border border-[#dfcebc] bg-white/82 px-4 py-3 text-sm outline-none transition focus:border-[#9b123f] focus:bg-white"
                   >
                     <option value="new">Новые</option>
                     <option value="price_asc">По цене: дешевые</option>
@@ -247,7 +256,7 @@ export function CatalogClient() {
               type="button"
               aria-expanded={isFiltersOpen}
               onClick={() => setIsFiltersOpen((current) => !current)}
-              className="flex w-full items-center justify-between rounded-[22px] border border-white/80 bg-white/90 px-5 py-4 text-left font-semibold text-zinc-950 shadow-[0_16px_36px_rgba(132,93,63,0.08)] backdrop-blur"
+              className="flex w-full items-center justify-between rounded-[24px] border border-[#f1e5d8] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(248,238,228,0.9))] px-5 py-4 text-left font-semibold text-zinc-950 shadow-[0_18px_44px_rgba(92,60,30,0.08)] backdrop-blur"
             >
               <span>Фильтры</span>
               <span className="flex items-center gap-2">
@@ -275,7 +284,7 @@ export function CatalogClient() {
               </span>
             </button>
             {isFiltersOpen ? (
-              <div className="mt-3 rounded-[28px] border border-white/80 bg-white/88 p-5 shadow-[0_20px_45px_rgba(132,93,63,0.08)] backdrop-blur">
+              <div className="mt-3 rounded-[28px] border border-[#f1e5d8] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(248,238,228,0.9))] p-5 shadow-[0_20px_45px_rgba(92,60,30,0.08)] backdrop-blur">
                 {filterPanel}
               </div>
             ) : null}
@@ -283,18 +292,29 @@ export function CatalogClient() {
 
           <div className="mt-6">
             {loadError ? (
-              <div className="mb-5 rounded-lg border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800">
+              <div className="mb-5 rounded-2xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-800 shadow-sm">
                 {loadError}
               </div>
             ) : null}
-            <div className="mb-5 flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-600">
-              {brand ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{brands.find((item) => item.slug === brand)?.name}</span> : null}
-              {category ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{categories.find((item) => item.slug === category)?.name}</span> : null}
-              {gender ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{genderOptions.find(([value]) => value === gender)?.[1]}</span> : null}
-              {type ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{fragranceOptions.find(([value]) => value === type)?.[1]}</span> : null}
-              {volume ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">{volume}</span> : null}
-              {search ? <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 shadow-sm">“{search}”</span> : null}
-            </div>
+            {activeFilters ? (
+              <div className="mb-6 rounded-[24px] border border-[#f1e5d8] bg-white/75 p-3 shadow-[0_16px_40px_rgba(92,60,30,0.06)] backdrop-blur">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-600">
+                  {brand ? <ActiveChip>{brands.find((item) => item.slug === brand)?.name}</ActiveChip> : null}
+                  {category ? <ActiveChip>{categories.find((item) => item.slug === category)?.name}</ActiveChip> : null}
+                  {gender ? <ActiveChip>{genderOptions.find(([value]) => value === gender)?.[1]}</ActiveChip> : null}
+                  {type ? <ActiveChip>{fragranceOptions.find(([value]) => value === type)?.[1]}</ActiveChip> : null}
+                  {volume ? <ActiveChip>{volume}</ActiveChip> : null}
+                  {search ? <ActiveChip>“{search}”</ActiveChip> : null}
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="rounded-full border border-[#deccb9] bg-white px-3 py-1.5 text-xs font-semibold text-zinc-900 shadow-sm transition hover:border-zinc-950"
+                  >
+                    Сбросить все
+                  </button>
+                </div>
+              </div>
+            ) : null}
 
             <div>
               <section className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
@@ -302,7 +322,7 @@ export function CatalogClient() {
                   <ProductCard key={product.id} product={product} />
                 ))}
                 {!filteredProducts.length ? (
-                  <div className="col-span-full rounded-lg border border-dashed border-zinc-300 bg-white p-12 text-center shadow-sm">
+                  <div className="col-span-full rounded-[28px] border border-dashed border-zinc-300 bg-white/92 p-12 text-center shadow-[0_16px_40px_rgba(92,60,30,0.06)]">
                     <p className="text-xl font-semibold text-zinc-950">
                       {isLoading ? "Загружаем товары" : "Ничего не найдено"}
                     </p>
@@ -344,11 +364,28 @@ function FilterSelect({
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-md border border-zinc-300 bg-zinc-50 px-4 py-3 text-sm outline-none transition focus:border-rose-700 focus:bg-white"
+        className="mt-2 w-full rounded-2xl border border-[#dfcebc] bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-[#9b123f] focus:bg-white"
       >
         <option value="">Все</option>
         {children}
       </select>
     </label>
+  );
+}
+
+function CatalogMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[24px] border border-white/80 bg-white/82 px-4 py-3 shadow-[0_16px_36px_rgba(99,64,32,0.08)] backdrop-blur">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-zinc-500">{label}</p>
+      <p className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950">{value}</p>
+    </div>
+  );
+}
+
+function ActiveChip({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="rounded-full border border-[#eadaca] bg-white/90 px-3 py-1.5 shadow-sm">
+      {children}
+    </span>
   );
 }

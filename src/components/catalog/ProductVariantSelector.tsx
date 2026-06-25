@@ -2,23 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { formatPrice } from "@/lib/dictionaries";
+import { normalizeProductVariants } from "@/lib/product-variants";
 import { Product, ProductVariant } from "@/types/catalog";
 
 export function ProductVariantSelector({ product }: { product: Product }) {
-  const variants = useMemo<ProductVariant[]>(
-    () =>
-      product.variants?.length
-        ? product.variants
-        : [
-            {
-              volume: product.volume,
-              price: product.price,
-              oldPrice: product.oldPrice,
-              images: ["/images/products/perfume-card-1.png"],
-            },
-          ],
-    [product],
-  );
+  const variants = useMemo<ProductVariant[]>(() => normalizeProductVariants(product), [product]);
   const [selectedVolume, setSelectedVolume] = useState(variants[0]?.volume ?? product.volume);
   const selected = variants.find((variant) => variant.volume === selectedVolume) ?? variants[0];
 
@@ -30,9 +18,9 @@ export function ProductVariantSelector({ product }: { product: Product }) {
             Объем
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            {variants.map((variant) => (
+            {variants.map((variant, index) => (
               <button
-                key={variant.volume}
+                key={`${variant.volume}-${variant.price}-${index}`}
                 type="button"
                 onClick={() => setSelectedVolume(variant.volume)}
                 className={

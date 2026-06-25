@@ -5,30 +5,16 @@ import Link from "next/link";
 import { useMemo, useState, type ReactNode } from "react";
 import { formatPrice, fragranceLabels, genderLabels } from "@/lib/dictionaries";
 import { imageUrl } from "@/lib/images";
+import { fallbackProductImage, normalizeProductVariants } from "@/lib/product-variants";
 import { Product, ProductVariant } from "@/types/catalog";
 
-const fallbackImage = "/images/products/perfume-card-1.png";
-
 export function ProductDetails({ product }: { product: Product }) {
-  const variants = useMemo<ProductVariant[]>(
-    () =>
-      product.variants?.length
-        ? product.variants
-        : [
-            {
-              volume: product.volume,
-              price: product.price,
-              oldPrice: product.oldPrice,
-              images: [fallbackImage],
-            },
-          ],
-    [product],
-  );
+  const variants = useMemo<ProductVariant[]>(() => normalizeProductVariants(product), [product]);
   const [selectedVolume, setSelectedVolume] = useState(variants[0]?.volume ?? product.volume);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const selectedVariant = variants.find((variant) => variant.volume === selectedVolume) ?? variants[0];
-  const images = selectedVariant?.images?.length ? selectedVariant.images : [fallbackImage];
-  const selectedImage = images[selectedImageIndex] ?? images[0] ?? fallbackImage;
+  const images = selectedVariant?.images?.length ? selectedVariant.images : [fallbackProductImage];
+  const selectedImage = images[selectedImageIndex] ?? images[0] ?? fallbackProductImage;
   const oldPrice = selectedVariant?.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
   const discount =
     oldPrice && selectedVariant && oldPrice > Number(selectedVariant.price)
@@ -52,10 +38,28 @@ export function ProductDetails({ product }: { product: Product }) {
           <Link href="/catalog" className="transition hover:text-zinc-950">
             Каталог
           </Link>
+          {product.category?.name && product.category?.slug ? (
+            <>
+              <BreadcrumbArrow />
+              <Link
+                href={`/catalog?category=${encodeURIComponent(product.category.slug)}`}
+                className="transition hover:text-zinc-950"
+              >
+                {product.category.name}
+              </Link>
+            </>
+          ) : null}
           {product.brand?.name ? (
             <>
               <BreadcrumbArrow />
-              <Link href="/brands" className="transition hover:text-zinc-950">
+              <Link
+                href={
+                  product.brand?.slug
+                    ? `/catalog?brand=${encodeURIComponent(product.brand.slug)}`
+                    : "/brands"
+                }
+                className="transition hover:text-zinc-950"
+              >
                 {product.brand.name}
               </Link>
             </>
@@ -64,7 +68,7 @@ export function ProductDetails({ product }: { product: Product }) {
           <span className="text-zinc-950">{product.name}</span>
         </nav>
 
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
             <div className="relative aspect-[1/1.02] overflow-hidden rounded-[30px] border border-[#eadaca] bg-white shadow-[0_24px_65px_rgba(80,52,24,0.12)]">
               <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2 sm:left-6 sm:top-6">
@@ -73,10 +77,12 @@ export function ProductDetails({ product }: { product: Product }) {
                 {discount ? <Badge tone="sale">-{discount}%</Badge> : null}
               </div>
               <Image
+                key={selectedImage}
                 src={imageUrl(selectedImage)}
                 alt={product.name}
                 fill
                 priority
+                unoptimized
                 sizes="(min-width: 1024px) 48vw, 100vw"
                 className="object-cover object-center"
               />
@@ -99,6 +105,7 @@ export function ProductDetails({ product }: { product: Product }) {
                     src={imageUrl(image)}
                     alt={`${product.name} ${index + 1}`}
                     fill
+                    unoptimized
                     sizes="120px"
                     className="object-cover"
                   />
@@ -131,9 +138,9 @@ export function ProductDetails({ product }: { product: Product }) {
             <div className="mt-8 border-y border-[#eadaca] py-6">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Выберите объем</p>
               <div className="mt-4 flex flex-wrap gap-2">
-                {variants.map((variant) => (
+                {variants.map((variant, index) => (
                   <button
-                    key={variant.volume}
+                    key={`${variant.volume}-${variant.price}-${index}`}
                     type="button"
                     onClick={() => selectVariant(variant.volume)}
                     className={

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BrandCard } from "@/components/catalog/BrandCard";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { API_URL } from "@/lib/api";
-import { imageUrl } from "@/lib/images";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
 
 export default async function Home() {
@@ -93,25 +93,7 @@ export default async function Home() {
       <Section title="Бренды" href="/brands">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
           {brands.map((brand) => (
-            <Link
-              href={`/catalog?brand=${brand.slug}`}
-              key={brand.id}
-              className="overflow-hidden rounded-lg border border-zinc-200 bg-white text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-            >
-              <div className="relative aspect-[4/3] bg-zinc-100">
-                <Image
-                  src={imageUrl(brand.image)}
-                  alt={brand.name}
-                  fill
-                  sizes="(min-width: 768px) 25vw, 50vw"
-                  className="object-cover"
-                />
-                <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-sm font-semibold text-zinc-950 shadow-sm">
-                  {brand.logo}
-                </div>
-              </div>
-              <p className="p-5 font-semibold text-zinc-950">{brand.name}</p>
-            </Link>
+            <BrandCard key={brand.id} brand={brand} />
           ))}
         </div>
         {!brands.length ? <EmptyState text="Бренды пока не загружены из backend." /> : null}

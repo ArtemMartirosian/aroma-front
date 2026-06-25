@@ -36,6 +36,31 @@ export function SiteFooter() {
           <p>Доставка: бесплатно</p>
         </div>
       </div>
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-zinc-400 sm:px-6 sm:text-sm lg:px-8">
+          <p>
+            Разработка сайта —{" "}
+            <a
+              href="https://digitalize.am"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-white transition hover:text-zinc-300"
+            >
+              Digitalize
+            </a>
+            {" "}(
+            <a
+              href="https://digitalize.am"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-white transition hover:text-zinc-300"
+            >
+              digitalize.am
+            </a>
+            ).
+          </p>
+        </div>
+      </div>
     </footer>
   );
 }

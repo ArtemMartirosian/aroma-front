@@ -1,50 +1,56 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BrandCard } from "@/components/catalog/BrandCard";
 import { API_URL } from "@/lib/api";
-import { imageUrl } from "@/lib/images";
 import { Brand } from "@/types/catalog";
 
 export default async function BrandsPage() {
   const brands = await loadBrands();
+  const totalProducts = brands.reduce((sum, brand) => sum + (brand.products?.length ?? 0), 0);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Brands</p>
-      <h1 className="mt-2 text-4xl font-semibold text-zinc-950">Бренды</h1>
-      <div className="mt-8 grid gap-5 md:grid-cols-2">
-        {brands.map((brand) => (
-          <Link
-            key={brand.id}
-            href={`/catalog?brand=${brand.slug}`}
-            className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            <div className="grid sm:grid-cols-[190px_1fr]">
-              <div className="relative min-h-44 bg-zinc-100">
-                <Image
-                  src={imageUrl(brand.image)}
-                  alt={brand.name}
-                  fill
-                  sizes="(min-width: 768px) 190px, 100vw"
-                  className="object-cover"
-                />
-                <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-sm font-semibold text-zinc-950 shadow-sm">
-                  {brand.logo || brand.name.slice(0, 2).toUpperCase()}
-                </div>
-              </div>
-              <div className="p-6">
-                <h2 className="text-2xl font-semibold text-zinc-950">{brand.name}</h2>
-                <p className="mt-2 leading-7 text-zinc-600">{brand.description}</p>
-                <p className="mt-4 text-sm font-semibold text-rose-800">{brand.products?.length ?? 0} товаров</p>
-              </div>
+    <div className="bg-[linear-gradient(180deg,#fbf2e9_0%,#fffaf6_30%,#fffdfa_100%)]">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(247,236,224,0.96))] px-6 py-8 shadow-[0_28px_80px_rgba(99,64,32,0.1)] sm:px-8 sm:py-10 lg:px-10">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(190,115,74,0.16),transparent_26%),radial-gradient(circle_at_84%_22%,rgba(231,210,188,0.6),transparent_24%)]" />
+          <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.32em] text-rose-800">Brand library</p>
+              <h1 className="mt-4 font-serif text-4xl leading-tight text-zinc-950 sm:text-5xl lg:text-6xl">
+                Бренды с характером и красивым шлейфом
+              </h1>
+              <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-600 sm:text-lg">
+                Собрали любимые дома парфюмерии в одной витрине: от нишевых акцентов до узнаваемой классики.
+              </p>
             </div>
-          </Link>
+
+            <div className="grid grid-cols-2 gap-3 sm:min-w-[320px]">
+              <StatCard label="Брендов" value={String(brands.length)} />
+              <StatCard label="Ароматов" value={String(totalProducts)} />
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+        {brands.map((brand) => (
+          <BrandCard key={brand.id} brand={brand} variant="showcase" />
         ))}
-      </div>
-      {!brands.length ? (
-        <div className="mt-8 rounded-lg border border-dashed border-zinc-300 bg-white p-10 text-center text-zinc-500">
-          Бренды пока не загружены из backend.
         </div>
-      ) : null}
+        {!brands.length ? (
+          <div className="mt-8 rounded-[28px] border border-dashed border-zinc-300 bg-white p-10 text-center text-zinc-500 shadow-sm">
+            Бренды пока не загружены из backend.
+          </div>
+        ) : null}
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            href="/catalog"
+            className="inline-flex items-center gap-2 rounded-full border border-[#deccb9] bg-white px-6 py-3 text-sm font-semibold text-zinc-950 shadow-sm transition hover:border-zinc-950"
+          >
+            Открыть весь каталог
+            <span aria-hidden="true">/</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
@@ -60,4 +66,13 @@ async function loadBrands(): Promise<Brand[]> {
   }
 
   return [];
+}
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[24px] border border-white/80 bg-white/82 px-5 py-4 shadow-[0_16px_36px_rgba(99,64,32,0.08)] backdrop-blur">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-zinc-500">{label}</p>
+      <p className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950">{value}</p>
+    </div>
+  );
 }
