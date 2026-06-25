@@ -245,12 +245,33 @@ export function CatalogClient() {
           <div className="mt-4 lg:hidden">
             <button
               type="button"
+              aria-expanded={isFiltersOpen}
               onClick={() => setIsFiltersOpen((current) => !current)}
               className="flex w-full items-center justify-between rounded-[22px] border border-white/80 bg-white/90 px-5 py-4 text-left font-semibold text-zinc-950 shadow-[0_16px_36px_rgba(132,93,63,0.08)] backdrop-blur"
             >
               <span>Фильтры</span>
-              <span className="text-sm text-zinc-500">
-                {activeFilters ? `${activeFilters} активно` : isFiltersOpen ? "Скрыть" : "Открыть"}
+              <span className="flex items-center gap-2">
+                {activeFilters ? (
+                  <span className="rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-900">
+                    {activeFilters}
+                  </span>
+                ) : null}
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 20 20"
+                  className={`h-5 w-5 text-zinc-500 transition-transform duration-200 ${
+                    isFiltersOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  <path
+                    d="M5 7.5 10 12.5 15 7.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.8"
+                  />
+                </svg>
               </span>
             </button>
             {isFiltersOpen ? (
