@@ -91,8 +91,8 @@ export const mockProducts: Product[] = [
     description:
       "Нежная цветочная композиция с прозрачным розовым сердцем, чистым мускусом и мягкой древесной базой.",
     shortDescription: "Пудровая роза, чистый мускус и мягкая древесная база.",
-    mainImage: "/images/perfume-hero.png",
-    galleryImages: ["/images/perfume-hero.png"],
+    mainImage: "/images/products/perfume-card-4.png",
+    galleryImages: ["/images/products/perfume-card-4.png", "/images/products/perfume-card-3.png"],
     isAvailable: true,
     stockStatus: "В наличии",
     isFeatured: true,
@@ -122,8 +122,8 @@ export const mockProducts: Product[] = [
     description:
       "Глубокий древесно-пряный аромат с сухим кедром, табаком и темной амброй.",
     shortDescription: "Кедр, табак и темная амбра для вечернего образа.",
-    mainImage: "/images/perfume-hero.png",
-    galleryImages: ["/images/perfume-hero.png"],
+    mainImage: "/images/products/perfume-card-6.png",
+    galleryImages: ["/images/products/perfume-card-6.png", "/images/products/perfume-card-5.png"],
     isAvailable: true,
     stockStatus: "В наличии",
     isFeatured: true,
@@ -153,8 +153,8 @@ export const mockProducts: Product[] = [
     description:
       "Светлый унисекс аромат с грейпфрутом, зеленым чаем и чистым мускусным финишем.",
     shortDescription: "Грейпфрут, зеленый чай и чистый мускус.",
-    mainImage: "/images/perfume-hero.png",
-    galleryImages: ["/images/perfume-hero.png"],
+    mainImage: "/images/products/perfume-card-2.png",
+    galleryImages: ["/images/products/perfume-card-2.png", "/images/products/perfume-card-1.png"],
     isAvailable: true,
     stockStatus: "В наличии",
     isFeatured: false,
@@ -184,8 +184,8 @@ export const mockProducts: Product[] = [
     description:
       "Теплая восточная композиция с амброй, ванилью, шафраном и бархатным цветочным аккордом.",
     shortDescription: "Амбра, ваниль, шафран и бархатный цветочный аккорд.",
-    mainImage: "/images/perfume-hero.png",
-    galleryImages: ["/images/perfume-hero.png"],
+    mainImage: "/images/products/perfume-card-5.png",
+    galleryImages: ["/images/products/perfume-card-5.png", "/images/products/perfume-card-4.png"],
     isAvailable: false,
     stockStatus: "Нет в наличии",
     isFeatured: true,
