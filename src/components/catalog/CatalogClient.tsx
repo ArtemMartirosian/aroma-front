@@ -22,7 +22,6 @@ export function CatalogClient() {
   const [volume, setVolume] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [sort, setSort] = useState<Sort>("new");
-  const [apiMode, setApiMode] = useState(false);
 
   useEffect(() => {
     Promise.all([getProducts({ limit: 100 }), getBrands(), getCategories()])
@@ -30,13 +29,11 @@ export function CatalogClient() {
         setProducts(productsResponse.items);
         setBrands(brandsResponse);
         setCategories(categoriesResponse);
-        setApiMode(true);
       })
       .catch(() => {
         setProducts(mockProducts);
         setBrands(mockBrands);
         setCategories(mockCategories);
-        setApiMode(false);
       });
   }, []);
 
@@ -203,7 +200,7 @@ export function CatalogClient() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 md:self-start sm:flex-row sm:flex-wrap sm:justify-end">
+              <div className="flex flex-col gap-3 md:self-center sm:flex-row sm:flex-wrap sm:justify-end">
                 <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 sm:justify-end">
                   <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">
                     {filteredProducts.length} товаров
@@ -216,7 +213,6 @@ export function CatalogClient() {
                       {activeFilters} фильтров
                     </span>
                   ) : null}
-                  {apiMode ? <span className="rounded-full bg-white px-3 py-1.5 shadow-sm">Backend API</span> : null}
                 </div>
 
                 <label className="block min-w-[210px]">
@@ -247,7 +243,7 @@ export function CatalogClient() {
             </div>
 
             <div>
-              <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              <section className="grid grid-cols-2 gap-4 sm:gap-6 xl:grid-cols-3">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
