@@ -70,7 +70,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
   return (
     <Link
       href={href}
-      className="group overflow-hidden rounded-[26px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(21,24,25,0.98)_0%,rgba(29,33,34,0.96)_100%)] shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_28px_70px_rgba(0,0,0,0.32)]"
+      className="group overflow-hidden rounded-[26px] bg-[linear-gradient(180deg,rgba(21,24,25,0.98)_0%,rgba(29,33,34,0.96)_100%)] shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_28px_70px_rgba(0,0,0,0.32)]"
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-[var(--surface-muted)]">
         {/* eslint-disable-next-line @next/next/no-img-element */}

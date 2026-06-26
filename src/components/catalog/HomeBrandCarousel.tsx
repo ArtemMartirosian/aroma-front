@@ -134,7 +134,7 @@ export function HomeBrandCarousel({ brands }: { brands: Brand[] }) {
       >
         <div className="flex">
           {brands.map((brand) => (
-            <div key={brand.id} className="w-1/2 shrink-0 snap-start px-1.5 sm:px-2 lg:w-1/4">
+            <div key={brand.id} className="w-1/2 shrink-0 snap-start px-1 sm:px-2 lg:w-1/4">
               <BrandCard brand={brand} />
             </div>
           ))}
