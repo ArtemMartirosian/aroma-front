@@ -132,7 +132,7 @@ export function HomeProductCarousel({ products }: { products: Product[] }) {
       >
         <div className="flex">
           {products.map((product) => (
-            <div key={product.id} className="w-1/2 shrink-0 snap-start px-1.5 sm:px-2 lg:w-1/3">
+                <div key={product.id} className="w-1/2 shrink-0 snap-start px-1 sm:px-2 lg:w-1/3">
               <ProductCard product={product} />
             </div>
           ))}

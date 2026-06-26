@@ -113,7 +113,7 @@ export function ProductCard({ product }: { product: Product }) {
           ))}
         </div>
 
-        <div className="mt-auto">
+        <div className="mt-auto pt-2">
           <div className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-2.5 sm:flex-row sm:items-end sm:justify-between">
             <div className="min-w-0">
               {oldPrice ? (
