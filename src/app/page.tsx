@@ -82,9 +82,9 @@ async function loadHomeData(): Promise<{
 }> {
   try {
     const [productsResponse, brandsResponse, categoriesResponse] = await Promise.all([
-      fetch(`${API_URL}/products?limit=100`, { cache: "no-store" }),
-      fetch(`${API_URL}/brands`, { cache: "no-store" }),
-      fetch(`${API_URL}/categories`, { cache: "no-store" }),
+      fetch(`${API_URL}/products?limit=100`, { cache: "no-store", signal: AbortSignal.timeout(1500) }),
+      fetch(`${API_URL}/brands`, { cache: "no-store", signal: AbortSignal.timeout(1500) }),
+      fetch(`${API_URL}/categories`, { cache: "no-store", signal: AbortSignal.timeout(1500) }),
     ]);
 
     if (!productsResponse.ok || !brandsResponse.ok || !categoriesResponse.ok) {

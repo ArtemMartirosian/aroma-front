@@ -59,8 +59,8 @@ export default async function BrandsPage() {
 async function loadBrands(): Promise<Brand[]> {
   try {
     const [brandsResponse, productsResponse] = await Promise.all([
-      fetch(`${API_URL}/brands`, { cache: "no-store" }),
-      fetch(`${API_URL}/products?limit=100`, { cache: "no-store" }),
+      fetch(`${API_URL}/brands`, { cache: "no-store", signal: AbortSignal.timeout(1500) }),
+      fetch(`${API_URL}/products?limit=100`, { cache: "no-store", signal: AbortSignal.timeout(1500) }),
     ]);
 
     if (brandsResponse.ok && productsResponse.ok) {

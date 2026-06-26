@@ -98,7 +98,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
             {productCount} ապրանք
           </span>
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--foreground)] transition group-hover:text-[var(--accent-strong)]">
-            <span className="md:hidden">Բացել</span>
+            <span className="md:hidden">Կատալոգ</span>
             <span className="hidden md:inline">Կատալոգ</span>
             <ArrowMark />
           </span>

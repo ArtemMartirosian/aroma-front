@@ -1,3 +1,4 @@
+import { MobileTabBar } from "@/components/catalog/MobileTabBar";
 import type { Metadata, Viewport } from "next";
 import { SiteFooter } from "@/components/catalog/SiteFooter";
 import { SiteHeader } from "@/components/catalog/SiteHeader";
@@ -24,8 +25,9 @@ export default function RootLayout({
     <html lang="hy" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-[calc(env(safe-area-inset-bottom)+6.5rem)] md:pb-0">{children}</main>
         <SiteFooter />
+        <MobileTabBar />
       </body>
     </html>
   );

@@ -69,6 +69,7 @@ async function loadProduct(slug: string): Promise<Product | undefined> {
   try {
     const response = await fetch(`${API_URL}/products/${slug}`, {
       cache: "no-store",
+      signal: AbortSignal.timeout(1500),
     });
     if (response.ok) {
       return response.json();
