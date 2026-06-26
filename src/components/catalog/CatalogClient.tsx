@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { fragranceOptions, genderOptions } from "@/lib/dictionaries";
@@ -10,19 +11,23 @@ import { Brand, Category, FragranceType, Gender, Product } from "@/types/catalog
 type Sort = "new" | "price_asc" | "price_desc" | "popular";
 
 export function CatalogClient() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const urlState = useMemo(() => readCatalogQuery(searchParams), [searchParams]);
   const [products, setProducts] = useState<Product[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
-  const [search, setSearch] = useState("");
-  const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
-  const [gender, setGender] = useState<Gender | "">("");
-  const [type, setType] = useState<FragranceType | "">("");
-  const [volume, setVolume] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [sort, setSort] = useState<Sort>("new");
+  const [search, setSearch] = useState(urlState.search);
+  const [brand, setBrand] = useState(urlState.brand);
+  const [category, setCategory] = useState(urlState.category);
+  const [gender, setGender] = useState<Gender | "">(urlState.gender);
+  const [type, setType] = useState<FragranceType | "">(urlState.type);
+  const [volume, setVolume] = useState(urlState.volume);
+  const [maxPrice, setMaxPrice] = useState(urlState.maxPrice);
+  const [sort, setSort] = useState<Sort>(urlState.sort);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   useEffect(() => {
@@ -40,6 +45,37 @@ export function CatalogClient() {
       })
       .finally(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    setSearch(urlState.search);
+    setBrand(urlState.brand);
+    setCategory(urlState.category);
+    setGender(urlState.gender);
+    setType(urlState.type);
+    setVolume(urlState.volume);
+    setMaxPrice(urlState.maxPrice);
+    setSort(urlState.sort);
+  }, [urlState]);
+
+  useEffect(() => {
+    const nextQuery = buildCatalogQuery({
+      search,
+      brand,
+      category,
+      gender,
+      type,
+      volume,
+      maxPrice,
+      sort,
+    });
+    const currentQuery = searchParams.toString();
+
+    if (nextQuery === currentQuery) {
+      return;
+    }
+
+    router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+  }, [brand, category, gender, maxPrice, pathname, router, search, searchParams, sort, type, volume]);
 
   const filteredProducts = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -307,26 +343,25 @@ export function CatalogClient() {
 
             <div>
               <section className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-                {!filteredProducts.length ? (
+                {isLoading ? (
+                  Array.from({ length: 6 }).map((_, index) => <ProductCardSkeleton key={index} />)
+                ) : filteredProducts.length ? (
+                  filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)
+                ) : (
                   <div className="col-span-full rounded-[28px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.24)]">
-                    <p className="text-xl font-semibold text-[var(--foreground)]">
-                      {isLoading ? "Բեռնում ենք ապրանքները" : "Ոչինչ չի գտնվել"}
-                    </p>
+                    <p className="text-xl font-semibold text-[var(--foreground)]">Ոչինչ չի գտնվել</p>
                     <p className="mt-2 text-[var(--text-soft)]">
-                      {isLoading ? "Տվյալները բեռնվում են backend-ից։" : "Փորձեք փոխել ֆիլտրերը կամ զրոյացնել որոնումը։"}
+                      Փորձեք փոխել ֆիլտրերը կամ զրոյացնել որոնումը։
                     </p>
                     <button
                       type="button"
                       onClick={resetFilters}
-                    className="mt-5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
+                      className="mt-5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
                     >
                       Զրոյացնել ֆիլտրերը
                     </button>
                   </div>
-                ) : null}
+                )}
               </section>
             </div>
           </div>
@@ -397,4 +432,99 @@ function ActiveChip({ children }: { children: React.ReactNode }) {
       {children}
     </span>
   );
+}
+
+function ProductCardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--surface-elevated)] sm:rounded-[24px]">
+      <div className="aspect-[3.5/4] animate-pulse bg-[var(--surface-muted)] sm:aspect-[4/3]" />
+      <div className="space-y-3 p-2.5 sm:p-4">
+        <div className="h-3 w-20 animate-pulse rounded-full bg-[var(--surface-muted)]" />
+        <div className="space-y-2">
+          <div className="h-5 w-full animate-pulse rounded-full bg-[var(--surface-muted)]" />
+          <div className="h-5 w-3/4 animate-pulse rounded-full bg-[var(--surface-muted)]" />
+        </div>
+        <div className="h-px w-12 bg-[var(--line)]" />
+        <div className="flex gap-2">
+          <div className="h-8 w-14 animate-pulse rounded-full bg-[var(--surface-muted)]" />
+          <div className="h-8 w-14 animate-pulse rounded-full bg-[var(--surface-muted)]" />
+          <div className="h-8 w-16 animate-pulse rounded-full bg-[var(--surface-muted)]" />
+        </div>
+        <div className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-2.5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="h-8 w-28 animate-pulse rounded-full bg-[var(--surface-muted)]" />
+          <div className="h-10 w-full animate-pulse rounded-full bg-[var(--surface-muted)] sm:w-28" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function readCatalogQuery(searchParams: { get: (key: string) => string | null }) {
+  const genderValue = searchParams.get("gender");
+  const typeValue = searchParams.get("type");
+  const sortValue = searchParams.get("sort");
+
+  return {
+    search: searchParams.get("search") ?? "",
+    brand: searchParams.get("brand") ?? "",
+    category: searchParams.get("category") ?? "",
+    gender: (isGender(genderValue) ? genderValue : "") as Gender | "",
+    type: (isFragranceType(typeValue) ? typeValue : "") as FragranceType | "",
+    volume: searchParams.get("volume") ?? "",
+    maxPrice: searchParams.get("maxPrice") ?? "",
+    sort: isSort(sortValue) ? sortValue : "new",
+  };
+}
+
+function buildCatalogQuery({
+  search,
+  brand,
+  category,
+  gender,
+  type,
+  volume,
+  maxPrice,
+  sort,
+}: {
+  search: string;
+  brand: string;
+  category: string;
+  gender: Gender | "";
+  type: FragranceType | "";
+  volume: string;
+  maxPrice: string;
+  sort: Sort;
+}) {
+  const params = new URLSearchParams();
+
+  if (search) params.set("search", search);
+  if (brand) params.set("brand", brand);
+  if (category) params.set("category", category);
+  if (gender) params.set("gender", gender);
+  if (type) params.set("type", type);
+  if (volume) params.set("volume", volume);
+  if (maxPrice) params.set("maxPrice", maxPrice);
+  if (sort !== "new") params.set("sort", sort);
+
+  return params.toString();
+}
+
+function isGender(value: string | null): value is Gender {
+  return value === "male" || value === "female" || value === "unisex";
+}
+
+function isFragranceType(value: string | null): value is FragranceType {
+  return (
+    value === "woody" ||
+    value === "floral" ||
+    value === "citrus" ||
+    value === "oriental" ||
+    value === "fresh" ||
+    value === "sweet" ||
+    value === "spicy"
+  );
+}
+
+function isSort(value: string | null): value is Sort {
+  return value === "new" || value === "price_asc" || value === "price_desc" || value === "popular";
 }

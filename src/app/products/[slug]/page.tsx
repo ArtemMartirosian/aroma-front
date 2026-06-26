@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
+import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { ProductDetails } from "@/components/catalog/ProductDetails";
-import { ProductCard } from "@/components/catalog/ProductCard";
 import { API_URL } from "@/lib/api";
 import { longevityLabels, sillageLabels } from "@/lib/dictionaries";
 import { getMockProductBySlug } from "@/lib/mock-catalog";
@@ -53,11 +53,7 @@ export default async function ProductPage({
             </div>
           </div>
           {related.length ? (
-            <div className="grid gap-6 md:grid-cols-3">
-              {related.map((item) => (
-                <ProductCard key={item.id} product={item} />
-              ))}
-            </div>
+            <HomeProductCarousel products={related} />
           ) : (
             <div className="rounded-[28px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-10 text-center text-[var(--text-muted)]">
               Նման ապրանքները դեռ չեն բեռնվել backend-ից։
