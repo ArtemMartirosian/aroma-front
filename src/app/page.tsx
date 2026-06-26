@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BrandCard } from "@/components/catalog/BrandCard";
+import { HomeBrandCarousel } from "@/components/catalog/HomeBrandCarousel";
 import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { API_URL } from "@/lib/api";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
@@ -83,11 +83,7 @@ export default async function Home() {
       </Section>
 
       <Section title="Բրենդներ" href="/brands">
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-          {brands.map((brand) => (
-            <BrandCard key={brand.id} brand={brand} />
-          ))}
-        </div>
+        {brands.length ? <HomeBrandCarousel brands={brands} /> : null}
         {!brands.length ? <EmptyState text="Բրենդները դեռ չեն բեռնվել backend-ից։" /> : null}
       </Section>
 

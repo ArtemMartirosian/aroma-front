@@ -24,7 +24,7 @@ export function ProductCard({ product }: { product: Product }) {
       : 0;
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--surface)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_52px_rgba(71,58,44,0.12)] sm:rounded-[24px]">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--surface)] transition duration-300 hover:-translate-y-1  sm:rounded-[24px]">
       <div className="relative overflow-hidden bg-[var(--surface-muted)]">
         <Link
           href={`/products/${product.slug}`}

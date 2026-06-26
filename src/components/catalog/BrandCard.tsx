@@ -70,7 +70,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
   return (
     <Link
       href={href}
-      className="group overflow-hidden rounded-[26px] border border-[var(--line)] bg-[linear-gradient(180deg,#fffdf9_0%,#f6f2eb_100%)] shadow-[0_18px_45px_rgba(71,58,44,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(71,58,44,0.12)]"
+      className="group overflow-hidden rounded-[26px] border-none bg-[linear-gradient(180deg,#fffdf9_0%,#f6f2eb_100%)] shadow-[0_18px_45px_rgba(71,58,44,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(71,58,44,0.12)]"
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-[var(--surface-muted)]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -89,7 +89,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 bg-[var(--surface)]">
           <p className="line-clamp-2 min-h-[3rem] text-sm leading-6 text-zinc-600">
             {description}
           </p>
