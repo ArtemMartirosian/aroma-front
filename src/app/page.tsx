@@ -43,7 +43,7 @@ export default async function Home() {
                 href="/contacts"
                 className="rounded-full border border-zinc-300 bg-white/80 px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
               >
-                Կապվել
+                Կապ
               </Link>
             </div>
           </div>
