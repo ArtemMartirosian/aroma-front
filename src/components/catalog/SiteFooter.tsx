@@ -25,6 +25,7 @@ export function SiteFooter() {
           <div className="mt-3 flex flex-col gap-2">
             <Link href="/catalog">Կատալոգ</Link>
             <Link href="/brands">Բրենդներ</Link>
+            <Link href="/about">Մեր մասին</Link>
             <Link href="/contacts">Կոնտակտներ</Link>
           </div>
         </div>
