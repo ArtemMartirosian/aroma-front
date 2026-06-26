@@ -97,7 +97,7 @@ export function CatalogClient() {
           <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">
             Ֆիլտրեր
           </p>
-          <p className="mt-2 text-sm leading-6 text-zinc-500">
+          <p className="mt-2 text-sm leading-6 text-[var(--text-muted)]">
             {activeFilters ? `${activeFilters} ակտիվ` : "Ընտրեք պարամետրերը"}
           </p>
         </div>
@@ -105,7 +105,7 @@ export function CatalogClient() {
           <button
             type="button"
             onClick={resetFilters}
-            className="rounded-full border border-[#deccb9] bg-white/90 px-3 py-1.5 text-xs font-semibold text-zinc-900 shadow-sm transition hover:border-zinc-950"
+            className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs font-semibold text-[var(--foreground)] shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
           >
             Զրոյացնել
           </button>
@@ -114,12 +114,12 @@ export function CatalogClient() {
 
       <div className="mt-5 space-y-4">
         <label className="block">
-          <span className="text-sm font-semibold text-zinc-800">Որոնում</span>
+          <span className="text-sm font-semibold text-[var(--foreground)]">Որոնում</span>
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Dior, Chanel, Oud..."
-            className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-[var(--accent)] focus:bg-white"
+            className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--accent)]"
           />
         </label>
         <FilterSelect label="Բրենդ" value={brand} onChange={setBrand}>
@@ -162,13 +162,13 @@ export function CatalogClient() {
           ))}
         </FilterSelect>
         <label className="block">
-          <span className="text-sm font-semibold text-zinc-800">Գինը մինչև</span>
+          <span className="text-sm font-semibold text-[var(--foreground)]">Գինը մինչև</span>
           <input
             value={maxPrice}
             onChange={(event) => setMaxPrice(event.target.value)}
             type="number"
             placeholder="50000"
-            className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-[var(--accent)] focus:bg-white"
+            className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--accent)]"
           />
         </label>
       </div>
@@ -176,7 +176,7 @@ export function CatalogClient() {
   );
 
   return (
-    <div className="relative overflow-hidden bg-[linear-gradient(180deg,#f4f1eb_0%,#faf7f2_28%,#fffdf9_100%)]">
+    <div className="relative overflow-hidden bg-transparent">
       <Image
         src="/images/perfume-hero.png"
         alt=""
@@ -185,27 +185,27 @@ export function CatalogClient() {
         sizes="100vw"
         className="object-cover object-center opacity-12"
       />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,253,249,0.95),rgba(255,253,249,0.84),rgba(255,253,249,0.96))]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.96),transparent_48%),radial-gradient(circle_at_top_right,rgba(220,212,202,0.44),transparent_32%)]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-b from-transparent to-white/85" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(10,11,12,0.95),rgba(10,11,12,0.84),rgba(10,11,12,0.96))]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(circle_at_top_left,rgba(195,164,111,0.14),transparent_48%),radial-gradient(circle_at_top_right,rgba(255,255,255,0.04),transparent_32%)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-b from-transparent to-black/30" />
 
       <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-8 lg:py-10">
-        <aside className="hidden h-fit rounded-[32px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(244,240,233,0.9))] p-6 shadow-[0_26px_70px_rgba(71,58,44,0.08)] backdrop-blur lg:sticky lg:top-8 lg:block">
+        <aside className="hidden h-fit rounded-[32px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(21,24,25,0.95),rgba(29,33,34,0.92))] p-6 shadow-[0_26px_70px_rgba(0,0,0,0.32)] backdrop-blur lg:sticky lg:top-8 lg:block">
           {filterPanel}
         </aside>
 
         <main className="min-w-0">
-          <div className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(243,238,231,0.96))] p-5 shadow-[0_28px_80px_rgba(71,58,44,0.08)] sm:p-7 lg:p-8">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(116,101,86,0.12),transparent_28%),radial-gradient(circle_at_84%_22%,rgba(221,212,201,0.48),transparent_24%)]" />
+          <div className="relative overflow-hidden rounded-[34px] border border-[var(--line)] bg-[linear-gradient(135deg,rgba(21,24,25,0.95),rgba(29,33,34,0.94))] p-5 shadow-[0_28px_80px_rgba(0,0,0,0.32)] sm:p-7 lg:p-8">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(195,164,111,0.14),transparent_28%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.04),transparent_24%)]" />
             <div className="relative flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
               <div className="max-w-3xl">
                 <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">
                   Aroma Parfume
                 </p>
-                <h1 className="mt-4 font-serif text-4xl leading-tight text-zinc-950 sm:text-5xl lg:text-6xl">
+                <h1 className="mt-4 font-serif text-4xl leading-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
                   Բույրերի կատալոգ
                 </h1>
-                <p className="mt-5 max-w-2xl text-sm leading-8 text-zinc-600 sm:text-lg">
+                <p className="mt-5 max-w-2xl text-sm leading-8 text-[var(--text-soft)] sm:text-lg">
                   Ընտրեք սիրելի նոտաները, բրենդներն ու ծավալները։ Բոլոր պատվերները ձևակերպվում են օնլայն,
                   իսկ առաքումն անվճար է։
                 </p>
@@ -220,32 +220,21 @@ export function CatalogClient() {
                   <CatalogMetric label="Առաքում" value="Անվճար" />
                 </div>
 
-                <div className="flex flex-wrap gap-2 text-xs font-semibold text-zinc-600 lg:justify-end">
-                  <span className="rounded-full border border-white/80 bg-white/88 px-3 py-1.5 shadow-sm">
-                    {isLoading ? "Բեռնում..." : `${filteredProducts.length} ապրանք`}
-                  </span>
-                  <span className="rounded-full border border-white/80 bg-white/88 px-3 py-1.5 shadow-sm">
-                    Անվճար առաքում
-                  </span>
-                  {activeFilters ? (
-                    <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1.5 text-[var(--accent-strong)] shadow-sm">
-                      {activeFilters} ֆիլտր
-                    </span>
-                  ) : null}
-                </div>
-
                 <label className="block min-w-[240px]">
-                  <span className="text-sm font-semibold text-zinc-800">Տեսակավորում</span>
-                  <select
-                    value={sort}
-                    onChange={(event) => setSort(event.target.value as Sort)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-white/82 px-4 py-3 text-sm outline-none transition focus:border-[var(--accent)] focus:bg-white"
-                  >
-                    <option value="new">Նորերը</option>
-                    <option value="price_asc">Ըստ գնի՝ էժանից</option>
-                    <option value="price_desc">Ըստ գնի՝ թանկից</option>
-                    <option value="popular">Հանրաճանաչ</option>
-                  </select>
+                  <span className="text-sm font-semibold text-[var(--foreground)]">Տեսակավորում</span>
+                  <div className="relative mt-2">
+                    <select
+                      value={sort}
+                      onChange={(event) => setSort(event.target.value as Sort)}
+                      className="w-full appearance-none rounded-2xl border border-[var(--line)] bg-[var(--surface-muted)] px-4 py-3 pr-12 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--accent)]"
+                    >
+                      <option value="new">Նորերը</option>
+                      <option value="price_asc">Ըստ գնի՝ էժանից</option>
+                      <option value="price_desc">Ըստ գնի՝ թանկից</option>
+                      <option value="popular">Հանրաճանաչ</option>
+                    </select>
+                    <SelectChevron />
+                  </div>
                 </label>
               </div>
             </div>
@@ -256,7 +245,7 @@ export function CatalogClient() {
               type="button"
               aria-expanded={isFiltersOpen}
               onClick={() => setIsFiltersOpen((current) => !current)}
-              className="flex w-full items-center justify-between rounded-[24px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(244,240,233,0.9))] px-5 py-4 text-left font-semibold text-zinc-950 shadow-[0_18px_44px_rgba(71,58,44,0.08)] backdrop-blur"
+              className="flex w-full items-center justify-between rounded-[24px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(21,24,25,0.95),rgba(29,33,34,0.92))] px-5 py-4 text-left font-semibold text-[var(--foreground)] shadow-[0_18px_44px_rgba(0,0,0,0.28)] backdrop-blur"
             >
               <span>Ֆիլտրեր</span>
               <span className="flex items-center gap-2">
@@ -268,7 +257,7 @@ export function CatalogClient() {
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 20 20"
-                  className={`h-5 w-5 text-zinc-500 transition-transform duration-200 ${
+                  className={`h-5 w-5 text-[var(--text-muted)] transition-transform duration-200 ${
                     isFiltersOpen ? "rotate-180" : ""
                   }`}
                 >
@@ -284,7 +273,7 @@ export function CatalogClient() {
               </span>
             </button>
             {isFiltersOpen ? (
-              <div className="mt-3 rounded-[28px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(244,240,233,0.9))] p-5 shadow-[0_20px_45px_rgba(71,58,44,0.08)] backdrop-blur">
+              <div className="mt-3 rounded-[28px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(21,24,25,0.95),rgba(29,33,34,0.92))] p-5 shadow-[0_20px_45px_rgba(0,0,0,0.28)] backdrop-blur">
                 {filterPanel}
               </div>
             ) : null}
@@ -297,8 +286,8 @@ export function CatalogClient() {
               </div>
             ) : null}
             {activeFilters ? (
-              <div className="mb-6 rounded-[24px] border border-[var(--line)] bg-white/75 p-3 shadow-[0_16px_40px_rgba(71,58,44,0.06)] backdrop-blur">
-                <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-zinc-600">
+              <div className="mb-6 rounded-[24px] border border-[var(--line)] bg-[rgba(21,24,25,0.78)] p-3 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop-blur">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[var(--text-soft)]">
                   {brand ? <ActiveChip>{brands.find((item) => item.slug === brand)?.name}</ActiveChip> : null}
                   {category ? <ActiveChip>{categories.find((item) => item.slug === category)?.name}</ActiveChip> : null}
                   {gender ? <ActiveChip>{genderOptions.find(([value]) => value === gender)?.[1]}</ActiveChip> : null}
@@ -308,7 +297,7 @@ export function CatalogClient() {
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-xs font-semibold text-zinc-900 shadow-sm transition hover:border-zinc-950"
+                    className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs font-semibold text-[var(--foreground)] shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
                   >
                     Զրոյացնել բոլորը
                   </button>
@@ -322,17 +311,17 @@ export function CatalogClient() {
                   <ProductCard key={product.id} product={product} />
                 ))}
                 {!filteredProducts.length ? (
-                  <div className="col-span-full rounded-[28px] border border-dashed border-zinc-300 bg-white/92 p-12 text-center shadow-[0_16px_40px_rgba(92,60,30,0.06)]">
-                    <p className="text-xl font-semibold text-zinc-950">
+                  <div className="col-span-full rounded-[28px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.24)]">
+                    <p className="text-xl font-semibold text-[var(--foreground)]">
                       {isLoading ? "Բեռնում ենք ապրանքները" : "Ոչինչ չի գտնվել"}
                     </p>
-                    <p className="mt-2 text-zinc-600">
+                    <p className="mt-2 text-[var(--text-soft)]">
                       {isLoading ? "Տվյալները բեռնվում են backend-ից։" : "Փորձեք փոխել ֆիլտրերը կամ զրոյացնել որոնումը։"}
                     </p>
                     <button
                       type="button"
                       onClick={resetFilters}
-                    className="mt-5 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
+                    className="mt-5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
                     >
                       Զրոյացնել ֆիլտրերը
                     </button>
@@ -360,31 +349,51 @@ function FilterSelect({
 }) {
   return (
     <label className="block">
-      <span className="text-sm font-semibold text-zinc-800">{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3 text-sm outline-none transition focus:border-[var(--accent)] focus:bg-white"
-      >
-        <option value="">Բոլորը</option>
-        {children}
-      </select>
+      <span className="text-sm font-semibold text-[var(--foreground)]">{label}</span>
+      <div className="relative mt-2">
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="w-full appearance-none rounded-2xl border border-[var(--line)] bg-[var(--surface-muted)] px-4 py-3 pr-12 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--accent)]"
+        >
+          <option value="">Բոլորը</option>
+          {children}
+        </select>
+        <SelectChevron />
+      </div>
     </label>
+  );
+}
+
+function SelectChevron() {
+  return (
+    <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-[var(--text-soft)]">
+      <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4">
+        <path
+          d="M5 7.5 10 12.5 15 7.5"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+      </svg>
+    </span>
   );
 }
 
 function CatalogMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[24px] border border-white/80 bg-white/82 px-4 py-3 shadow-[0_16px_36px_rgba(99,64,32,0.08)] backdrop-blur">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-zinc-500">{label}</p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950">{value}</p>
+    <div className="rounded-[24px] border border-[var(--line)] bg-[rgba(21,24,25,0.74)] px-4 py-3 shadow-[0_16px_36px_rgba(0,0,0,0.24)] backdrop-blur">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-[var(--text-muted)]">{label}</p>
+      <p className="mt-2 text-2xl font-semibold tracking-tight text-[var(--foreground)]">{value}</p>
     </div>
   );
 }
 
 function ActiveChip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full border border-[var(--line)] bg-white/90 px-3 py-1.5 shadow-sm">
+    <span className="rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-3 py-1.5 shadow-sm">
       {children}
     </span>
   );

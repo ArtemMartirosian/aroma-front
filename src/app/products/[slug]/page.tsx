@@ -17,14 +17,14 @@ export default async function ProductPage({
   const related = product.relatedProducts?.slice(0, 3) ?? [];
 
   return (
-    <div className="bg-[linear-gradient(180deg,#f4f1eb_0%,#faf7f2_34%,#fcfbf8_100%)]">
+    <div className="bg-transparent">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <ProductDetails product={product} />
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.86fr]">
-          <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
+          <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Բույրի նոտաներ</p>
-            <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Բույրի բուրգ</h2>
+            <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բույրի բուրգ</h2>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               <NoteCard label="Վերին նոտաներ" value={product.topNotes || "Նշված չէ"} />
               <NoteCard label="Միջին նոտաներ" value={product.middleNotes || "Նշված չէ"} />
@@ -32,9 +32,9 @@ export default async function ProductPage({
             </div>
           </div>
 
-          <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
+          <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Մանրամասներ</p>
-            <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Բնութագրեր</h2>
+            <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բնութագրեր</h2>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <Info label="Երկարակեցություն" value={product.longevity ? longevityLabels[product.longevity] : "Միջին"} />
               <Info label="Շլեյֆ" value={product.sillage ? sillageLabels[product.sillage] : "Միջին"} />
@@ -48,7 +48,7 @@ export default async function ProductPage({
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Ձեզ կարող է դուր գալ նաև</p>
-              <h2 className="mt-2 text-3xl font-semibold text-zinc-950">Նման ապրանքներ</h2>
+              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Նման ապրանքներ</h2>
             </div>
           </div>
           {related.length ? (
@@ -58,7 +58,7 @@ export default async function ProductPage({
               ))}
             </div>
           ) : (
-            <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-10 text-center text-zinc-500">
+            <div className="rounded-[28px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-10 text-center text-[var(--text-muted)]">
               Նման ապրանքները դեռ չեն բեռնվել backend-ից։
             </div>
           )}
@@ -85,18 +85,18 @@ async function loadProduct(slug: string): Promise<Product | undefined> {
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4">
-      <p className="text-xs uppercase tracking-[0.16em] text-zinc-500">{label}</p>
-      <p className="mt-1 font-semibold text-zinc-950">{value}</p>
+    <div className="rounded-[20px] border border-[var(--line)] bg-[var(--surface-muted)] p-4">
+      <p className="text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">{label}</p>
+      <p className="mt-1 font-semibold text-[var(--foreground)]">{value}</p>
     </div>
   );
 }
 
 function NoteCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-[#fbfaf8] p-5">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{label}</p>
-      <p className="mt-3 text-lg font-semibold leading-7 text-zinc-950">{value}</p>
+    <div className="rounded-[22px] border border-[var(--line)] bg-[var(--surface-muted)] p-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">{label}</p>
+      <p className="mt-3 text-lg font-semibold leading-7 text-[var(--foreground)]">{value}</p>
     </div>
   );
 }

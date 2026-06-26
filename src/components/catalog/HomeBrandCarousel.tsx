@@ -4,17 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Brand } from "@/types/catalog";
 import { BrandCard } from "./BrandCard";
 
-const SWIPE_THRESHOLD = 40;
-
 export function HomeBrandCarousel({ brands }: { brands: Brand[] }) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [visibleCount, setVisibleCount] = useState(2);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [dragOffset, setDragOffset] = useState(0);
-  const touchStartXRef = useRef<number | null>(null);
-  const touchStartYRef = useRef<number | null>(null);
-  const pointerStartXRef = useRef<number | null>(null);
-  const pointerStartYRef = useRef<number | null>(null);
-  const dragBlockedClickRef = useRef(false);
 
   useEffect(() => {
     function updateVisibleCount() {
@@ -32,115 +25,72 @@ export function HomeBrandCarousel({ brands }: { brands: Brand[] }) {
   }, []);
 
   const maxIndex = useMemo(() => Math.max(brands.length - visibleCount, 0), [brands.length, visibleCount]);
-  const safeIndex = Math.min(currentIndex, maxIndex);
+
+  useEffect(() => {
+    setCurrentIndex((current) => Math.min(current, maxIndex));
+  }, [maxIndex]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
+
+    function syncIndex() {
+      const currentContainer = containerRef.current;
+      if (!currentContainer) {
+        return;
+      }
+      const step = currentContainer.clientWidth / visibleCount;
+      if (!step) {
+        return;
+      }
+
+      const nextIndex = Math.max(0, Math.min(Math.round(currentContainer.scrollLeft / step), maxIndex));
+      setCurrentIndex(nextIndex);
+    }
+
+    syncIndex();
+    container.addEventListener("scroll", syncIndex, { passive: true });
+    window.addEventListener("resize", syncIndex);
+
+    return () => {
+      container.removeEventListener("scroll", syncIndex);
+      window.removeEventListener("resize", syncIndex);
+    };
+  }, [maxIndex, visibleCount]);
+
+  function scrollToIndex(index: number) {
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
+
+    const safeIndex = Math.max(0, Math.min(index, maxIndex));
+    const currentContainer = containerRef.current;
+    if (!currentContainer) {
+      return;
+    }
+    const step = currentContainer.clientWidth / visibleCount;
+
+    currentContainer.scrollTo({
+      left: step * safeIndex,
+      behavior: "smooth",
+    });
+    setCurrentIndex(safeIndex);
+  }
 
   function goTo(direction: "prev" | "next") {
-    setCurrentIndex((current) => {
-      const baseIndex = Math.min(current, maxIndex);
-      return direction === "prev" ? Math.max(baseIndex - 1, 0) : Math.min(baseIndex + 1, maxIndex);
-    });
+    scrollToIndex(direction === "prev" ? currentIndex - 1 : currentIndex + 1);
   }
 
-  function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
-    touchStartXRef.current = event.touches[0]?.clientX ?? null;
-    touchStartYRef.current = event.touches[0]?.clientY ?? null;
-  }
-
-  function handleTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
-    const touchStartX = touchStartXRef.current;
-    const touchStartY = touchStartYRef.current;
-
-    if (touchStartX === null || touchStartY === null) {
-      return;
-    }
-
-    const touchEndX = event.changedTouches[0]?.clientX ?? touchStartX;
-    const touchEndY = event.changedTouches[0]?.clientY ?? touchStartY;
-    const deltaX = touchEndX - touchStartX;
-    const deltaY = touchEndY - touchStartY;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= SWIPE_THRESHOLD) {
-      goTo(deltaX < 0 ? "next" : "prev");
-    }
-
-    touchStartXRef.current = null;
-    touchStartYRef.current = null;
-  }
-
-  function handleTouchCancel() {
-    touchStartXRef.current = null;
-    touchStartYRef.current = null;
-  }
-
-  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if (event.pointerType !== "mouse" || event.button !== 0) {
-      return;
-    }
-
-    pointerStartXRef.current = event.clientX;
-    pointerStartYRef.current = event.clientY;
-    dragBlockedClickRef.current = false;
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }
-
-  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    const pointerStartX = pointerStartXRef.current;
-    const pointerStartY = pointerStartYRef.current;
-
-    if (event.pointerType !== "mouse" || pointerStartX === null || pointerStartY === null) {
-      return;
-    }
-
-    const deltaX = event.clientX - pointerStartX;
-    const deltaY = event.clientY - pointerStartY;
-
-    if (Math.abs(deltaX) > 8) {
-      dragBlockedClickRef.current = true;
-    }
-
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      event.preventDefault();
-      setDragOffset(deltaX);
-    }
-  }
-
-  function handlePointerEnd(event: React.PointerEvent<HTMLDivElement>) {
-    const pointerStartX = pointerStartXRef.current;
-    const pointerStartY = pointerStartYRef.current;
-
-    if (event.pointerType === "mouse" && event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-
-    if (pointerStartX === null || pointerStartY === null) {
-      setDragOffset(0);
-      return;
-    }
-
-    const deltaX = event.clientX - pointerStartX;
-    const deltaY = event.clientY - pointerStartY;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= SWIPE_THRESHOLD) {
-      goTo(deltaX < 0 ? "next" : "prev");
-    }
-
-    pointerStartXRef.current = null;
-    pointerStartYRef.current = null;
-    setDragOffset(0);
-  }
-
-  function handleClickCapture(event: React.MouseEvent<HTMLDivElement>) {
-    if (!dragBlockedClickRef.current) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-    dragBlockedClickRef.current = false;
-  }
-
-  function handleNativeDragStart(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
+  function handleArrowPointerUp(direction: "prev" | "next") {
+    return (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (event.pointerType === "mouse") {
+        return;
+      }
+      goTo(direction);
+    };
   }
 
   return (
@@ -149,8 +99,9 @@ export function HomeBrandCarousel({ brands }: { brands: Brand[] }) {
         <button
           type="button"
           onClick={() => goTo("prev")}
-          disabled={safeIndex === 0}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] bg-white text-zinc-900 shadow-sm transition hover:border-zinc-950 disabled:cursor-not-allowed disabled:opacity-35"
+          onPointerUp={handleArrowPointerUp("prev")}
+          disabled={currentIndex === 0}
+          className="relative z-10 inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] text-[var(--foreground)] shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-35"
           aria-label="Նախորդ բրենդները"
         >
           <ArrowIcon direction="left" />
@@ -158,8 +109,9 @@ export function HomeBrandCarousel({ brands }: { brands: Brand[] }) {
         <button
           type="button"
           onClick={() => goTo("next")}
-          disabled={safeIndex >= maxIndex}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-zinc-950 text-white shadow-sm transition hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:bg-zinc-300"
+          onPointerUp={handleArrowPointerUp("next")}
+          disabled={currentIndex >= maxIndex}
+          className="relative z-10 inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-full border border-[var(--accent)] bg-[var(--accent)] text-[#171717] shadow-sm transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-35"
           aria-label="Հաջորդ բրենդները"
         >
           <ArrowIcon direction="right" />
@@ -167,24 +119,12 @@ export function HomeBrandCarousel({ brands }: { brands: Brand[] }) {
       </div>
 
       <div
-        className="touch-pan-y cursor-grab select-none overflow-hidden active:cursor-grabbing"
-        onClickCapture={handleClickCapture}
-        onDragStart={handleNativeDragStart}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerEnd}
-        onPointerCancel={handlePointerEnd}
-        onPointerLeave={handlePointerEnd}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchCancel}
+        ref={containerRef}
+        className="no-scrollbar overflow-x-auto scroll-smooth snap-x snap-mandatory"
       >
-        <div
-          className={dragOffset === 0 ? "flex transition-transform duration-500 ease-out" : "flex transition-transform duration-75 ease-out"}
-          style={{ transform: `translateX(calc(-${(safeIndex * 100) / visibleCount}% + ${dragOffset}px))` }}
-        >
+        <div className="flex">
           {brands.map((brand) => (
-            <div key={brand.id} className="w-1/2 shrink-0 px-1.5 sm:px-2 lg:w-1/4">
+            <div key={brand.id} className="w-1/2 shrink-0 snap-start px-1.5 sm:px-2 lg:w-1/4">
               <BrandCard brand={brand} />
             </div>
           ))}

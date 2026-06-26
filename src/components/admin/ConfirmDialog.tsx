@@ -47,7 +47,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onConfirm}
             disabled={isSubmitting}
-            className="rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-800 disabled:opacity-60"
+            className="rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent)] disabled:opacity-60"
           >
             {isSubmitting ? "Ջնջում..." : confirmLabel}
           </button>

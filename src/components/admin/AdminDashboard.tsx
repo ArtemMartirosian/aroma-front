@@ -50,10 +50,10 @@ export function AdminDashboard() {
     <AdminShell>
       <div className="space-y-6">
         <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Ընդհանուր տեսք</p>
+          <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Ընդհանուր տեսք</p>
           <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Վահանակ</h1>
         </div>
-        {message ? <p className="rounded-md bg-rose-50 p-3 text-sm text-rose-800">{message}</p> : null}
+        {message ? <p className="rounded-md bg-[var(--accent-soft)] p-3 text-sm text-[var(--accent-strong)]">{message}</p> : null}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {cards.map(([label, value]) => (
             <div key={label} className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">

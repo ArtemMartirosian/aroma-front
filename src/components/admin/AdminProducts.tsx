@@ -57,12 +57,12 @@ export function AdminProducts() {
       <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Ապրանքներ</p>
+            <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Ապրանքներ</p>
             <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Ապրանքներ</h1>
           </div>
           <Link
             href="/admin/products/create"
-            className="rounded-full bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-rose-800"
+            className="rounded-full bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
           >
             Ստեղծել ապրանք
           </Link>
@@ -85,13 +85,13 @@ export function AdminProducts() {
                   <td>{product.brand?.name}</td>
                   <td>{formatPrice(product.price)}</td>
                   <td className="text-right">
-                    <Link className="font-semibold text-rose-800" href={`/admin/products/edit/${product.id}`}>
+                    <Link className="font-semibold text-[var(--accent)]" href={`/admin/products/edit/${product.id}`}>
                       Խմբագրել
                     </Link>
                     <button
                       type="button"
                       onClick={() => setProductToDelete(product)}
-                      className="ml-4 font-semibold text-zinc-500 hover:text-rose-800"
+                      className="ml-4 font-semibold text-zinc-500 hover:text-[var(--sale-strong)]"
                     >
                       Ջնջել
                     </button>

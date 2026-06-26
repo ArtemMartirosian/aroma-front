@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { HomeBrandCarousel } from "@/components/catalog/HomeBrandCarousel";
+import { HomeHero } from "@/components/catalog/HomeHero";
 import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { API_URL } from "@/lib/api";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
@@ -9,46 +9,8 @@ export default async function Home() {
   const { featured, newest, brands, categories } = await loadHomeData();
 
   return (
-    <div>
-      <section className="relative min-h-[680px] overflow-hidden bg-white">
-        <Image
-          src="/images/perfume-hero.png"
-          alt="Պրեմիում օծանելիքի սրվակներ"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-white/5" />
-        <div className="relative mx-auto flex min-h-[680px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--accent)]">
-              Պրեմիում օծանելիքի կատալոգ
-            </p>
-            <h1 className="mt-5 text-5xl font-semibold leading-tight text-zinc-950 md:text-7xl">
-              Գտեք ձեր բնորոշ բույրը
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-zinc-700">
-              Օրիգինալ օծանելիքի ժամանակակից կատալոգ՝ բրենդներ, նոտաներ,
-              ծավալներ, գներ և արագ կապ առանց զամբյուղի ու օնլայն վճարման։
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/catalog"
-                className="rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
-              >
-                Դիտել կատալոգը
-              </Link>
-              <Link
-                href="/contacts"
-                className="rounded-full border border-zinc-300 bg-white/80 px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
-              >
-                Կապ
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="bg-transparent">
+      <HomeHero />
 
       <Section title="Հանրաճանաչ ապրանքներ" href="/catalog">
         {featured.length ? (
@@ -72,10 +34,10 @@ export default async function Home() {
             <Link
               href={`/catalog?category=${category.slug}`}
               key={category.id}
-              className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+            className="rounded-[24px] border border-[var(--line)] bg-[var(--surface-elevated)] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_26px_60px_rgba(0,0,0,0.34)]"
             >
-              <p className="text-lg font-semibold text-zinc-950">{category.name}</p>
-              <p className="mt-2 text-sm leading-6 text-zinc-600">{category.description}</p>
+              <p className="text-lg font-semibold text-[var(--foreground)]">{category.name}</p>
+              <p className="mt-2 text-sm leading-6 text-[var(--text-muted)]">{category.description}</p>
             </Link>
           ))}
         </div>
@@ -87,15 +49,15 @@ export default async function Home() {
         {!brands.length ? <EmptyState text="Բրենդները դեռ չեն բեռնվել backend-ից։" /> : null}
       </Section>
 
-      <section className="bg-white">
+      <section className="bg-transparent">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-8">
           <div>
             <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Մեր մասին</p>
-            <h2 className="mt-3 text-4xl font-semibold text-zinc-950">
+            <h2 className="mt-3 text-4xl font-semibold text-[var(--foreground)]">
               Օգնում ենք ընտրել բույրը ըստ բնավորության, սեզոնի և տրամադրության
             </h2>
           </div>
-          <div className="space-y-4 text-zinc-600">
+          <div className="space-y-4 text-[var(--text-soft)]">
             <p>
               AROMA-ն օգնում է արագ գտնել ճիշտ շիշը՝ ըստ բրենդի, սեռի,
               բույրի տեսակի, գնի և ծավալի։
@@ -132,11 +94,23 @@ async function loadHomeData(): Promise<{
     const brands = (await brandsResponse.json()) as Brand[];
     const categories = (await categoriesResponse.json()) as Category[];
     const products = productsData.items;
+    const brandProductCount = new Map<string, number>();
+
+    products.forEach((product) => {
+      const brandId = product.brandId ?? product.brand?.id;
+      if (!brandId) return;
+      brandProductCount.set(brandId, (brandProductCount.get(brandId) ?? 0) + 1);
+    });
+
+    const brandsWithCounts = brands.map((brand) => ({
+      ...brand,
+      productCount: brand.productCount ?? brandProductCount.get(brand.id) ?? 0,
+    }));
 
     return {
       featured: products.filter((product) => product.isFeatured),
       newest: products.filter((product) => product.isNew),
-      brands,
+      brands: brandsWithCounts,
       categories,
     };
   } catch {
@@ -159,10 +133,10 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-2 py-14 sm:px-6 lg:px-8">
       <div className="mb-8 flex items-end justify-between gap-4">
-        <h2 className="text-3xl font-semibold text-zinc-950">{title}</h2>
-        <Link href={href} className="text-sm font-semibold text-[var(--accent)] hover:text-zinc-950">
+        <h2 className="text-3xl font-semibold text-[var(--foreground)]">{title}</h2>
+        <Link href={href} className="text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-strong)]">
           Դիտել բոլորը
         </Link>
       </div>
@@ -173,7 +147,7 @@ function Section({
 
 function EmptyState({ text }: { text: string }) {
   return (
-    <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-8 text-center text-sm font-medium text-zinc-500">
+    <div className="rounded-[24px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-8 text-center text-sm font-medium text-[var(--text-muted)]">
       {text}
     </div>
   );

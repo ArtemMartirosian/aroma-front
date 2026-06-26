@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { formatPrice } from "@/lib/dictionaries";
 import { imageUrl } from "@/lib/images";
 import { fallbackProductImage, normalizeProductVariants } from "@/lib/product-variants";
@@ -10,12 +10,27 @@ import { Product } from "@/types/catalog";
 
 export function ProductCard({ product }: { product: Product }) {
   const variants = useMemo(() => normalizeProductVariants(product), [product]);
-  const lowestVariant = useMemo(
-    () => [...variants].sort((a, b) => Number(a.price) - Number(b.price))[0],
+  const defaultVariantIndex = useMemo(
+    () =>
+      variants.reduce((lowestIndex, variant, index, currentVariants) => {
+        return Number(variant.price) < Number(currentVariants[lowestIndex]?.price ?? Number.POSITIVE_INFINITY)
+          ? index
+          : lowestIndex;
+      }, 0),
     [variants],
   );
-  const [selectedVolume, setSelectedVolume] = useState(lowestVariant.volume);
-  const selectedVariant = variants.find((variant) => variant.volume === selectedVolume) ?? lowestVariant;
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(defaultVariantIndex);
+
+  useEffect(() => {
+    setSelectedVariantIndex(defaultVariantIndex);
+  }, [defaultVariantIndex, product.id]);
+
+  const selectedVariant = variants[selectedVariantIndex] ?? variants[defaultVariantIndex];
+
+  if (!selectedVariant) {
+    return null;
+  }
+
   const selectedImage = selectedVariant.images?.[0] ?? fallbackProductImage;
   const oldPrice = selectedVariant.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
   const discount =
@@ -23,8 +38,17 @@ export function ProductCard({ product }: { product: Product }) {
       ? Math.round((1 - Number(selectedVariant.price) / oldPrice) * 100)
       : 0;
 
+  function handleVariantPointerUp(index: number) {
+    return (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (event.pointerType === "mouse") {
+        return;
+      }
+      setSelectedVariantIndex(index);
+    };
+  }
+
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--surface)] transition duration-300 hover:-translate-y-1  sm:rounded-[24px]">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--surface-elevated)] transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)] sm:rounded-[24px]">
       <div className="relative overflow-hidden bg-[var(--surface-muted)]">
         <Link
           href={`/products/${product.slug}`}
@@ -37,7 +61,7 @@ export function ProductCard({ product }: { product: Product }) {
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
             className="object-cover object-center transition duration-700 group-hover:scale-[1.03]"
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),transparent_30%,rgba(28,20,14,0.08)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),transparent_30%,rgba(0,0,0,0.32)_100%)]" />
         </Link>
 
         <div className="absolute left-2.5 top-2.5 z-10 flex max-w-[75%] flex-wrap gap-1.5 sm:left-4 sm:top-4 sm:gap-2">
@@ -54,8 +78,8 @@ export function ProductCard({ product }: { product: Product }) {
           </p>
         </div>
 
-        <h3 className="mt-1.5 line-clamp-3 font-serif text-[14px] leading-[1.28] text-zinc-950 sm:mt-2.5 sm:min-h-[2.8rem] sm:text-[1.22rem] sm:leading-6">
-          <Link href={`/products/${product.slug}`} className="transition group-hover:text-[var(--accent)]">
+        <h3 className="mt-1.5 line-clamp-3 font-serif text-[14px] leading-[1.28] text-[var(--foreground)] sm:mt-2.5 sm:min-h-[2.8rem] sm:text-[1.22rem] sm:leading-6">
+          <Link href={`/products/${product.slug}`} className="transition group-hover:text-[var(--accent-strong)]">
             {product.name}
           </Link>
         </h3>
@@ -67,11 +91,12 @@ export function ProductCard({ product }: { product: Product }) {
             <button
               key={`${variant.volume}-${variant.price}-${index}`}
               type="button"
-              onClick={() => setSelectedVolume(variant.volume)}
+              onClick={() => setSelectedVariantIndex(index)}
+              onPointerUp={handleVariantPointerUp(index)}
               className={
-                variant.volume === selectedVariant.volume
-                  ? "shrink-0 rounded-full bg-zinc-950 px-3 py-1.5 text-[10px] font-semibold text-white shadow-sm sm:px-3 sm:text-xs"
-                  : "shrink-0 rounded-full border border-[var(--line)] bg-[#fbf8f4] px-3 py-1.5 text-[10px] font-semibold text-zinc-700 transition hover:border-zinc-950 hover:bg-white sm:px-3 sm:text-xs"
+                index === selectedVariantIndex
+                  ? "shrink-0 touch-manipulation rounded-full border border-[var(--accent)] bg-[var(--accent)] px-2 py-1 text-[10px] font-semibold text-[#171717] shadow-sm sm:px-3 sm:text-xs"
+                  : "shrink-0 touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-2 py-1 text-[10px] font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)] sm:px-3 sm:text-xs"
               }
             >
               {variant.volume}
@@ -79,22 +104,22 @@ export function ProductCard({ product }: { product: Product }) {
           ))}
         </div>
 
-        <div className="mt-auto pt-3">
+        <div className="mt-auto">
           <div className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-2.5 sm:flex-row sm:items-end sm:justify-between">
             <div className="min-w-0">
               {oldPrice ? (
-                <p className="text-[10px] text-zinc-400 line-through sm:text-[11px]">
+                <p className="text-[10px] text-[var(--text-muted)] line-through sm:text-[11px]">
                   {formatPrice(oldPrice)}
                 </p>
               ) : null}
-              <p className="mt-1 text-[17px] font-semibold leading-none tracking-tight text-zinc-950 sm:text-[1.45rem]">
+              <p className="mt-1 text-[17px] font-semibold leading-none tracking-tight text-[var(--foreground)] sm:text-[1.45rem]">
                 {formatPrice(selectedVariant.price)}
               </p>
             </div>
 
             <Link
               href={`/products/${product.slug}`}
-              className="inline-flex h-10 w-full items-center justify-center rounded-full bg-zinc-950 px-3.5 text-[11px] font-semibold text-white transition hover:bg-[var(--accent)] sm:h-11 sm:w-auto sm:px-4 sm:text-xs"
+              className="inline-flex h-10 w-full items-center justify-center rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3.5 text-[11px] font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)] sm:h-11 sm:w-auto sm:px-4 sm:text-xs"
             >
               Դիտել
             </Link>
@@ -111,7 +136,7 @@ function Badge({ children, tone }: { children: ReactNode; tone: "green" | "dark"
       ? "bg-[var(--sage-soft)] text-[var(--sage-strong)]"
       : tone === "red"
         ? "bg-[var(--sale-soft)] text-[var(--sale-strong)]"
-        : "bg-zinc-950/95 text-white";
+        : "bg-[rgba(14,16,17,0.95)] text-[var(--foreground)]";
 
   return (
     <span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold lowercase shadow-sm sm:px-3 sm:text-xs ${className}`}>

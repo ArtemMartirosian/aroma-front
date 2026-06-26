@@ -248,7 +248,7 @@ export function ProductForm({ productId }: { productId?: string }) {
     return (
       <AdminShell>
         <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-          <p className="text-sm uppercase tracking-[0.2em] text-rose-800">Խմբագրել ապրանքը</p>
+          <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Խմբագրել ապրանքը</p>
           <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Բեռնվում են տվյալները...</h1>
           <p className="mt-4 text-sm text-zinc-500">
             Սպասեք մի պահ, բեռնում ենք ապրանքի ընթացիկ տվյալները։
@@ -264,13 +264,13 @@ export function ProductForm({ productId }: { productId?: string }) {
         onSubmit={handleSubmit(onSubmit)}
         className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm"
       >
-        <p className="text-sm uppercase tracking-[0.2em] text-rose-800">
+        <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">
           {productId ? "Խմբագրել ապրանքը" : "Ստեղծել ապրանք"}
         </p>
         <h1 className="mt-2 text-3xl font-semibold text-zinc-950">
           {productId ? "Խմբագրել ապրանքը" : "Ստեղծել ապրանք"}
         </h1>
-        {message ? <p className="mt-4 rounded-md bg-rose-50 p-3 text-sm text-rose-800">{message}</p> : null}
+        {message ? <p className="mt-4 rounded-md bg-[var(--accent-soft)] p-3 text-sm text-[var(--accent-strong)]">{message}</p> : null}
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <Input label="Անվանում" {...register("name")} />
           <Select label="Բրենդ" {...register("brandId")}>
@@ -377,7 +377,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                             label: watchedVariants?.[index]?.volume || `#${index + 1}`,
                           })
                         }
-                        className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800"
+                        className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-[var(--sale-strong)] hover:text-[var(--sale-strong)]"
                       >
                         Ջնջել ծավալը
                       </button>
@@ -420,7 +420,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                                 label: watchedVariants?.[index]?.volume || `#${index + 1}`,
                               })
                             }
-                            className="h-fit rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800 lg:self-center"
+                            className="h-fit rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-[var(--sale-strong)] hover:text-[var(--sale-strong)] lg:self-center"
                           >
                             Ջնջել նկարը
                           </button>
@@ -441,7 +441,7 @@ export function ProductForm({ productId }: { productId?: string }) {
         </div>
         <button
           disabled={isSubmitting}
-          className="mt-6 rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-800 disabled:opacity-60"
+          className="mt-6 rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)] disabled:opacity-60"
         >
           {isSubmitting ? "Պահպանում..." : "Պահպանել"}
         </button>
@@ -474,7 +474,7 @@ function Input({ label, ...props }: React.InputHTMLAttributes<HTMLInputElement> 
       <span className="text-sm font-medium text-zinc-700">{label}</span>
       <input
         {...props}
-        className="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-rose-700"
+        className="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-[var(--accent)]"
       />
     </label>
   );
@@ -486,7 +486,7 @@ function Select({ label, children, ...props }: React.SelectHTMLAttributes<HTMLSe
       <span className="text-sm font-medium text-zinc-700">{label}</span>
       <select
         {...props}
-        className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-rose-700"
+        className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-[var(--accent)]"
       >
         {children}
       </select>
@@ -504,7 +504,7 @@ function Textarea({
       <textarea
         {...props}
         rows={4}
-        className="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-rose-700"
+        className="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-[var(--accent)]"
       />
     </label>
   );

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { formatPrice, fragranceLabels, genderLabels } from "@/lib/dictionaries";
 import { imageUrl } from "@/lib/images";
 import { fallbackProductImage, normalizeProductVariants } from "@/lib/product-variants";
@@ -10,9 +10,9 @@ import { Product, ProductVariant } from "@/types/catalog";
 
 export function ProductDetails({ product }: { product: Product }) {
   const variants = useMemo<ProductVariant[]>(() => normalizeProductVariants(product), [product]);
-  const [selectedVolume, setSelectedVolume] = useState(variants[0]?.volume ?? product.volume);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const selectedVariant = variants.find((variant) => variant.volume === selectedVolume) ?? variants[0];
+  const selectedVariant = variants[selectedVariantIndex] ?? variants[0];
   const images = selectedVariant?.images?.length ? selectedVariant.images : [fallbackProductImage];
   const selectedImage = images[selectedImageIndex] ?? images[0] ?? fallbackProductImage;
   const oldPrice = selectedVariant?.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
@@ -21,21 +21,44 @@ export function ProductDetails({ product }: { product: Product }) {
       ? Math.round((1 - Number(selectedVariant.price) / oldPrice) * 100)
       : 0;
 
-  function selectVariant(volume: string) {
-    setSelectedVolume(volume);
+  useEffect(() => {
+    setSelectedVariantIndex(0);
+    setSelectedImageIndex(0);
+  }, [product.id, variants.length]);
+
+  function selectVariant(index: number) {
+    setSelectedVariantIndex(index);
     setSelectedImageIndex(0);
   }
 
+  function handleVariantPointerUp(index: number) {
+    return (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (event.pointerType === "mouse") {
+        return;
+      }
+      selectVariant(index);
+    };
+  }
+
+  function handleImagePointerUp(index: number) {
+    return (event: React.PointerEvent<HTMLButtonElement>) => {
+      if (event.pointerType === "mouse") {
+        return;
+      }
+      setSelectedImageIndex(index);
+    };
+  }
+
   return (
-    <section className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[#fcfaf6] p-4 shadow-[0_28px_80px_rgba(71,58,44,0.1)] sm:p-6 lg:p-8">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(116,101,86,0.12),transparent_28%),linear-gradient(135deg,rgba(255,255,255,0.86),rgba(242,237,230,0.78))]" />
+    <section className="relative overflow-hidden rounded-[34px] border border-[var(--line)] bg-[var(--surface)] p-4 shadow-[0_28px_80px_rgba(0,0,0,0.32)] sm:p-6 lg:p-8">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(195,164,111,0.12),transparent_28%),linear-gradient(135deg,rgba(21,24,25,0.92),rgba(29,33,34,0.84))]" />
       <div className="relative">
-        <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm font-medium text-zinc-500">
-          <Link href="/" className="transition hover:text-zinc-950">
+        <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm font-medium text-[var(--text-muted)]">
+          <Link href="/" className="transition hover:text-[var(--accent-strong)]">
             Գլխավոր
           </Link>
           <BreadcrumbArrow />
-          <Link href="/catalog" className="transition hover:text-zinc-950">
+          <Link href="/catalog" className="transition hover:text-[var(--accent-strong)]">
             Կատալոգ
           </Link>
           {product.category?.name && product.category?.slug ? (
@@ -43,7 +66,7 @@ export function ProductDetails({ product }: { product: Product }) {
               <BreadcrumbArrow />
               <Link
                 href={`/catalog?category=${encodeURIComponent(product.category.slug)}`}
-                className="transition hover:text-zinc-950"
+                className="transition hover:text-[var(--accent-strong)]"
               >
                 {product.category.name}
               </Link>
@@ -58,19 +81,19 @@ export function ProductDetails({ product }: { product: Product }) {
                     ? `/catalog?brand=${encodeURIComponent(product.brand.slug)}`
                     : "/brands"
                 }
-                className="transition hover:text-zinc-950"
+                className="transition hover:text-[var(--accent-strong)]"
               >
                 {product.brand.name}
               </Link>
             </>
           ) : null}
           <BreadcrumbArrow />
-          <span className="text-zinc-950">{product.name}</span>
+          <span className="text-[var(--foreground)]">{product.name}</span>
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
-            <div className="relative aspect-[1/1.02] overflow-hidden rounded-[30px] border border-[var(--line)] bg-white shadow-[0_24px_65px_rgba(71,58,44,0.1)]">
+            <div className="relative aspect-[1/1.02] overflow-hidden rounded-[30px] border border-[var(--line)] bg-[var(--surface-muted)] shadow-[0_24px_65px_rgba(0,0,0,0.3)]">
               <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2 sm:left-6 sm:top-6">
                 {product.isNew ? <Badge>նոր</Badge> : null}
                 {product.isFeatured ? <Badge tone="dark">հիթ</Badge> : null}
@@ -95,10 +118,11 @@ export function ProductDetails({ product }: { product: Product }) {
                   key={`${image}-${index}`}
                   type="button"
                   onClick={() => setSelectedImageIndex(index)}
+                  onPointerUp={handleImagePointerUp(index)}
                   className={
                     index === selectedImageIndex
-                      ? "relative aspect-square overflow-hidden rounded-2xl border border-zinc-950 bg-white shadow-sm"
-                      : "relative aspect-square overflow-hidden rounded-2xl border border-[var(--line)] bg-white opacity-75 transition hover:opacity-100"
+                      ? "relative aspect-square touch-manipulation overflow-hidden rounded-2xl border border-[var(--accent)] bg-[var(--surface-muted)] shadow-sm"
+                      : "relative aspect-square touch-manipulation overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--surface-muted)] opacity-75 transition hover:opacity-100"
                   }
                 >
                   <Image
@@ -114,39 +138,40 @@ export function ProductDetails({ product }: { product: Product }) {
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-white/90 bg-white/86 p-5 shadow-[0_22px_60px_rgba(80,52,24,0.08)] backdrop-blur sm:p-7 lg:p-9">
+          <div className="rounded-[30px] border border-[var(--line)] bg-[rgba(24,28,29,0.88)] p-5 shadow-[0_22px_60px_rgba(0,0,0,0.28)] backdrop-blur sm:p-7 lg:p-9">
             <p className="text-xs font-bold uppercase tracking-[0.34em] text-[var(--accent)]">
               {product.brand?.name ?? "Aroma Parfume"}
             </p>
-            <h1 className="mt-4 font-serif text-4xl leading-[1.02] text-zinc-950 sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 font-serif text-4xl leading-[1.02] text-[var(--foreground)] sm:text-5xl lg:text-6xl">
               {product.name}
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-600 sm:text-lg">
+            <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--text-soft)] sm:text-lg">
               {product.description}
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-zinc-700">
-              <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1.5">{genderLabels[product.gender]}</span>
-              <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1.5">
+            <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-[var(--accent-strong)]">
+              <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">{genderLabels[product.gender]}</span>
+              <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
                 {fragranceLabels[product.fragranceType]}
               </span>
-              <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1.5">
+              <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
                 {product.concentration || "Eau de Parfum"}
               </span>
             </div>
 
             <div className="mt-8 border-y border-[var(--line)] py-6">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Ընտրեք ծավալը</p>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">Ընտրեք ծավալը</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {variants.map((variant, index) => (
                   <button
                     key={`${variant.volume}-${variant.price}-${index}`}
                     type="button"
-                    onClick={() => selectVariant(variant.volume)}
+                    onClick={() => selectVariant(index)}
+                    onPointerUp={handleVariantPointerUp(index)}
                     className={
-                      variant.volume === selectedVariant.volume
-                        ? "rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(0,0,0,0.2)]"
-                        : "rounded-full border border-[var(--line)] bg-white px-5 py-2.5 text-sm font-semibold text-zinc-800 transition hover:border-zinc-950"
+                      index === selectedVariantIndex
+                        ? "touch-manipulation rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] shadow-[0_12px_28px_rgba(0,0,0,0.2)]"
+                        : "touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-5 py-2.5 text-sm font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
                     }
                   >
                     {variant.volume}
@@ -157,13 +182,13 @@ export function ProductDetails({ product }: { product: Product }) {
 
             <div className="mt-6 flex flex-wrap items-end justify-between gap-5">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Գին</p>
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">Գին</p>
                 <div className="mt-2 flex flex-wrap items-baseline gap-3">
-                  <p className="text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">
+                  <p className="text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-5xl">
                     {formatPrice(selectedVariant?.price ?? product.price)}
                   </p>
                   {oldPrice ? (
-                    <p className="text-lg text-zinc-400 line-through">{formatPrice(oldPrice)}</p>
+                    <p className="text-lg text-[var(--text-muted)] line-through">{formatPrice(oldPrice)}</p>
                   ) : null}
                 </div>
               </div>
@@ -174,7 +199,7 @@ export function ProductDetails({ product }: { product: Product }) {
                 href={`https://wa.me/37433696009?text=${encodeURIComponent(
                   `Բարև ձեզ, հետաքրքրում է ${product.name} ${selectedVariant.volume}`,
                 )}`}
-                className="inline-flex justify-center rounded-full bg-zinc-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
+                className="inline-flex justify-center rounded-full border border-[var(--accent)] bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
               >
                 Գրել WhatsApp-ով
               </a>
@@ -182,12 +207,12 @@ export function ProductDetails({ product }: { product: Product }) {
                 href="https://instagram.com/aroma__parfume"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex justify-center rounded-full border border-zinc-300 bg-white px-6 py-3.5 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
+                className="inline-flex justify-center rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3.5 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
               >
                 Գրել Instagram-ում
               </a>
             </div>
-            <p className="mt-4 text-sm text-zinc-500">Օնլայն պատվեր։ Անվճար առաքում՝ համաձայնությամբ։</p>
+            <p className="mt-4 text-sm text-[var(--text-muted)]">Օնլայն պատվեր։ Անվճար առաքում՝ համաձայնությամբ։</p>
           </div>
         </div>
       </div>
@@ -197,7 +222,7 @@ export function ProductDetails({ product }: { product: Product }) {
 
 function BreadcrumbArrow() {
   return (
-    <svg aria-hidden="true" viewBox="0 0 16 16" className="h-3.5 w-3.5 text-zinc-300">
+    <svg aria-hidden="true" viewBox="0 0 16 16" className="h-3.5 w-3.5 text-[var(--line-strong)]">
       <path
         d="M6 3.5 10.5 8 6 12.5"
         fill="none"
@@ -213,7 +238,7 @@ function BreadcrumbArrow() {
 function Badge({ children, tone = "soft" }: { children: ReactNode; tone?: "soft" | "dark" | "sale" }) {
   const className =
     tone === "dark"
-      ? "bg-zinc-950 text-white"
+      ? "bg-[rgba(14,16,17,0.95)] text-[var(--foreground)]"
       : tone === "sale"
         ? "bg-[var(--sale-soft)] text-[var(--sale-strong)]"
         : "bg-[var(--sage-soft)] text-[var(--sage-strong)]";

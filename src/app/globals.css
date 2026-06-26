@@ -1,19 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f5f1;
-  --foreground: #18181b;
-  --surface: #fffdf9;
-  --surface-muted: #f2eee7;
-  --line: #ddd5ca;
-  --line-strong: #c9beb0;
-  --accent: #5e564e;
-  --accent-strong: #38332e;
-  --accent-soft: #ebe4da;
-  --sage-soft: #e5eee8;
-  --sage-strong: #496051;
-  --sale-soft: #f1e6dd;
-  --sale-strong: #7b5d4f;
+  --background: #0e1011;
+  --foreground: #f3ede1;
+  --surface: #151819;
+  --surface-muted: #1d2122;
+  --surface-elevated: #181c1d;
+  --line: #2a2f30;
+  --line-strong: #3d4446;
+  --accent: #c3a46f;
+  --accent-strong: #e2c996;
+  --accent-soft: #2b251c;
+  --sage-soft: #1f2622;
+  --sage-strong: #c5d4c8;
+  --sale-soft: #2b211d;
+  --sale-strong: #ddb18c;
+  --text-muted: #938d83;
+  --text-soft: #c9c1b4;
 }
 
 @theme inline {
@@ -24,7 +27,7 @@
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(180deg, #0e1011 0%, #121516 26%, #171a1b 52%, #121516 78%, #0e1011 100%);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -35,6 +38,7 @@ input,
 select,
 textarea {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .no-scrollbar {

@@ -165,7 +165,7 @@ export function TaxonomyManager({
       <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-rose-800">
+            <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">
               {isBrands ? "Բրենդներ" : "Կատեգորիաներ"}
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-zinc-950">{pageTitle}</h1>
@@ -182,7 +182,7 @@ export function TaxonomyManager({
             {createHref ? (
               <Link
                 href={createHref}
-                className="rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-800"
+                className="rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
               >
                 {primaryActionLabel}
               </Link>
@@ -197,19 +197,19 @@ export function TaxonomyManager({
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 placeholder="Անվանում"
-                className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-rose-700"
+                className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-[var(--accent)]"
               />
               <input
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
                 placeholder="Նկարագրություն"
-                className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-rose-700"
+                className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-[var(--accent)]"
               />
               <button
                 type="button"
                 onClick={createItem}
                 disabled={isSaving}
-                className="rounded-md bg-zinc-950 px-5 py-2 text-sm font-semibold text-white transition hover:bg-rose-800 disabled:opacity-60"
+                className="rounded-md bg-zinc-950 px-5 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent)] disabled:opacity-60"
               >
                 {isSaving ? "Պահպանում..." : submitButtonLabel}
               </button>
@@ -258,7 +258,7 @@ export function TaxonomyManager({
                   <button
                     type="button"
                     onClick={() => setItemToDelete(item)}
-                    className="font-semibold text-rose-800 transition hover:text-rose-900"
+                    className="font-semibold text-[var(--sale-strong)] transition hover:text-zinc-950"
                   >
                     Ջնջել
                   </button>

@@ -44,7 +44,7 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-zinc-700">{label}</p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <label className="inline-flex cursor-pointer rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-800">
+            <label className="inline-flex cursor-pointer rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent)]">
               {uploading ? "Բեռնում..." : "Բեռնել նկարը"}
               <input
                 type="file"
@@ -58,13 +58,13 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
               <button
                 type="button"
                 onClick={() => onChange("")}
-                className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-rose-800 hover:text-rose-800"
+                className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-[var(--sale-strong)] hover:text-[var(--sale-strong)]"
               >
                 Հեռացնել
               </button>
             ) : null}
           </div>
-          {error ? <p className="mt-2 text-sm text-rose-700">{error}</p> : null}
+          {error ? <p className="mt-2 text-sm text-[var(--sale-strong)]">{error}</p> : null}
         </div>
       </div>
     </div>
