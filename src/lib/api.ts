@@ -1,5 +1,11 @@
 import axios from "axios";
 import { Brand, Category, DashboardStats, Product, ProductVariant, ProductsResponse } from "@/types/catalog";
+import {
+  getMockBrands,
+  getMockCategories,
+  getMockProductBySlug,
+  getMockProductsResponse,
+} from "@/lib/mock-catalog";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 const ADMIN_TOKEN_STORAGE_KEY = "aroma_admin_token";
@@ -45,23 +51,44 @@ export async function loginAdmin(email: string, password: string) {
 }
 
 export async function getProducts(params?: Record<string, string | number | undefined>) {
-  const { data } = await api.get<ProductsResponse>("/products", { params });
-  return data;
+  try {
+    const { data } = await api.get<ProductsResponse>("/products", { params });
+    return data;
+  } catch {
+    const limit = Number(params?.limit ?? 100);
+    return getMockProductsResponse(Number.isFinite(limit) ? limit : 100);
+  }
 }
 
 export async function getProduct(slug: string) {
-  const { data } = await api.get<Product>(`/products/${slug}`);
-  return data;
+  try {
+    const { data } = await api.get<Product>(`/products/${slug}`);
+    return data;
+  } catch {
+    const fallbackProduct = getMockProductBySlug(slug);
+    if (!fallbackProduct) {
+      throw new Error("Product not found");
+    }
+    return fallbackProduct;
+  }
 }
 
 export async function getBrands() {
-  const { data } = await api.get<Brand[]>("/brands");
-  return data;
+  try {
+    const { data } = await api.get<Brand[]>("/brands");
+    return data;
+  } catch {
+    return getMockBrands();
+  }
 }
 
 export async function getCategories() {
-  const { data } = await api.get<Category[]>("/categories");
-  return data;
+  try {
+    const { data } = await api.get<Category[]>("/categories");
+    return data;
+  } catch {
+    return getMockCategories();
+  }
 }
 
 export async function getAdminDashboard() {

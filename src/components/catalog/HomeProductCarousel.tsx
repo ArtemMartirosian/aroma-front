@@ -91,12 +91,21 @@ export function HomeProductCarousel({ products }: { products: Product[] }) {
     };
   }
 
+  function handleArrowTouchStart(direction: "prev" | "next") {
+    return (event: React.TouchEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      goTo(direction);
+    };
+  }
+
   return (
     <div>
       <div className="mb-5 flex items-center justify-end gap-2">
         <button
           type="button"
           onClick={() => goTo("prev")}
+          onTouchStart={handleArrowTouchStart("prev")}
           onPointerUp={handleArrowPointerUp("prev")}
           disabled={currentIndex === 0}
           className="relative z-10 inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] text-[var(--foreground)] shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-35"
@@ -107,6 +116,7 @@ export function HomeProductCarousel({ products }: { products: Product[] }) {
         <button
           type="button"
           onClick={() => goTo("next")}
+          onTouchStart={handleArrowTouchStart("next")}
           onPointerUp={handleArrowPointerUp("next")}
           disabled={currentIndex >= maxIndex}
           className="relative z-10 inline-flex h-11 w-11 touch-manipulation items-center justify-center rounded-full border border-[var(--accent)] bg-[var(--accent)] text-[#171717] shadow-sm transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)] disabled:cursor-not-allowed disabled:opacity-35"

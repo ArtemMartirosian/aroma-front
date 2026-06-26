@@ -3,6 +3,7 @@ import { HomeBrandCarousel } from "@/components/catalog/HomeBrandCarousel";
 import { HomeHero } from "@/components/catalog/HomeHero";
 import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { API_URL } from "@/lib/api";
+import { getMockBrands, getMockCategories, getMockProducts } from "@/lib/mock-catalog";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
 
 export default async function Home() {
@@ -114,11 +115,15 @@ async function loadHomeData(): Promise<{
       categories,
     };
   } catch {
+    const products = getMockProducts();
+    const brands = getMockBrands();
+    const categories = getMockCategories();
+
     return {
-      featured: [],
-      newest: [],
-      brands: [],
-      categories: [],
+      featured: products.filter((product) => product.isFeatured),
+      newest: products.filter((product) => product.isNew),
+      brands,
+      categories,
     };
   }
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandCard } from "@/components/catalog/BrandCard";
 import { API_URL } from "@/lib/api";
+import { getMockBrands } from "@/lib/mock-catalog";
 import { Brand, ProductsResponse } from "@/types/catalog";
 
 export default async function BrandsPage() {
@@ -79,10 +80,10 @@ async function loadBrands(): Promise<Brand[]> {
       }));
     }
   } catch {
-    return [];
+    return getMockBrands();
   }
 
-  return [];
+  return getMockBrands();
 }
 
 function StatCard({ label, value }: { label: string; value: string }) {

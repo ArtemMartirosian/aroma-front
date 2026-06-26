@@ -3,6 +3,7 @@ import { ProductDetails } from "@/components/catalog/ProductDetails";
 import { ProductCard } from "@/components/catalog/ProductCard";
 import { API_URL } from "@/lib/api";
 import { longevityLabels, sillageLabels } from "@/lib/dictionaries";
+import { getMockProductBySlug } from "@/lib/mock-catalog";
 import { Product } from "@/types/catalog";
 
 export default async function ProductPage({
@@ -77,10 +78,10 @@ async function loadProduct(slug: string): Promise<Product | undefined> {
       return response.json();
     }
   } catch {
-    return undefined;
+    return getMockProductBySlug(slug);
   }
 
-  return undefined;
+  return getMockProductBySlug(slug);
 }
 
 function Info({ label, value }: { label: string; value: string }) {

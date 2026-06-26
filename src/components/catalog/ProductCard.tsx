@@ -47,6 +47,14 @@ export function ProductCard({ product }: { product: Product }) {
     };
   }
 
+  function handleVariantTouchStart(index: number) {
+    return (event: React.TouchEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setSelectedVariantIndex(index);
+    };
+  }
+
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--surface-elevated)] transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)] sm:rounded-[24px]">
       <div className="relative overflow-hidden bg-[var(--surface-muted)]">
@@ -92,6 +100,7 @@ export function ProductCard({ product }: { product: Product }) {
               key={`${variant.volume}-${variant.price}-${index}`}
               type="button"
               onClick={() => setSelectedVariantIndex(index)}
+              onTouchStart={handleVariantTouchStart(index)}
               onPointerUp={handleVariantPointerUp(index)}
               className={
                 index === selectedVariantIndex
