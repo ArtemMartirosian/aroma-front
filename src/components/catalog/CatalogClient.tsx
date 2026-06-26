@@ -9,6 +9,7 @@ import { getBrands, getCategories, getProducts } from "@/lib/api";
 import { Brand, Category, FragranceType, Gender, Product } from "@/types/catalog";
 
 type Sort = "new" | "price_asc" | "price_desc" | "popular";
+const PRODUCTS_BATCH_SIZE = 12;
 
 export function CatalogClient() {
   const router = useRouter();
@@ -29,6 +30,7 @@ export function CatalogClient() {
   const [maxPrice, setMaxPrice] = useState(urlState.maxPrice);
   const [sort, setSort] = useState<Sort>(urlState.sort);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PRODUCTS_BATCH_SIZE);
 
   useEffect(() => {
     Promise.all([getProducts({ limit: 100 }), getBrands(), getCategories()])
@@ -56,6 +58,10 @@ export function CatalogClient() {
     setMaxPrice(urlState.maxPrice);
     setSort(urlState.sort);
   }, [urlState]);
+
+  useEffect(() => {
+    setVisibleCount(PRODUCTS_BATCH_SIZE);
+  }, [search, brand, category, gender, type, volume, maxPrice, sort]);
 
   useEffect(() => {
     const nextQuery = buildCatalogQuery({
@@ -114,6 +120,8 @@ export function CatalogClient() {
     ),
   );
   const activeFilters = [search, brand, category, gender, type, volume, maxPrice].filter(Boolean).length;
+  const visibleProducts = filteredProducts.slice(0, visibleCount);
+  const hasMoreProducts = filteredProducts.length > visibleCount;
 
   function resetFilters() {
     setSearch("");
@@ -124,6 +132,10 @@ export function CatalogClient() {
     setVolume("");
     setMaxPrice("");
     setSort("new");
+  }
+
+  function showMoreProducts() {
+    setVisibleCount((current) => current + PRODUCTS_BATCH_SIZE);
   }
 
   const filterPanel = (
@@ -344,9 +356,9 @@ export function CatalogClient() {
             <div>
               <section className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
                 {isLoading ? (
-                  Array.from({ length: 6 }).map((_, index) => <ProductCardSkeleton key={index} />)
+                  Array.from({ length: PRODUCTS_BATCH_SIZE }).map((_, index) => <ProductCardSkeleton key={index} />)
                 ) : filteredProducts.length ? (
-                  filteredProducts.map((product) => <ProductCard key={product.id} product={product} />)
+                  visibleProducts.map((product) => <ProductCard key={product.id} product={product} />)
                 ) : (
                   <div className="col-span-full rounded-[28px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.24)]">
                     <p className="text-xl font-semibold text-[var(--foreground)]">Ոչինչ չի գտնվել</p>
@@ -363,6 +375,17 @@ export function CatalogClient() {
                   </div>
                 )}
               </section>
+              {!isLoading && hasMoreProducts ? (
+                <div className="mt-8 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={showMoreProducts}
+                    className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
+                  >
+                      Տեսնել ավելին
+                  </button>
+                </div>
+              ) : null}
             </div>
           </div>
         </main>
