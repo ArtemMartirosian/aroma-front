@@ -19,6 +19,7 @@ import { imageUrl } from "@/lib/images";
 import { Brand, Category } from "@/types/catalog";
 
 type Mode = "brands" | "categories";
+const protectedCategorySlugs = new Set(["cosmetics", "accessoires"]);
 
 type TaxonomyManagerProps = {
   mode: Mode;
@@ -70,7 +71,7 @@ export function TaxonomyManager({
           if (currentItem) {
             setName(currentItem.name ?? "");
             setDescription(currentItem.description ?? "");
-            setImage(currentItem.image ?? "");
+            setImage("image" in currentItem ? currentItem.image ?? "" : "");
             setFormInitialized(true);
           }
         }
@@ -86,24 +87,34 @@ export function TaxonomyManager({
     if (ready) loadItems();
   }, [loadItems, ready]);
 
+  function isProtectedCategory(item: Brand | Category) {
+    return !isBrands && "slug" in item && protectedCategorySlugs.has(item.slug);
+  }
+
   async function createItem() {
     const trimmedName = name.trim();
     if (!trimmedName) {
       setMessage("Մուտքագրեք անվանումը։");
       return;
     }
-    const payload = {
-      name: trimmedName,
-      description,
-      image,
-      logo: trimmedName
-        .split(" ")
-        .map((word) => word[0])
-        .join("")
-        .slice(0, 3)
-        .toUpperCase(),
-      isActive: true,
-    };
+    const payload = isBrands
+      ? {
+          name: trimmedName,
+          description,
+          image,
+          logo: trimmedName
+            .split(" ")
+            .map((word) => word[0])
+            .join("")
+            .slice(0, 3)
+            .toUpperCase(),
+          isActive: true,
+        }
+      : {
+          name: trimmedName,
+          description,
+          isActive: true,
+        };
     setIsSaving(true);
     setMessage("");
     try {
@@ -121,7 +132,9 @@ export function TaxonomyManager({
         setItems((current) => [...current, created]);
       }
       setName("");
-      setImage("");
+      if (isBrands) {
+        setImage("");
+      }
       setDescription("");
     } catch (error) {
       const fallbackMessage =
@@ -214,13 +227,15 @@ export function TaxonomyManager({
                 {isSaving ? "Պահպանում..." : submitButtonLabel}
               </button>
             </div>
-            <div className="mt-3">
-              <ImageUploadField
-                label={isBrands ? "Բրենդի նկար" : "Կատեգորիայի նկար"}
-                value={image}
-                onChange={setImage}
-              />
-            </div>
+            {isBrands ? (
+              <div className="mt-3">
+                <ImageUploadField
+                  label="Բրենդի նկար"
+                  value={image}
+                  onChange={setImage}
+                />
+              </div>
+            ) : null}
           </>
         ) : null}
         {showItems ? (
@@ -231,18 +246,18 @@ export function TaxonomyManager({
                 className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex min-w-0 items-center gap-4">
-                  {item.image ? (
+                  {isBrands && "image" in item && item.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={imageUrl(item.image)}
                       alt={item.name}
                       className="h-16 w-24 rounded-md border border-zinc-200 object-cover"
                     />
-                  ) : (
+                  ) : isBrands ? (
                     <div className="flex h-16 w-24 items-center justify-center rounded-md border border-dashed border-zinc-300 text-xs text-zinc-400">
                       Նկար չկա
                     </div>
-                  )}
+                  ) : null}
                   <div>
                     <p className="font-semibold text-zinc-950">{item.name}</p>
                     <p className="text-sm text-zinc-500">{item.description}</p>
@@ -255,13 +270,17 @@ export function TaxonomyManager({
                   >
                     Խմբագրել
                   </Link>
-                  <button
-                    type="button"
-                    onClick={() => setItemToDelete(item)}
-                    className="font-semibold text-[var(--sale-strong)] transition hover:text-zinc-950"
-                  >
-                    Ջնջել
-                  </button>
+                  {isProtectedCategory(item) ? (
+                    <span className="text-sm font-semibold text-zinc-400">Պաշտպանված</span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setItemToDelete(item)}
+                      className="font-semibold text-[var(--sale-strong)] transition hover:text-zinc-950"
+                    >
+                      Ջնջել
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

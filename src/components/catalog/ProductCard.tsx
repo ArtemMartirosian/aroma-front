@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { isAccessoiresCategory } from "@/lib/category-groups";
 import { formatPrice } from "@/lib/dictionaries";
 import { imageUrl } from "@/lib/images";
 import { fallbackProductImage, normalizeProductVariants } from "@/lib/product-variants";
@@ -10,6 +11,7 @@ import { Product } from "@/types/catalog";
 
 export function ProductCard({ product }: { product: Product }) {
   const variants = useMemo(() => normalizeProductVariants(product), [product]);
+  const isAccessoiresProduct = isAccessoiresCategory(product.category?.slug);
   const defaultVariantIndex = useMemo(
     () =>
       variants.reduce((lowestIndex, variant, index, currentVariants) => {
@@ -33,6 +35,10 @@ export function ProductCard({ product }: { product: Product }) {
 
   const selectedImage = selectedVariant.images?.[0] ?? fallbackProductImage;
   const oldPrice = selectedVariant.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
+  const hasVariantChoices =
+    !isAccessoiresProduct &&
+    variants.length > 1 &&
+    variants.some((variant) => variant.volume?.trim());
   const discount =
     oldPrice && oldPrice > Number(selectedVariant.price)
       ? Math.round((1 - Number(selectedVariant.price) / oldPrice) * 100)
@@ -94,26 +100,28 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-2.5 h-px w-12 bg-[var(--line-strong)]" />
 
-        <div className="mt-2.5 flex flex-wrap gap-2">
-          {variants.slice(0, 4).map((variant, index) => (
-            <button
-              key={`${variant.volume}-${variant.price}-${index}`}
-              type="button"
-              onClick={() => setSelectedVariantIndex(index)}
-              onTouchStart={handleVariantTouchStart(index)}
-              onPointerUp={handleVariantPointerUp(index)}
-              className={
-                index === selectedVariantIndex
-                  ? "shrink-0 touch-manipulation rounded-full border border-[var(--accent)] bg-[var(--accent)] px-2 py-1 text-[10px] font-semibold text-[#171717] shadow-sm sm:px-3 sm:text-xs"
-                  : "shrink-0 touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-2 py-1 text-[10px] font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)] sm:px-3 sm:text-xs"
-              }
-            >
-              {variant.volume}
-            </button>
-          ))}
-        </div>
+        {hasVariantChoices ? (
+          <div className="mt-2.5 flex flex-wrap gap-2">
+            {variants.slice(0, 4).map((variant, index) => (
+              <button
+                key={`${variant.volume}-${variant.price}-${index}`}
+                type="button"
+                onClick={() => setSelectedVariantIndex(index)}
+                onTouchStart={handleVariantTouchStart(index)}
+                onPointerUp={handleVariantPointerUp(index)}
+                className={
+                  index === selectedVariantIndex
+                    ? "shrink-0 touch-manipulation rounded-full border border-[var(--accent)] bg-[var(--accent)] px-2 py-1 text-[10px] font-semibold text-[#171717] shadow-sm sm:px-3 sm:text-xs"
+                    : "shrink-0 touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-2 py-1 text-[10px] font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)] sm:px-3 sm:text-xs"
+                }
+              >
+                {variant.volume}
+              </button>
+            ))}
+          </div>
+        ) : null}
 
-        <div className="mt-auto pt-2">
+        <div className={`mt-auto ${hasVariantChoices ? "pt-2" : "pt-5"}`}>
           <div className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-2.5 sm:flex-row sm:items-end sm:justify-between">
             <div className="min-w-0">
               {oldPrice ? (

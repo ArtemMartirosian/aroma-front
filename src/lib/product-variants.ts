@@ -17,10 +17,13 @@ export function normalizeProductVariants(product: Product): ProductVariant[] {
   const uniqueVariants = new Map<string, ProductVariant>();
 
   rawVariants.forEach((variant) => {
-    if (!variant.volume || uniqueVariants.has(variant.volume)) return;
+    const normalizedVolume = variant.volume?.trim() ?? "";
+    const key = normalizedVolume || "__default__";
+    if (uniqueVariants.has(key)) return;
 
-    uniqueVariants.set(variant.volume, {
+    uniqueVariants.set(key, {
       ...variant,
+      volume: normalizedVolume,
       images: variant.images?.length ? variant.images : [fallbackProductImage],
     });
   });

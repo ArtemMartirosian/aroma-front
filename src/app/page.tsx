@@ -4,6 +4,7 @@ import { HomeBrandCarousel } from "@/components/catalog/HomeBrandCarousel";
 import { HomeHero } from "@/components/catalog/HomeHero";
 import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { API_URL } from "@/lib/api";
+import { accessoiresCategorySlugs, cosmeticsCategorySlugs } from "@/lib/category-groups";
 import { getMockBrands, getMockCategories, getMockProducts } from "@/lib/mock-catalog";
 import { SITE_NAME, absoluteUrl, buildMetadata } from "@/lib/seo";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
@@ -16,7 +17,7 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function Home() {
-  const { featured, newest, brands, categories } = await loadHomeData();
+  const { featured, newest, cosmetics, accessoires, brands, categories } = await loadHomeData();
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -65,6 +66,22 @@ export default async function Home() {
           <HomeProductCarousel products={newest} />
         ) : (
           <EmptyState text="Նոր ապրանքները կհայտնվեն backend-ից տվյալների բեռնումից հետո։" />
+        )}
+      </Section>
+
+      <Section title="Կոսմետիկա" href="/catalog?category=cosmetics">
+        {cosmetics.length ? (
+          <HomeProductCarousel products={cosmetics} />
+        ) : (
+          <EmptyState text="Կոսմետիկայի բաժինը կլցվի backend-ից կամ ադմինից ավելացված ապրանքներով։" />
+        )}
+      </Section>
+
+      <Section title="Աքսեսուարներ" href="/catalog?category=accessoires">
+        {accessoires.length ? (
+          <HomeProductCarousel products={accessoires} />
+        ) : (
+          <EmptyState text="Աքսեսուարների բաժինը կլցվի backend-ից կամ ադմինից ավելացված ապրանքներով։" />
         )}
       </Section>
 
@@ -118,21 +135,45 @@ export default async function Home() {
 async function loadHomeData(): Promise<{
   featured: Product[];
   newest: Product[];
+  cosmetics: Product[];
+  accessoires: Product[];
   brands: Brand[];
   categories: Category[];
 }> {
   try {
-    const [productsResponse, brandsResponse, categoriesResponse] = await Promise.all([
+    const [
+      productsResponse,
+      brandsResponse,
+      categoriesResponse,
+      cosmeticsResponse,
+      accessoiresResponse,
+    ] = await Promise.all([
       fetch(`${API_URL}/products?limit=100`, { cache: "no-store", signal: AbortSignal.timeout(1500) }),
       fetch(`${API_URL}/brands`, { cache: "no-store", signal: AbortSignal.timeout(1500) }),
       fetch(`${API_URL}/categories`, { cache: "no-store", signal: AbortSignal.timeout(1500) }),
+      fetch(`${API_URL}/products?category=cosmetics&limit=12`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(1500),
+      }),
+      fetch(`${API_URL}/products?category=accessoires&limit=12`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(1500),
+      }),
     ]);
 
-    if (!productsResponse.ok || !brandsResponse.ok || !categoriesResponse.ok) {
+    if (
+      !productsResponse.ok ||
+      !brandsResponse.ok ||
+      !categoriesResponse.ok ||
+      !cosmeticsResponse.ok ||
+      !accessoiresResponse.ok
+    ) {
       throw new Error("Backend response failed");
     }
 
     const productsData = (await productsResponse.json()) as ProductsResponse;
+    const cosmeticsData = (await cosmeticsResponse.json()) as ProductsResponse;
+    const accessoiresData = (await accessoiresResponse.json()) as ProductsResponse;
     const brands = (await brandsResponse.json()) as Brand[];
     const categories = (await categoriesResponse.json()) as Category[];
     const products = productsData.items;
@@ -152,6 +193,12 @@ async function loadHomeData(): Promise<{
     return {
       featured: products.filter((product) => product.isFeatured),
       newest: products.filter((product) => product.isNew),
+      cosmetics: cosmeticsData.items.filter((product) =>
+        cosmeticsCategorySlugs.includes(product.category?.slug ?? ""),
+      ),
+      accessoires: accessoiresData.items.filter((product) =>
+        accessoiresCategorySlugs.includes(product.category?.slug ?? ""),
+      ),
       brands: brandsWithCounts,
       categories,
     };
@@ -163,6 +210,8 @@ async function loadHomeData(): Promise<{
     return {
       featured: products.filter((product) => product.isFeatured),
       newest: products.filter((product) => product.isNew),
+      cosmetics: products.filter((product) => cosmeticsCategorySlugs.includes(product.category?.slug ?? "")),
+      accessoires: products.filter((product) => accessoiresCategorySlugs.includes(product.category?.slug ?? "")),
       brands,
       categories,
     };

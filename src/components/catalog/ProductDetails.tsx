@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { formatPrice, fragranceLabels, genderLabels } from "@/lib/dictionaries";
+import { isAccessoiresCategory, isParfumeProduct } from "@/lib/category-groups";
 import { imageUrl } from "@/lib/images";
 import { fallbackProductImage, normalizeProductVariants } from "@/lib/product-variants";
 import { Product, ProductVariant } from "@/types/catalog";
@@ -15,6 +16,12 @@ export function ProductDetails({ product }: { product: Product }) {
   const selectedVariant = variants[selectedVariantIndex] ?? variants[0];
   const images = selectedVariant?.images?.length ? selectedVariant.images : [fallbackProductImage];
   const selectedImage = images[selectedImageIndex] ?? images[0] ?? fallbackProductImage;
+  const perfumeProduct = isParfumeProduct(product);
+  const isAccessoiresProduct = isAccessoiresCategory(product.category?.slug);
+  const hasVariantChoices =
+    !isAccessoiresProduct &&
+    variants.length > 1 &&
+    variants.some((variant) => variant.volume?.trim());
   const oldPrice = selectedVariant?.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
   const discount =
     oldPrice && selectedVariant && oldPrice > Number(selectedVariant.price)
@@ -150,35 +157,47 @@ export function ProductDetails({ product }: { product: Product }) {
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-[var(--accent-strong)]">
-              <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">{genderLabels[product.gender]}</span>
-              <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
-                {fragranceLabels[product.fragranceType]}
-              </span>
-              <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
-                {product.concentration || "Eau de Parfum"}
-              </span>
+              {product.gender ? (
+                <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
+                  {genderLabels[product.gender]}
+                </span>
+              ) : null}
+              {perfumeProduct && product.fragranceType ? (
+                <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
+                  {fragranceLabels[product.fragranceType]}
+                </span>
+              ) : null}
+              {perfumeProduct ? (
+                <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
+                  {product.concentration || "Eau de Parfum"}
+                </span>
+              ) : null}
             </div>
 
-            <div className="mt-8 border-y border-[var(--line)] py-6">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">Ընտրեք ծավալը</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {variants.map((variant, index) => (
-                  <button
-                    key={`${variant.volume}-${variant.price}-${index}`}
-                    type="button"
-                    onClick={() => selectVariant(index)}
-                    onPointerUp={handleVariantPointerUp(index)}
-                    className={
-                      index === selectedVariantIndex
-                        ? "touch-manipulation rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] shadow-[0_12px_28px_rgba(0,0,0,0.2)]"
-                        : "touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-5 py-2.5 text-sm font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
-                    }
-                  >
-                    {variant.volume}
-                  </button>
-                ))}
+            {hasVariantChoices ? (
+              <div className="mt-8 border-y border-[var(--line)] py-6">
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">
+                  {perfumeProduct ? "Ընտրեք ծավալը" : "Ընտրեք տարբերակը"}
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {variants.map((variant, index) => (
+                    <button
+                      key={`${variant.volume}-${variant.price}-${index}`}
+                      type="button"
+                      onClick={() => selectVariant(index)}
+                      onPointerUp={handleVariantPointerUp(index)}
+                      className={
+                        index === selectedVariantIndex
+                          ? "touch-manipulation rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] shadow-[0_12px_28px_rgba(0,0,0,0.2)]"
+                          : "touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-5 py-2.5 text-sm font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+                      }
+                    >
+                      {variant.volume}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : null}
 
             <div className="mt-6 flex flex-wrap items-end justify-between gap-5">
               <div>
@@ -197,7 +216,7 @@ export function ProductDetails({ product }: { product: Product }) {
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
               <a
                 href={`https://wa.me/37433696009?text=${encodeURIComponent(
-                  `Բարև ձեզ, հետաքրքրում է ${product.name} ${selectedVariant.volume}`,
+                  `Բարև ձեզ, հետաքրքրում է ${product.name}${selectedVariant.volume ? ` ${selectedVariant.volume}` : ""}`,
                 )}`}
                 className="inline-flex justify-center rounded-full border border-[var(--accent)] bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
               >

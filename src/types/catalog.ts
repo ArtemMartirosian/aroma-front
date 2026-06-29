@@ -29,7 +29,7 @@ export type Category = {
   name: string;
   slug: string;
   description?: string;
-  image?: string;
+  isProtected?: boolean;
   isActive: boolean;
   products?: Product[];
   createdAt?: string;
@@ -54,8 +54,8 @@ export type Product = {
   price: number | string;
   oldPrice?: number | string;
   volume: string;
-  gender: Gender;
-  fragranceType: FragranceType;
+  gender?: Gender;
+  fragranceType?: FragranceType;
   description: string;
   shortDescription: string;
   isFeatured: boolean;

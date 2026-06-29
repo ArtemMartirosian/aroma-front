@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { ProductDetails } from "@/components/catalog/ProductDetails";
 import { API_URL } from "@/lib/api";
+import { isAccessoiresCategory, isParfumeProduct } from "@/lib/category-groups";
 import { longevityLabels, sillageLabels } from "@/lib/dictionaries";
 import { getMockProductBySlug } from "@/lib/mock-catalog";
 import { SITE_NAME, absoluteUrl, buildMetadata } from "@/lib/seo";
@@ -45,6 +46,8 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const related = product.relatedProducts?.slice(0, 3) ?? [];
+  const perfumeProduct = isParfumeProduct(product);
+  const isAccessoiresProduct = isAccessoiresCategory(product.category?.slug);
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -58,15 +61,15 @@ export default async function ProductPage({
       name: product.brand?.name ?? SITE_NAME,
     },
     category: product.category?.name,
-    offers: (product.variants?.length ? product.variants : [{ volume: product.volume, price: product.price, images: [] }]).map((variant) => ({
+    offers: (product.variants?.length ? product.variants : [{ volume: product.volume, price: product.price, images: [] }]).map((variant, index) => ({
       "@type": "Offer",
       priceCurrency: "AMD",
       price: Number(variant.price),
       availability: "https://schema.org/InStock",
       url: absoluteUrl(`/products/${product.slug}`),
       itemCondition: "https://schema.org/NewCondition",
-      sku: `${product.slug}-${variant.volume}`,
-      description: `${product.name} ${variant.volume}`,
+      sku: isAccessoiresProduct || !variant.volume ? `${product.slug}-${index + 1}` : `${product.slug}-${variant.volume}`,
+      description: isAccessoiresProduct || !variant.volume ? product.name : `${product.name} ${variant.volume}`,
     })),
   };
   const breadcrumbJsonLd = {
@@ -87,23 +90,37 @@ export default async function ProductPage({
         <ProductDetails product={product} />
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.86fr]">
-          <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Բույրի նոտաներ</p>
-            <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բույրի բուրգ</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <NoteCard label="Վերին նոտաներ" value={product.topNotes || "Նշված չէ"} />
-              <NoteCard label="Միջին նոտաներ" value={product.middleNotes || "Նշված չէ"} />
-              <NoteCard label="Բազային նոտաներ" value={product.baseNotes || "Նշված չէ"} />
+          {perfumeProduct ? (
+            <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Բույրի նոտաներ</p>
+              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բույրի բուրգ</h2>
+              <div className="mt-6 grid gap-4 md:grid-cols-3">
+                <NoteCard label="Վերին նոտաներ" value={product.topNotes || "Նշված չէ"} />
+                <NoteCard label="Միջին նոտաներ" value={product.middleNotes || "Նշված չէ"} />
+                <NoteCard label="Բազային նոտաներ" value={product.baseNotes || "Նշված չէ"} />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Ապրանքի մասին</p>
+              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Նկարագրություն</h2>
+              <p className="mt-6 text-base leading-8 text-[var(--text-soft)]">
+                {product.description}
+              </p>
+            </div>
+          )}
 
           <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Մանրամասներ</p>
             <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բնութագրեր</h2>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <Info label="Երկարակեցություն" value={product.longevity ? longevityLabels[product.longevity] : "Միջին"} />
-              <Info label="Շլեյֆ" value={product.sillage ? sillageLabels[product.sillage] : "Միջին"} />
-              <Info label="Երկիր" value={product.country || "France"} />
+              {perfumeProduct ? (
+                <>
+                  <Info label="Երկարակեցություն" value={product.longevity ? longevityLabels[product.longevity] : "Միջին"} />
+                  <Info label="Շլեյֆ" value={product.sillage ? sillageLabels[product.sillage] : "Միջին"} />
+                </>
+              ) : null}
+              <Info label="Երկիր" value={product.country || "Նշված չէ"} />
               <Info label="Տարի" value={product.releaseYear ? String(product.releaseYear) : "Նշված չէ"} />
             </div>
           </div>

@@ -7,6 +7,7 @@ import { ProductCard } from "@/components/catalog/ProductCard";
 import { fragranceOptions, genderOptions } from "@/lib/dictionaries";
 import { getBrands, getCategories, getProducts } from "@/lib/api";
 import { Brand, Category, FragranceType, Gender, Product } from "@/types/catalog";
+import { isAccessoiresCategory, isCosmeticsCategory } from "@/lib/category-groups";
 
 type Sort = "new" | "price_asc" | "price_desc" | "popular";
 const PRODUCTS_BATCH_SIZE = 12;
@@ -25,7 +26,7 @@ export function CatalogClient() {
   const [brand, setBrand] = useState(urlState.brand);
   const [category, setCategory] = useState(urlState.category);
   const [gender, setGender] = useState<Gender | "">(urlState.gender);
-  const [type, setType] = useState<FragranceType | "">(urlState.type);
+  const [fragranceType, setFragranceType] = useState<FragranceType | "">(urlState.fragranceType);
   const [volume, setVolume] = useState(urlState.volume);
   const [maxPrice, setMaxPrice] = useState(urlState.maxPrice);
   const [sort, setSort] = useState<Sort>(urlState.sort);
@@ -53,15 +54,24 @@ export function CatalogClient() {
     setBrand(urlState.brand);
     setCategory(urlState.category);
     setGender(urlState.gender);
-    setType(urlState.type);
+    setFragranceType(urlState.fragranceType);
     setVolume(urlState.volume);
     setMaxPrice(urlState.maxPrice);
     setSort(urlState.sort);
   }, [urlState]);
 
   useEffect(() => {
+    if ((isCosmeticsCategory(category) || isAccessoiresCategory(category)) && fragranceType) {
+      setFragranceType("");
+    }
+    if (isAccessoiresCategory(category) && volume) {
+      setVolume("");
+    }
+  }, [category, fragranceType]);
+
+  useEffect(() => {
     setVisibleCount(PRODUCTS_BATCH_SIZE);
-  }, [search, brand, category, gender, type, volume, maxPrice, sort]);
+  }, [search, brand, category, gender, fragranceType, volume, maxPrice, sort]);
 
   useEffect(() => {
     const nextQuery = buildCatalogQuery({
@@ -69,7 +79,7 @@ export function CatalogClient() {
       brand,
       category,
       gender,
-      type,
+      fragranceType,
       volume,
       maxPrice,
       sort,
@@ -81,7 +91,7 @@ export function CatalogClient() {
     }
 
     router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
-  }, [brand, category, gender, maxPrice, pathname, router, search, searchParams, sort, type, volume]);
+  }, [brand, category, gender, maxPrice, pathname, router, search, searchParams, sort, fragranceType, volume]);
 
   const filteredProducts = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -96,7 +106,7 @@ export function CatalogClient() {
           (!brand || product.brand?.slug === brand) &&
           (!category || product.category?.slug === category) &&
           (!gender || product.gender === gender) &&
-          (!type || product.fragranceType === type) &&
+          (!fragranceType || product.fragranceType === fragranceType) &&
           (!volume || productVolumes.includes(volume)) &&
           (!maxPrice || price <= Number(maxPrice)) &&
           product.isActive
@@ -108,7 +118,7 @@ export function CatalogClient() {
         if (sort === "popular") return Number(b.isFeatured) - Number(a.isFeatured);
         return Number(b.isNew) - Number(a.isNew);
       });
-  }, [brand, category, gender, maxPrice, products, search, sort, type, volume]);
+  }, [brand, category, gender, maxPrice, products, search, sort, fragranceType, volume]);
 
   const volumes = Array.from(
     new Set(
@@ -118,8 +128,8 @@ export function CatalogClient() {
           : [product.volume],
       ),
     ),
-  );
-  const activeFilters = [search, brand, category, gender, type, volume, maxPrice].filter(Boolean).length;
+  ).filter(Boolean);
+  const activeFilters = [search, brand, category, gender, fragranceType, volume, maxPrice].filter(Boolean).length;
   const visibleProducts = filteredProducts.slice(0, visibleCount);
   const hasMoreProducts = filteredProducts.length > visibleCount;
 
@@ -128,7 +138,7 @@ export function CatalogClient() {
     setBrand("");
     setCategory("");
     setGender("");
-    setType("");
+    setFragranceType("");
     setVolume("");
     setMaxPrice("");
     setSort("new");
@@ -191,24 +201,28 @@ export function CatalogClient() {
             </option>
           ))}
         </FilterSelect>
-        <FilterSelect
-          label="Բույրի տեսակ"
-          value={type}
-          onChange={(value) => setType(value as FragranceType | "")}
-        >
-          {fragranceOptions.map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </FilterSelect>
-        <FilterSelect label="Ծավալ" value={volume} onChange={setVolume}>
-          {volumes.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </FilterSelect>
+        {(!category || (!isCosmeticsCategory(category) && !isAccessoiresCategory(category))) ? (
+          <FilterSelect
+            label="Բույրի տեսակ"
+            value={fragranceType}
+            onChange={(value) => setFragranceType(value as FragranceType | "")}
+          >
+            {fragranceOptions.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </FilterSelect>
+        ) : null}
+        {!isAccessoiresCategory(category) ? (
+          <FilterSelect label="Ծավալ" value={volume} onChange={setVolume}>
+            {volumes.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </FilterSelect>
+        ) : null}
         <label className="block">
           <span className="text-sm font-semibold text-[var(--foreground)]">Գինը մինչև</span>
           <input
@@ -251,11 +265,11 @@ export function CatalogClient() {
                   Aroma Parfume
                 </p>
                 <h1 className="mt-4 font-serif text-4xl leading-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
-                  Բույրերի կատալոգ
+                  Գեղեցկության կատալոգ
                 </h1>
                 <p className="mt-5 max-w-2xl text-sm leading-8 text-[var(--text-soft)] sm:text-lg">
-                  Ընտրեք սիրելի նոտաները, բրենդներն ու ծավալները։ Բոլոր պատվերները ձևակերպվում են օնլայն,
-                  իսկ առաքումն անվճար է։
+                  Ընտրեք parfume, cosmetics կամ accessoires, համեմատեք բրենդներն ու տարբերակները։
+                  Բոլոր պատվերները ձևակերպվում են օնլայն, իսկ առաքումն անվճար է։
                 </p>
               </div>
 
@@ -339,7 +353,7 @@ export function CatalogClient() {
                   {brand ? <ActiveChip>{brands.find((item) => item.slug === brand)?.name}</ActiveChip> : null}
                   {category ? <ActiveChip>{categories.find((item) => item.slug === category)?.name}</ActiveChip> : null}
                   {gender ? <ActiveChip>{genderOptions.find(([value]) => value === gender)?.[1]}</ActiveChip> : null}
-                  {type ? <ActiveChip>{fragranceOptions.find(([value]) => value === type)?.[1]}</ActiveChip> : null}
+                  {fragranceType ? <ActiveChip>{fragranceOptions.find(([value]) => value === fragranceType)?.[1]}</ActiveChip> : null}
                   {volume ? <ActiveChip>{volume}</ActiveChip> : null}
                   {search ? <ActiveChip>“{search}”</ActiveChip> : null}
                   <button
@@ -492,7 +506,7 @@ function readCatalogQuery(searchParams: { get: (key: string) => string | null })
     brand: searchParams.get("brand") ?? "",
     category: searchParams.get("category") ?? "",
     gender: (isGender(genderValue) ? genderValue : "") as Gender | "",
-    type: (isFragranceType(typeValue) ? typeValue : "") as FragranceType | "",
+    fragranceType: (isFragranceType(typeValue) ? typeValue : "") as FragranceType | "",
     volume: searchParams.get("volume") ?? "",
     maxPrice: searchParams.get("maxPrice") ?? "",
     sort: isSort(sortValue) ? sortValue : "new",
@@ -504,7 +518,7 @@ function buildCatalogQuery({
   brand,
   category,
   gender,
-  type,
+  fragranceType,
   volume,
   maxPrice,
   sort,
@@ -513,7 +527,7 @@ function buildCatalogQuery({
   brand: string;
   category: string;
   gender: Gender | "";
-  type: FragranceType | "";
+  fragranceType: FragranceType | "";
   volume: string;
   maxPrice: string;
   sort: Sort;
@@ -524,7 +538,7 @@ function buildCatalogQuery({
   if (brand) params.set("brand", brand);
   if (category) params.set("category", category);
   if (gender) params.set("gender", gender);
-  if (type) params.set("type", type);
+  if (fragranceType) params.set("type", fragranceType);
   if (volume) params.set("volume", volume);
   if (maxPrice) params.set("maxPrice", maxPrice);
   if (sort !== "new") params.set("sort", sort);
