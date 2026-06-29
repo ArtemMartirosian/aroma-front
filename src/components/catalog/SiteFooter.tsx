@@ -15,13 +15,22 @@ export function SiteFooter() {
     <footer className="border-t border-[var(--line)] bg-[#0b0d0e] pb-[calc(env(safe-area-inset-bottom)+5.75rem)] text-[var(--foreground)] md:pb-0">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
-          <Image
-            src="/images/aroma-logo.png"
-            alt="Aroma Parfume"
-            width={260}
-            height={260}
-            className="h-20 w-auto"
-          />
+          <div className="flex items-center gap-3">
+            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-[var(--line)] bg-black/90 shadow-[0_10px_28px_rgba(0,0,0,0.25)]">
+              <Image
+                src="/images/aroma-logo.png"
+                alt=""
+                aria-hidden="true"
+                fill
+                sizes="64px"
+                className="object-cover scale-[2.15]"
+                style={{ objectPosition: "50% 28%" }}
+              />
+            </div>
+            <span className="min-w-0 text-[1.3rem] font-semibold uppercase tracking-[0.24em] text-[var(--foreground)]">
+              Aroma Parfume
+            </span>
+          </div>
           <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--text-soft)]">
             Օրիգինալ օծանելիքի օնլայն կատալոգ առանց օնլայն վճարման․ ընտրեք
             բույրը, կապվեք մեզ հետ և ստացեք անվճար առաքում։
