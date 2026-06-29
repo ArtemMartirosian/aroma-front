@@ -22,16 +22,19 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[rgba(14,16,17,0.84)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="shrink-0 flex items-center gap-6">
-          <Image
-            src="/images/aroma-logo.png"
-            alt="Aroma Parfume"
-            width={280}
-            height={280}
-            priority
-            className="h-14 w-auto sm:h-16 scale-150"
-          />
+          <span className="text-[0.95rem] font-semibold uppercase tracking-[0.2em] text-[var(--foreground)] sm:text-[1.05rem]">
+            Aroma
+          </span>
+            <Image
+                src="/images/aroma-logo.png"
+                alt="Aroma Parfume"
+                width={280}
+                height={280}
+                priority
+                className="h-14 w-auto sm:h-16 scale-150"
+            />
             <span className="text-[0.95rem] font-semibold uppercase tracking-[0.2em] text-[var(--foreground)] sm:text-[1.05rem]">
-            Aroma Parfume
+             Parfume
           </span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm font-medium text-[var(--text-soft)] md:flex">
