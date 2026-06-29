@@ -24,14 +24,6 @@ export function SiteFooter() {
                   priority
                   className="h-14 w-auto scale-110 sm:h-16"
               />
-            <span className="flex min-w-0 flex-col leading-none">
-              <span className="text-[1.3rem] font-semibold uppercase tracking-[0.24em] text-[var(--foreground)]">
-                Aroma Parfume
-              </span>
-              <span className="mt-2 text-[0.68rem] font-semibold tracking-[0.2em] text-[var(--accent)]">
-                &amp; cosmetics
-              </span>
-            </span>
           </div>
           <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--text-soft)]">
             Օրիգինալ օծանելիքի օնլայն կատալոգ առանց օնլայն վճարման․ ընտրեք
