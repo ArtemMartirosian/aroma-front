@@ -5,10 +5,10 @@ const fallbackSiteUrl = "http://localhost:3000";
 const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
 export const SITE_URL = (rawSiteUrl || fallbackSiteUrl).replace(/\/$/, "");
-export const SITE_NAME = "Aroma Parfume";
-export const DEFAULT_TITLE = "Aroma Parfume | Օծանելիքի օնլայն կատալոգ";
+export const SITE_NAME = "Aroma Parfume & cosmetics";
+export const DEFAULT_TITLE = "Aroma Parfume & cosmetics | Օծանելիքի օնլայն կատալոգ";
 export const DEFAULT_DESCRIPTION =
-  "Aroma Parfume-ի օնլայն կատալոգը՝ կանացի, տղամարդու և ունիսեքս օծանելիքներով, բրենդներով, ծավալներով, գներով և անվճար առաքմամբ։";
+  "Aroma Parfume & cosmetics-ի օնլայն կատալոգը՝ կանացի, տղամարդու և ունիսեքս օծանելիքներով, բրենդներով, ծավալներով, գներով և անվճար առաքմամբ։";
 export const DEFAULT_OG_IMAGE = "/images/perfume-hero.png";
 
 export function absoluteUrl(path = "/") {

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     "օծանելիք",
     "parfume",
     "perfume Armenia",
-    "Aroma Parfume",
+    "Aroma Parfume & cosmetics",
     "օնլայն օծանելիքի խանութ",
     "նիշային օծանելիք",
     "կանացի օծանելիք",

@@ -9,7 +9,7 @@ import { Brand, ProductsResponse } from "@/types/catalog";
 export const metadata: Metadata = buildMetadata({
   title: "Բրենդներ",
   description:
-    "Բացահայտեք Aroma Parfume-ի բրենդները՝ Chanel, Dior, Tom Ford, Byredo և այլ ճանաչելի օծանելիքի տներ մեկ էջում։",
+    "Բացահայտեք Aroma Parfume & cosmetics-ի բրենդները՝ Chanel, Dior, Tom Ford, Byredo և այլ ճանաչելի օծանելիքի տներ մեկ էջում։",
   path: "/brands",
 });
 

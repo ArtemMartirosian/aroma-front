@@ -11,7 +11,7 @@ import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
 export const metadata: Metadata = buildMetadata({
   title: "Օծանելիքի օնլայն կատալոգ",
   description:
-    "Գտեք կանացի, տղամարդու և ունիսեքս օծանելիք Aroma Parfume-ում՝ բրենդներով, ծավալներով, գներով և անվճար առաքմամբ։",
+    "Գտեք կանացի, տղամարդու և ունիսեքս օծանելիք Aroma Parfume & cosmetics-ում՝ բրենդներով, ծավալներով, գներով և անվճար առաքմամբ։",
   path: "/",
 });
 

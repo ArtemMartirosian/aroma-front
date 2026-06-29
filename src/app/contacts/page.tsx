@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Կոնտակտներ",
   description:
-    "Կապվեք Aroma Parfume-ի հետ WhatsApp-ով, հեռախոսով կամ Instagram-ով։ Օնլայն պատվերներ և անվճար առաքում Հայաստանում։",
+    "Կապվեք Aroma Parfume & cosmetics-ի հետ WhatsApp-ով, հեռախոսով կամ Instagram-ով։ Օնլայն պատվերներ և անվճար առաքում Հայաստանում։",
   path: "/contacts",
 });
 

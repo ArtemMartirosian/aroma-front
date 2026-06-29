@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Մեր մասին",
   description:
-    "Իմացեք Aroma Parfume-ի մասին՝ օնլայն օծանելիքի կատալոգ, արագ կապ, անվճար առաքում և հարմար ընտրություն ըստ բրենդի, գնի ու ծավալի։",
+    "Իմացեք Aroma Parfume & cosmetics-ի մասին՝ օնլայն օծանելիքի կատալոգ, արագ կապ, անվճար առաքում և հարմար ընտրություն ըստ բրենդի, գնի ու ծավալի։",
   path: "/about",
 });
 
