@@ -22,7 +22,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[rgba(14,16,17,0.84)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-4 sm:justify-between sm:px-6 lg:px-8">
         <Link href="/" className="shrink-0 flex items-center gap-6">
-          <span className="text-[0.95rem] font-semibold uppercase tracking-[0.2em] text-[var(--foreground)] sm:text-[1.05rem]">
+          <span className="text-[0.95rem] font-semibold uppercase tracking-[0.2em] text-[var(--accent)] sm:text-[1.05rem]">
             Aroma
           </span>
           <Image
@@ -34,10 +34,10 @@ export function SiteHeader() {
             className="h-14 w-auto scale-150 sm:h-16"
           />
           <span className="flex flex-col leading-none">
-            <span className="text-[0.95rem] font-semibold uppercase tracking-[0.2em] text-[var(--foreground)] sm:text-[1.05rem]">
+            <span className="text-[0.95rem] font-semibold uppercase tracking-[0.2em] text-[var(--accent)] text-[0.95rem]">
               Parfume
             </span>
-            <span className="mt-1 text-[0.55rem] font-semibold tracking-[0.18em] text-[var(--accent)] sm:text-[0.65rem]">
+            <span className="mt-1 text-[0.95rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] text-[0.95rem]">
               &amp; cosmetics
             </span>
           </span>
