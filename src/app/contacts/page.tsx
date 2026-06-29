@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Կոնտակտներ",
+  description:
+    "Կապվեք Aroma Parfume-ի հետ WhatsApp-ով, հեռախոսով կամ Instagram-ով։ Օնլայն պատվերներ և անվճար առաքում Հայաստանում։",
+  path: "/contacts",
+});
+
 export default function ContactsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">

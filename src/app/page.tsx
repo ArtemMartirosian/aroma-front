@@ -1,16 +1,55 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { HomeBrandCarousel } from "@/components/catalog/HomeBrandCarousel";
 import { HomeHero } from "@/components/catalog/HomeHero";
 import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { API_URL } from "@/lib/api";
 import { getMockBrands, getMockCategories, getMockProducts } from "@/lib/mock-catalog";
+import { SITE_NAME, absoluteUrl, buildMetadata } from "@/lib/seo";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Օծանելիքի օնլայն կատալոգ",
+  description:
+    "Գտեք կանացի, տղամարդու և ունիսեքս օծանելիք Aroma Parfume-ում՝ բրենդներով, ծավալներով, գներով և անվճար առաքմամբ։",
+  path: "/",
+});
 
 export default async function Home() {
   const { featured, newest, brands, categories } = await loadHomeData();
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: absoluteUrl("/"),
+    logo: absoluteUrl("/images/aroma-logo.png"),
+    sameAs: ["https://instagram.com/aroma__parfume"],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: "+37433696009",
+        contactType: "customer service",
+        areaServed: "AM",
+        availableLanguage: ["hy", "ru"],
+      },
+    ],
+  };
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: absoluteUrl("/"),
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${absoluteUrl("/catalog")}?search={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
 
   return (
     <div className="bg-transparent">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       <HomeHero />
 
       <Section title="Հանրաճանաչ ապրանքներ" href="/catalog">

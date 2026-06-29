@@ -1,5 +1,14 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { CatalogClient } from "@/components/catalog/CatalogClient";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Կատալոգ",
+  description:
+    "Դիտեք Aroma Parfume-ի օծանելիքի կատալոգը՝ ֆիլտրերով ըստ բրենդի, սեռի, բույրի տեսակի, ծավալի և գնի։",
+  path: "/catalog",
+});
 
 export default function CatalogPage() {
   return (

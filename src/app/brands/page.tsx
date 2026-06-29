@@ -1,8 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandCard } from "@/components/catalog/BrandCard";
 import { API_URL } from "@/lib/api";
 import { getMockBrands } from "@/lib/mock-catalog";
+import { buildMetadata } from "@/lib/seo";
 import { Brand, ProductsResponse } from "@/types/catalog";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Բրենդներ",
+  description:
+    "Բացահայտեք Aroma Parfume-ի բրենդները՝ Chanel, Dior, Tom Ford, Byredo և այլ ճանաչելի օծանելիքի տներ մեկ էջում։",
+  path: "/brands",
+});
 
 export default async function BrandsPage() {
   const brands = await loadBrands();

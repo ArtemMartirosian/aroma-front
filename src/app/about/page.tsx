@@ -1,3 +1,13 @@
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Մեր մասին",
+  description:
+    "Իմացեք Aroma Parfume-ի մասին՝ օնլայն օծանելիքի կատալոգ, արագ կապ, անվճար առաքում և հարմար ընտրություն ըստ բրենդի, գնի ու ծավալի։",
+  path: "/about",
+});
+
 export default function AboutPage() {
   const benefits = [
     "Օրիգինալ արտադրանք և հասկանալի բույրերի քարտեր",

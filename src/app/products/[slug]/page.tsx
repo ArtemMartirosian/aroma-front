@@ -1,10 +1,39 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { ProductDetails } from "@/components/catalog/ProductDetails";
 import { API_URL } from "@/lib/api";
 import { longevityLabels, sillageLabels } from "@/lib/dictionaries";
 import { getMockProductBySlug } from "@/lib/mock-catalog";
+import { SITE_NAME, absoluteUrl, buildMetadata } from "@/lib/seo";
 import { Product } from "@/types/catalog";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await loadProduct(slug);
+
+  if (!product) {
+    return buildMetadata({
+      title: "Ապրանք չի գտնվել",
+      description: "Պահանջվող ապրանքը չի գտնվել Aroma Parfume-ի կատալոգում։",
+      path: `/products/${slug}`,
+      noIndex: true,
+    });
+  }
+
+  const image = product.variants?.[0]?.images?.[0] ?? "/images/perfume-hero.png";
+
+  return buildMetadata({
+    title: product.name,
+    description: product.shortDescription || product.description,
+    path: `/products/${product.slug}`,
+    image,
+  });
+}
 
 export default async function ProductPage({
   params,
@@ -16,9 +45,44 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const related = product.relatedProducts?.slice(0, 3) ?? [];
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: (product.variants?.flatMap((variant) => variant.images) ?? ["/images/perfume-hero.png"]).map((image) =>
+      absoluteUrl(image),
+    ),
+    brand: {
+      "@type": "Brand",
+      name: product.brand?.name ?? SITE_NAME,
+    },
+    category: product.category?.name,
+    offers: (product.variants?.length ? product.variants : [{ volume: product.volume, price: product.price, images: [] }]).map((variant) => ({
+      "@type": "Offer",
+      priceCurrency: "AMD",
+      price: Number(variant.price),
+      availability: "https://schema.org/InStock",
+      url: absoluteUrl(`/products/${product.slug}`),
+      itemCondition: "https://schema.org/NewCondition",
+      sku: `${product.slug}-${variant.volume}`,
+      description: `${product.name} ${variant.volume}`,
+    })),
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Գլխավոր", item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: "Կատալոգ", item: absoluteUrl("/catalog") },
+      { "@type": "ListItem", position: 3, name: product.name, item: absoluteUrl(`/products/${product.slug}`) },
+    ],
+  };
 
   return (
     <div className="bg-transparent">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <ProductDetails product={product} />
 
