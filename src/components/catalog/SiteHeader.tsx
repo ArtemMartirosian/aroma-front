@@ -37,6 +37,9 @@ export function SiteHeader() {
             <span className="mt-1 text-[0.95rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] text-[0.95rem]">
               &amp; cosmetics
             </span>
+               <span className="mt-1 text-[0.95rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent)] text-[0.95rem]">
+              &amp; accessoires
+            </span>
           </span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm font-medium text-[var(--text-soft)] md:flex">
