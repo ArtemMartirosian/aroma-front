@@ -9,7 +9,7 @@ import { Brand, ProductsResponse } from "@/types/catalog";
 export const metadata: Metadata = buildMetadata({
   title: "Բրենդներ",
   description:
-    "Բացահայտեք Aroma Parfume & cosmetics-ի բրենդները՝ Chanel, Dior, Tom Ford, Byredo և այլ ճանաչելի օծանելիքի տներ մեկ էջում։",
+    "Բացահայտեք Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի բրենդները՝ օծանելիքի, կոսմետիկայի և աքսեսուարների ընտրված հավաքածուներով մեկ էջում։",
   path: "/brands",
 });
 
@@ -26,16 +26,16 @@ export default async function BrandsPage() {
             <div className="max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">Բրենդների հավաքածու</p>
               <h1 className="mt-4 font-serif text-4xl leading-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
-                Բրենդներ՝ բնավորությամբ և գեղեցիկ շլեյֆով
+                Բրենդներ՝ ընտրված գեղեցկության տեսականիով
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--text-soft)] sm:text-lg">
-                Մեկ վիտրինայում հավաքել ենք սիրելի օծանելիքի տները՝ նիշային շեշտերից մինչև ճանաչելի դասականը։
+                Մեկ վիտրինայում հավաքել ենք սիրելի բրենդները՝ օծանելիքից մինչև կոսմետիկա և աքսեսուարներ։
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:min-w-[320px]">
               <StatCard label="Բրենդ" value={String(brands.length)} />
-              <StatCard label="Բույր" value={String(totalProducts)} />
+              <StatCard label="Ապրանք" value={String(totalProducts)} />
             </div>
           </div>
         </section>

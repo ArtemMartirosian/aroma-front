@@ -9,19 +9,22 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: SITE_NAME,
   title: {
-    default: `${SITE_NAME} | Օծանելիքի օնլայն կատալոգ`,
+    default: `${SITE_NAME} | Գեղեցկության օնլայն կատալոգ`,
     template: `%s | ${SITE_NAME}`,
   },
-  description: "Օծանելիքի օնլայն կատալոգ՝ բրենդներով, ծավալներով, գներով, արագ կապով և անվճար առաքմամբ ամբողջ Հայաստանում։",
+  description:
+    "Գեղեցկության օնլայն կատալոգ՝ parfume, cosmetics և accessoires տեսականիով, ընտրված բրենդներով, գներով, արագ կապով և անվճար առաքմամբ ամբողջ Հայաստանում։",
   keywords: [
     "օծանելիք",
     "parfume",
     "perfume Armenia",
-    "Aroma Parfume & cosmetics",
-    "օնլայն օծանելիքի խանութ",
+    "cosmetics Armenia",
+    "accessoires Armenia",
+    "Aroma Parfume, cosmetics & accessoires",
+    "beauty shop Armenia",
     "նիշային օծանելիք",
-    "կանացի օծանելիք",
-    "տղամարդու օծանելիք",
+    "կոսմետիկա",
+    "աքսեսուարներ",
   ],
   category: "shopping",
   alternates: {
@@ -40,8 +43,9 @@ export const metadata: Metadata = {
     locale: "hy_AM",
     url: absoluteUrl("/"),
     siteName: SITE_NAME,
-    title: `${SITE_NAME} | Օծանելիքի օնլայն կատալոգ`,
-    description: "Օծանելիքի օնլայն կատալոգ՝ բրենդներով, ծավալներով, գներով, արագ կապով և անվճար առաքմամբ ամբողջ Հայաստանում։",
+    title: `${SITE_NAME} | Գեղեցկության օնլայն կատալոգ`,
+    description:
+      "Գեղեցկության օնլայն կատալոգ՝ parfume, cosmetics և accessoires տեսականիով, ընտրված բրենդներով, գներով, արագ կապով և անվճար առաքմամբ ամբողջ Հայաստանում։",
     images: [
       {
         url: absoluteUrl("/images/perfume-hero.png"),
@@ -53,8 +57,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} | Օծանելիքի օնլայն կատալոգ`,
-    description: "Օծանելիքի օնլայն կատալոգ՝ բրենդներով, ծավալներով, գներով, արագ կապով և անվճար առաքմամբ ամբողջ Հայաստանում։",
+    title: `${SITE_NAME} | Գեղեցկության օնլայն կատալոգ`,
+    description:
+      "Գեղեցկության օնլայն կատալոգ՝ parfume, cosmetics և accessoires տեսականիով, ընտրված բրենդներով, գներով, արագ կապով և անվճար առաքմամբ ամբողջ Հայաստանում։",
     images: [absoluteUrl("/images/perfume-hero.png")],
   },
   icons: {

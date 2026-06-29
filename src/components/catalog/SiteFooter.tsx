@@ -18,7 +18,7 @@ export function SiteFooter() {
           <div className="flex items-center gap-3">
               <Image
                   src="/images/aroma-logo.png"
-                  alt="Aroma Parfume"
+                  alt="Aroma Parfume, cosmetics & accessoires"
                   width={280}
                   height={280}
                   priority
@@ -26,8 +26,9 @@ export function SiteFooter() {
               />
           </div>
           <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--text-soft)]">
-            Օրիգինալ օծանելիքի օնլայն կատալոգ առանց օնլայն վճարման․ ընտրեք
-            բույրը, կապվեք մեզ հետ և ստացեք անվճար առաքում։
+            Օնլայն գեղեցկության կատալոգ՝ օծանելիք, կոսմետիկա և աքսեսուարներ
+            տեսականիով։ Ընտրեք ձեզ հարմար տարբերակը, կապվեք մեզ հետ և ստացեք
+            անվճար առաքում։
           </p>
         </div>
         <div className="text-sm text-[var(--text-soft)]">

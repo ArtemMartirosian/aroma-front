@@ -51,7 +51,7 @@ export default function NotFound() {
           </div>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <InfoCard title="Կատալոգ" text="Դիտեք ամբողջ օծանելիքի հավաքածուն մեկ էջում։" href="/catalog" />
+            <InfoCard title="Կատալոգ" text="Դիտեք ամբողջ գեղեցկության հավաքածուն մեկ էջում։" href="/catalog" />
             <InfoCard title="Բրենդներ" text="Բացեք բրենդների էջը և ընտրեք սիրելի տունը։" href="/brands" />
             <InfoCard title="Կոնտակտներ" text="Գրեք մեզ WhatsApp-ով կամ Instagram-ում։" href="/contacts" />
           </div>

@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Կատալոգ",
   description:
-    "Դիտեք Aroma Parfume & cosmetics-ի օծանելիքի կատալոգը՝ ֆիլտրերով ըստ բրենդի, սեռի, բույրի տեսակի, ծավալի և գնի։",
+    "Դիտեք Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի օծանելիքի, կոսմետիկայի և աքսեսուարների կատալոգը՝ ֆիլտրերով ըստ բրենդի, տեսակի, ծավալի և գնի։",
   path: "/catalog",
 });
 

@@ -47,14 +47,15 @@ export function HomeHero() {
       <div className="relative mx-auto flex min-h-[680px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--accent)]">
-            Պրեմիում օծանելիքի կատալոգ
+            Օծանելիք, կոսմետիկա և աքսեսուարներ
           </p>
           <h1 className="mt-5 text-5xl font-semibold leading-tight text-[var(--foreground)] md:text-7xl">
-            Գտեք ձեր բնորոշ բույրը
+            Գտեք ձեր սիրելի գեղեցկության ընտրանին
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--text-soft)]">
-            Օրիգինալ օծանելիքի ժամանակակից կատալոգ՝ բրենդներ, նոտաներ,
-            ծավալներ, գներ և արագ կապ առանց զամբյուղի ու օնլայն վճարման։
+            Ժամանակակից օնլայն կատալոգ՝ օծանելիք, կոսմետիկա և աքսեսուարներ
+            մեկ վայրում։ Համեմատեք բրենդները, տարբերակներն ու գները և արագ
+            կապ հաստատեք պատվերի համար։
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link

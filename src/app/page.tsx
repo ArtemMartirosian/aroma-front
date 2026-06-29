@@ -9,9 +9,9 @@ import { SITE_NAME, absoluteUrl, buildMetadata } from "@/lib/seo";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Օծանելիքի օնլայն կատալոգ",
+  title: "Գեղեցկության օնլայն կատալոգ",
   description:
-    "Գտեք կանացի, տղամարդու և ունիսեքս օծանելիք Aroma Parfume & cosmetics-ում՝ բրենդներով, ծավալներով, գներով և անվճար առաքմամբ։",
+    "Գտեք օծանելիք, կոսմետիկա և աքսեսուարներ Aroma Parfume, կոսմետիկա և աքսեսուարներ-ում՝ ընտրված բրենդներով, գներով և անվճար առաքմամբ։",
   path: "/",
 });
 
@@ -94,19 +94,19 @@ export default async function Home() {
           <div>
             <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Մեր մասին</p>
             <h2 className="mt-3 text-4xl font-semibold text-[var(--foreground)]">
-              Օգնում ենք ընտրել բույրը ըստ բնավորության, սեզոնի և տրամադրության
+              Օգնում ենք ընտրել օծանելիք, կոսմետիկա և աքսեսուարներ՝ ըստ ոճի ու առիթի
             </h2>
           </div>
           <div className="space-y-4 text-[var(--text-soft)]">
             <p>
-              Aroma Parfume &amp; cosmetics-ը հավաքել է օծանելիքի ընտրությունը
-              մեկ հարմար կատալոգում, որտեղ հեշտ է համեմատել բրենդները,
-              բույրի տեսակները, ծավալներն ու գները։
+              Aroma Parfume, կոսմետիկա և աքսեսուարներ-ը հավաքել է
+              գեղեցկության ընտրանին մեկ հարմար կատալոգում, որտեղ հեշտ է
+              համեմատել բրենդները, տեսակները, ծավալներն ու գները։
             </p>
             <p>
               Յուրաքանչյուր ապրանքի էջից կարող եք անմիջապես կապ հաստատել մեզ հետ,
-              ճշտել մանրամասները և ձևակերպել պատվերը WhatsApp-ով կամ Instagram-ով՝
-              անվճար առաքմամբ։
+              ճշտել մանրամասները և ձևակերպել պատվերը WhatsApp-ով կամ
+              Instagram-ով՝ անվճար առաքմամբ։
             </p>
           </div>
         </div>

@@ -19,7 +19,7 @@ export async function generateMetadata({
   if (!product) {
     return buildMetadata({
       title: "Ապրանք չի գտնվել",
-      description: "Պահանջվող ապրանքը չի գտնվել Aroma Parfume & cosmetics-ի կատալոգում։",
+      description: "Պահանջվող ապրանքը չի գտնվել Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի կատալոգում։",
       path: `/products/${slug}`,
       noIndex: true,
     });
