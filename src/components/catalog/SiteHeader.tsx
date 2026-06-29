@@ -20,7 +20,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[rgba(14,16,17,0.84)] backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-4 sm:justify-between sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-5 sm:justify-between sm:px-6 lg:px-8">
         <Link href="/" className="shrink-0 flex items-center gap-6">
           <span className="text-[0.95rem] font-semibold uppercase tracking-[0.2em] text-[var(--accent)] sm:text-[1.05rem]">
             Aroma
@@ -31,7 +31,7 @@ export function SiteHeader() {
             width={280}
             height={280}
             priority
-            className="h-14 w-auto scale-150 sm:h-16"
+            className="h-14 w-auto scale-170 sm:scale-150 sm:h-16"
           />
           <span className="flex flex-col leading-none">
             <span className="text-[0.95rem] font-semibold uppercase tracking-[0.2em] text-[var(--accent)] text-[0.95rem]">
