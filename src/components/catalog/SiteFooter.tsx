@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,7 +15,13 @@ export function SiteFooter() {
     <footer className="border-t border-[var(--line)] bg-[#0b0d0e] pb-[calc(env(safe-area-inset-bottom)+5.75rem)] text-[var(--foreground)] md:pb-0">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
-          <p className="text-xl font-semibold tracking-[0.18em]">AROMA</p>
+          <Image
+            src="/images/aroma-logo.png"
+            alt="Aroma Parfume"
+            width={260}
+            height={260}
+            className="h-20 w-auto"
+          />
           <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--text-soft)]">
             Օրիգինալ օծանելիքի օնլայն կատալոգ առանց օնլայն վճարման․ ընտրեք
             բույրը, կապվեք մեզ հետ և ստացեք անվճար առաքում։
