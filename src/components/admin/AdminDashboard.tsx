@@ -50,28 +50,28 @@ export function AdminDashboard() {
     <AdminShell>
       <div className="space-y-6">
         <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Ընդհանուր տեսք</p>
-          <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Վահանակ</h1>
+          <p className="admin-kicker text-sm uppercase tracking-[0.2em]">Ընդհանուր տեսք</p>
+          <h1 className="admin-title mt-2 text-3xl font-semibold">Վահանակ</h1>
         </div>
-        {message ? <p className="rounded-md bg-[var(--accent-soft)] p-3 text-sm text-[var(--accent-strong)]">{message}</p> : null}
+        {message ? <p className="admin-notice rounded-md p-3 text-sm">{message}</p> : null}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {cards.map(([label, value]) => (
-            <div key={label} className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-              <p className="text-sm text-zinc-500">{label}</p>
-              <p className="mt-2 text-3xl font-semibold text-zinc-950">{value}</p>
+            <div key={label} className="admin-panel rounded-[22px] p-5">
+              <p className="admin-muted text-sm">{label}</p>
+              <p className="admin-title mt-2 text-3xl font-semibold">{value}</p>
             </div>
           ))}
         </div>
-        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-          <h2 className="text-xl font-semibold text-zinc-950">Վերջին ապրանքները</h2>
-          <div className="mt-4 divide-y divide-zinc-100">
+        <div className="admin-panel rounded-[24px] p-5">
+          <h2 className="admin-title text-xl font-semibold">Վերջին ապրանքները</h2>
+          <div className="admin-divider mt-4 divide-y">
             {(stats?.latestProducts ?? []).map((product) => (
               <div key={product.id} className="flex items-center justify-between py-3">
                 <div>
-                  <p className="font-semibold text-zinc-950">{product.name}</p>
-                  <p className="text-sm text-zinc-500">{product.brand?.name}</p>
+                  <p className="admin-title font-semibold">{product.name}</p>
+                  <p className="admin-muted text-sm">{product.brand?.name}</p>
                 </div>
-                <p className="font-semibold text-zinc-950">{formatPrice(product.price)}</p>
+                <p className="admin-title font-semibold">{formatPrice(product.price)}</p>
               </div>
             ))}
           </div>

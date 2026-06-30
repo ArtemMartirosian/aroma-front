@@ -49,3 +49,83 @@ textarea {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.admin-panel {
+  border: 1px solid #111111;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(17, 24, 39, 0.06);
+}
+
+.admin-subpanel {
+  border: 1px solid #111111;
+  background: #fafafa;
+}
+
+.admin-title {
+  color: #111111;
+}
+
+.admin-kicker {
+  color: #2563eb;
+}
+
+.admin-text {
+  color: #111111;
+}
+
+.admin-muted {
+  color: #6b7280;
+}
+
+.admin-divider {
+  border-color: #e5e7eb;
+}
+
+.admin-input,
+.admin-select,
+.admin-textarea {
+  width: 100%;
+  border: 1px solid #111111;
+  background: #ffffff;
+  color: #111111;
+}
+
+.admin-input::placeholder,
+.admin-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.admin-input:focus,
+.admin-select:focus,
+.admin-textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.admin-button-primary {
+  border: 1px solid #111111;
+  background: #111111;
+  color: #ffffff;
+}
+
+.admin-button-primary:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.admin-button-secondary {
+  border: 1px solid #111111;
+  background: #ffffff;
+  color: #111111;
+}
+
+.admin-button-secondary:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.admin-notice {
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}

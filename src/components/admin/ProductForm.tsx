@@ -331,10 +331,10 @@ export function ProductForm({ productId }: { productId?: string }) {
   if (productId && isBootstrapping) {
     return (
       <AdminShell>
-        <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-          <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Խմբագրել ապրանքը</p>
-          <h1 className="mt-2 text-3xl font-semibold text-zinc-950">Բեռնվում են տվյալները...</h1>
-          <p className="mt-4 text-sm text-zinc-500">
+        <div className="admin-panel rounded-[24px] p-5">
+          <p className="admin-kicker text-sm uppercase tracking-[0.2em]">Խմբագրել ապրանքը</p>
+          <h1 className="admin-title mt-2 text-3xl font-semibold">Բեռնվում են տվյալները...</h1>
+          <p className="admin-muted mt-4 text-sm">
             Սպասեք մի պահ, բեռնում ենք ապրանքի ընթացիկ տվյալները։
           </p>
         </div>
@@ -346,15 +346,15 @@ export function ProductForm({ productId }: { productId?: string }) {
     <AdminShell>
       <form
         onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
-        className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm"
+        className="admin-panel rounded-[24px] p-5"
       >
-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">
+        <p className="admin-kicker text-sm uppercase tracking-[0.2em]">
           {productId ? "Խմբագրել ապրանքը" : "Ստեղծել ապրանք"}
         </p>
-        <h1 className="mt-2 text-3xl font-semibold text-zinc-950">
+        <h1 className="admin-title mt-2 text-3xl font-semibold">
           {productId ? "Խմբագրել ապրանքը" : "Ստեղծել ապրանք"}
         </h1>
-        {message ? <p className="mt-4 rounded-md bg-[var(--accent-soft)] p-3 text-sm text-[var(--accent-strong)]">{message}</p> : null}
+        {message ? <p className="admin-notice mt-4 rounded-md p-3 text-sm">{message}</p> : null}
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <Input
             label="Անվանում"
@@ -431,13 +431,13 @@ export function ProductForm({ productId }: { productId?: string }) {
             </>
           ) : null}
         </div>
-        <div className="mt-6 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+        <div className="admin-subpanel mt-6 rounded-[22px] p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg font-semibold text-zinc-950">
+              <h2 className="admin-title text-lg font-semibold">
                 {isAccessoiresProduct ? "Ապրանքի տվյալներ" : "Ապրանքի տարբերակներ"}
               </h2>
-              <p className="mt-1 text-sm text-zinc-500">
+              <p className="admin-muted mt-1 text-sm">
                 {isAccessoiresProduct
                   ? "Աքսեսուարի համար պահվում է մեկ գին և մի քանի նկար։"
                   : "Սկզբում ավելացվում է մեկ դատարկ տարբերակ։ Եթե պետք լինի, հետո կարող եք ավելացնել ևս տարբերակներ։"}
@@ -447,7 +447,7 @@ export function ProductForm({ productId }: { productId?: string }) {
               <button
                 type="button"
                 onClick={() => append(createEmptyVariant())}
-                className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
+                className="admin-button-secondary rounded-full px-4 py-2 text-sm font-semibold transition"
               >
                 Ավելացնել տարբերակ
               </button>
@@ -463,14 +463,14 @@ export function ProductForm({ productId }: { productId?: string }) {
               return (
               <div
                 key={field.id}
-                className="rounded-md border border-zinc-200 bg-white p-4"
+                className="admin-panel rounded-[18px] p-4"
               >
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-zinc-950">
+                    <p className="admin-title text-sm font-semibold">
                       {isAccessoiresProduct ? "Հիմնական տարբերակ" : `Տարբերակ ${index + 1}`}
                     </p>
-                    <p className="text-xs text-zinc-500">
+                    <p className="admin-muted text-xs">
                       {isAccessoiresProduct ? "Նշեք գինը և ավելացրեք նկարներ" : "Օր.` 50ml, 100ml, set"}
                     </p>
                   </div>
@@ -484,7 +484,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                           label: watchedVariants?.[index]?.volume || `#${index + 1}`,
                         })
                       }
-                      className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-[var(--sale-strong)] hover:text-[var(--sale-strong)]"
+                      className="admin-button-secondary rounded-full px-4 py-2 text-sm font-semibold transition hover:text-red-700"
                     >
                       Ջնջել տարբերակը
                     </button>
@@ -515,9 +515,9 @@ export function ProductForm({ productId }: { productId?: string }) {
                   />
                 </div>
 
-                <div className="mt-4 border-t border-zinc-100 pt-4">
+                <div className="admin-divider mt-4 border-t pt-4">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                    <h3 className="text-sm font-semibold text-zinc-950">Նկարներ այս տարբերակի համար</h3>
+                    <h3 className="admin-title text-sm font-semibold">Նկարներ այս տարբերակի համար</h3>
                     <button
                       type="button"
                       onClick={() =>
@@ -526,7 +526,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                           "",
                         ])
                       }
-                      className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950"
+                      className="admin-button-secondary rounded-full px-4 py-2 text-sm font-semibold transition"
                     >
                       Ավելացնել նկար
                     </button>
@@ -550,7 +550,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                                 label: watchedVariants?.[index]?.volume || `#${index + 1}`,
                               })
                             }
-                            className="h-fit rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-[var(--sale-strong)] hover:text-[var(--sale-strong)] lg:self-center"
+                            className="admin-button-secondary h-fit rounded-full px-4 py-2 text-sm font-semibold transition hover:text-red-700 lg:self-center"
                           >
                             Ջնջել նկարը
                           </button>
@@ -576,7 +576,7 @@ export function ProductForm({ productId }: { productId?: string }) {
         </div>
         <button
           disabled={isSubmitting}
-          className="mt-6 rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)] disabled:opacity-60"
+          className="admin-button-primary mt-6 rounded-full px-6 py-3 text-sm font-semibold transition disabled:opacity-60"
         >
           {isSubmitting ? "Պահպանում..." : "Պահպանել"}
         </button>
@@ -610,10 +610,10 @@ function Input({
 }: React.InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-zinc-700">{label}</span>
+      <span className="admin-text text-sm font-medium">{label}</span>
       <input
         {...props}
-        className="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-[var(--accent)]"
+        className="admin-input mt-2 rounded-xl px-3 py-2.5 outline-none"
       />
       {error ? <span className="mt-1 block text-sm text-[var(--sale-strong)]">{error}</span> : null}
     </label>
@@ -628,10 +628,10 @@ function Select({
 }: React.SelectHTMLAttributes<HTMLSelectElement> & { label: string; error?: string }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-zinc-700">{label}</span>
+      <span className="admin-text text-sm font-medium">{label}</span>
       <select
         {...props}
-        className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-[var(--accent)]"
+        className="admin-select mt-2 rounded-xl px-3 py-2.5 outline-none"
       >
         {children}
       </select>
@@ -647,11 +647,11 @@ function Textarea({
 }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string; error?: string }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-zinc-700">{label}</span>
+      <span className="admin-text text-sm font-medium">{label}</span>
       <textarea
         {...props}
         rows={4}
-        className="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-[var(--accent)]"
+        className="admin-textarea mt-2 rounded-xl px-3 py-2.5 outline-none"
       />
       {error ? <span className="mt-1 block text-sm text-[var(--sale-strong)]">{error}</span> : null}
     </label>
@@ -660,7 +660,7 @@ function Textarea({
 
 function Checkbox({ label, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   return (
-    <label className="flex items-center gap-2 rounded-md border border-zinc-200 p-3 text-sm font-medium text-zinc-700">
+    <label className="admin-subpanel admin-text flex items-center gap-2 rounded-xl p-3 text-sm font-medium">
       <input {...props} type="checkbox" className="h-4 w-4" />
       {label}
     </label>

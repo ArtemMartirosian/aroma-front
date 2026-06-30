@@ -29,22 +29,22 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
   }
 
   return (
-    <div className="rounded-md border border-zinc-200 bg-zinc-50 p-4">
+    <div className="admin-subpanel rounded-[20px] p-4">
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
-        <div className="h-28 w-36 overflow-hidden rounded-md border border-zinc-200 bg-white">
+        <div className="h-28 w-36 overflow-hidden rounded-xl border border-black bg-white">
           {value ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={imageUrl(value)} alt="" className="h-full w-full object-cover" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs text-zinc-400">
+            <div className="admin-muted flex h-full w-full items-center justify-center text-xs">
               Նկար չկա
             </div>
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-zinc-700">{label}</p>
+          <p className="admin-text text-sm font-medium">{label}</p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <label className="inline-flex cursor-pointer rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--accent)]">
+            <label className="admin-button-primary inline-flex cursor-pointer rounded-full px-4 py-2 text-sm font-semibold transition">
               {uploading ? "Բեռնում..." : "Բեռնել նկարը"}
               <input
                 type="file"
@@ -58,7 +58,7 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
               <button
                 type="button"
                 onClick={() => onChange("")}
-                className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-[var(--sale-strong)] hover:text-[var(--sale-strong)]"
+                className="admin-button-secondary rounded-full px-4 py-2 text-sm font-semibold transition hover:text-red-700"
               >
                 Հեռացնել
               </button>
