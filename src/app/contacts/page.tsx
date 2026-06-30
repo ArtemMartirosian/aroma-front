@@ -28,7 +28,7 @@ export default function ContactsPage() {
           />
           <Contact
             label="Facebook"
-            value="Բացել Facebook էջը"
+            value="Aroma Parfume"
             href="https://www.facebook.com/profile.php?id=61572896413532"
           />
           <Contact label="Առաքում" value="Անվճար" />
