@@ -11,10 +11,8 @@ export function ProductVariantSelector({ product }: { product: Product }) {
   const isAccessoiresProduct = isAccessoiresCategory(product.category?.slug);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const selected = variants[selectedVariantIndex] ?? variants[0];
-  const hasVariantChoices =
-    !isAccessoiresProduct &&
-    variants.length > 1 &&
-    variants.some((variant) => variant.volume?.trim());
+  const hasVariantChoices = !isAccessoiresProduct && variants.length > 1;
+  const shouldShowVolume = !isAccessoiresProduct && Boolean(selected?.volume?.trim());
 
   useEffect(() => {
     setSelectedVariantIndex(0);
@@ -56,9 +54,20 @@ export function ProductVariantSelector({ product }: { product: Product }) {
             </div>
           </div>
         </div>
+      ) : shouldShowVolume ? (
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+            Ծավալ
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[#171717]">
+              {selected?.volume?.trim()}
+            </span>
+          </div>
+        </div>
       ) : null}
 
-      <div className={`${hasVariantChoices ? "mt-6" : "mt-0"} flex flex-wrap items-end justify-between gap-4`}>
+      <div className={`${hasVariantChoices || shouldShowVolume ? "mt-6" : "mt-0"} flex flex-wrap items-end justify-between gap-4`}>
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Գին</p>
           <div className="mt-1 flex items-baseline gap-3">

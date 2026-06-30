@@ -14,14 +14,17 @@ export function ProductDetails({ product }: { product: Product }) {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const selectedVariant = variants[selectedVariantIndex] ?? variants[0];
-  const images = selectedVariant?.images?.length ? selectedVariant.images : [fallbackProductImage];
+  const images = selectedVariant?.images?.filter(Boolean)?.length
+    ? selectedVariant.images.filter(Boolean)
+    : variants.flatMap((variant) => variant.images ?? []).filter(Boolean).length
+      ? variants.flatMap((variant) => variant.images ?? []).filter(Boolean)
+      : [fallbackProductImage];
   const selectedImage = images[selectedImageIndex] ?? images[0] ?? fallbackProductImage;
   const perfumeProduct = isParfumeProduct(product);
   const isAccessoiresProduct = isAccessoiresCategory(product.category?.slug);
-  const hasVariantChoices =
-    !isAccessoiresProduct &&
-    variants.length > 1 &&
-    variants.some((variant) => variant.volume?.trim());
+  const selectedVolumeLabel = selectedVariant?.volume?.trim();
+  const hasVariantChoices = !isAccessoiresProduct && variants.length > 1;
+  const shouldShowVolume = !isAccessoiresProduct && Boolean(selectedVolumeLabel);
   const oldPrice = selectedVariant?.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
   const discount =
     oldPrice && selectedVariant && oldPrice > Number(selectedVariant.price)
@@ -192,9 +195,20 @@ export function ProductDetails({ product }: { product: Product }) {
                           : "touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-5 py-2.5 text-sm font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
                       }
                     >
-                      {variant.volume}
+                      {variant.volume?.trim() || `Տարբերակ ${index + 1}`}
                     </button>
                   ))}
+                </div>
+              </div>
+            ) : shouldShowVolume ? (
+              <div className="mt-8 border-y border-[var(--line)] py-6">
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">
+                  {perfumeProduct ? "Ծավալ" : "Տարբերակ"}
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] shadow-[0_12px_28px_rgba(0,0,0,0.2)]">
+                    {selectedVolumeLabel}
+                  </span>
                 </div>
               </div>
             ) : null}
@@ -231,7 +245,7 @@ export function ProductDetails({ product }: { product: Product }) {
                 Գրել Instagram-ում
               </a>
             </div>
-            <p className="mt-4 text-sm text-[var(--text-muted)]">Օնլայն պատվեր։ Անվճար առաքում՝ համաձայնությամբ։</p>
+            <p className="mt-4 text-sm text-[var(--text-muted)]">Կապվեք մեզ հետ և ստացեք անվճար առաքում:</p>
           </div>
         </div>
       </div>

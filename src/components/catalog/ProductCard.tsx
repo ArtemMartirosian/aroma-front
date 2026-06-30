@@ -33,12 +33,14 @@ export function ProductCard({ product }: { product: Product }) {
     return null;
   }
 
-  const selectedImage = selectedVariant.images?.[0] ?? fallbackProductImage;
+  const selectedImage =
+    selectedVariant.images?.find(Boolean) ??
+    variants.flatMap((variant) => variant.images ?? []).find(Boolean) ??
+    fallbackProductImage;
   const oldPrice = selectedVariant.oldPrice ? Number(selectedVariant.oldPrice) : undefined;
-  const hasVariantChoices =
-    !isAccessoiresProduct &&
-    variants.length > 1 &&
-    variants.some((variant) => variant.volume?.trim());
+  const selectedVolumeLabel = selectedVariant.volume?.trim();
+  const hasVariantChoices = !isAccessoiresProduct && variants.length > 1;
+  const shouldShowVolume = !isAccessoiresProduct && Boolean(selectedVolumeLabel);
   const discount =
     oldPrice && oldPrice > Number(selectedVariant.price)
       ? Math.round((1 - Number(selectedVariant.price) / oldPrice) * 100)
@@ -72,6 +74,7 @@ export function ProductCard({ product }: { product: Product }) {
             src={imageUrl(selectedImage)}
             alt={product.name}
             fill
+            unoptimized
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
             className="object-cover object-center transition duration-700 group-hover:scale-[1.03]"
           />
@@ -115,13 +118,19 @@ export function ProductCard({ product }: { product: Product }) {
                     : "shrink-0 touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-2 py-1 text-[10px] font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)] sm:px-3 sm:text-xs"
                 }
               >
-                {variant.volume}
+                {variant.volume?.trim() || `Տարբերակ ${index + 1}`}
               </button>
             ))}
           </div>
+        ) : shouldShowVolume ? (
+          <div className="mt-2.5 flex flex-wrap gap-2">
+            <span className="shrink-0 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-2 py-1 text-[10px] font-semibold text-[#171717] shadow-sm sm:px-3 sm:text-xs">
+              {selectedVolumeLabel}
+            </span>
+          </div>
         ) : null}
 
-        <div className={`mt-auto ${hasVariantChoices ? "pt-2" : "pt-5"}`}>
+        <div className={`mt-auto ${hasVariantChoices || shouldShowVolume ? "pt-2" : "pt-5"}`}>
           <div className="flex flex-col gap-2.5 border-t border-[var(--line)] pt-2.5 sm:flex-row sm:items-end sm:justify-between">
             <div className="min-w-0">
               {oldPrice ? (

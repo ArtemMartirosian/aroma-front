@@ -145,16 +145,32 @@ export function ProductForm({ productId }: { productId?: string }) {
       return;
     }
 
-    const firstVariant = getValues("variants.0");
-    replace([
-      {
-        volume: "",
-        price: firstVariant?.price,
-        oldPrice: firstVariant?.oldPrice,
-        images: firstVariant?.images ?? [],
-      },
-    ]);
-  }, [getValues, isAccessoiresProduct, replace]);
+    const firstVariant = watchedVariants?.[0];
+
+    if (!firstVariant) {
+      replace([createEmptyVariant()]);
+      return;
+    }
+
+    if ((watchedVariants?.length ?? 0) > 1) {
+      replace([
+        {
+          volume: "",
+          price: firstVariant.price,
+          oldPrice: firstVariant.oldPrice,
+          images: firstVariant.images ?? [],
+        },
+      ]);
+      return;
+    }
+
+    if (firstVariant.volume) {
+      setValue("variants.0.volume", "", {
+        shouldDirty: true,
+        shouldValidate: false,
+      });
+    }
+  }, [isAccessoiresProduct, replace, setValue, watchedVariants]);
 
   useEffect(() => {
     if (!ready || !token) return;
