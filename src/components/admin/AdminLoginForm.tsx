@@ -26,8 +26,8 @@ export function AdminLoginForm() {
   } = useForm<LoginValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: "admin@aroma.local",
-      password: "admin12345",
+      email: "",
+      password: "",
     },
   });
 
