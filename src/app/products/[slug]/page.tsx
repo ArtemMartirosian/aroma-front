@@ -126,21 +126,17 @@ export default async function ProductPage({
           </div>
         </section>
 
-        <section className="py-14">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Ձեզ կարող է դուր գալ նաև</p>
-              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Նման ապրանքներ</h2>
+        {related.length ? (
+          <section className="py-14">
+            <div className="mb-8 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Ձեզ կարող է դուր գալ նաև</p>
+                <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Նման ապրանքներ</h2>
+              </div>
             </div>
-          </div>
-          {related.length ? (
             <HomeProductCarousel products={related} />
-          ) : (
-            <div className="rounded-[28px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-10 text-center text-[var(--text-muted)]">
-              Նման ապրանքները դեռ չեն բեռնվել backend-ից։
-            </div>
-          )}
-        </section>
+          </section>
+        ) : null}
       </div>
     </div>
   );
