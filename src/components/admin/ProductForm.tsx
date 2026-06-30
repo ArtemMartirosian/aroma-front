@@ -299,7 +299,7 @@ export function ProductForm({ productId }: { productId?: string }) {
   }
 
   function setVariantImages(index: number, images: string[]) {
-    setValue(`variants.${index}.images`, images.filter(Boolean), {
+    setValue(`variants.${index}.images`, images, {
       shouldDirty: true,
       shouldValidate: true,
     });

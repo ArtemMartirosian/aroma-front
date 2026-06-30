@@ -22,14 +22,16 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
         href={href}
         className="group overflow-hidden rounded-[30px] border border-[var(--line)] bg-[linear-gradient(135deg,rgba(21,24,25,0.98),rgba(29,33,34,0.94))] shadow-[0_24px_70px_rgba(0,0,0,0.28)] transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_34px_90px_rgba(0,0,0,0.36)]"
       >
-        <div className="grid lg:grid-cols-[240px_1fr]">
-          <div className="relative min-h-[260px] overflow-hidden bg-[var(--surface-muted)]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imageUrl(brand.image)}
-              alt={brand.name}
-              className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
-            />
+        <div className="grid lg:grid-cols-[280px_1fr]">
+          <div className="relative aspect-[5/4] overflow-hidden bg-[var(--surface-muted)] sm:aspect-[4/3] lg:min-h-[100%] lg:aspect-auto">
+            <div className="absolute inset-0 p-5 sm:p-6">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imageUrl(brand.image)}
+                alt={brand.name}
+                className="h-full w-full object-contain object-center transition duration-700 group-hover:scale-[1.03]"
+              />
+            </div>
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(0,0,0,0.4))]" />
             <div className="absolute left-5 top-5 rounded-full border border-[var(--line-strong)] bg-[rgba(14,16,17,0.76)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-[var(--accent-strong)] shadow-sm backdrop-blur">
               {logo}
@@ -72,13 +74,15 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
       href={href}
       className="group overflow-hidden rounded-[26px] bg-[linear-gradient(180deg,rgba(21,24,25,0.98)_0%,rgba(29,33,34,0.96)_100%)] shadow-[0_18px_45px_rgba(0,0,0,0.24)] transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_28px_70px_rgba(0,0,0,0.32)]"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--surface-muted)]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={imageUrl(brand.image)}
-          alt={brand.name}
-          className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
-        />
+      <div className="relative aspect-[5/4] overflow-hidden bg-[var(--surface-muted)] sm:aspect-[4/3]">
+        <div className="absolute inset-0 p-4 sm:p-5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageUrl(brand.image)}
+            alt={brand.name}
+            className="h-full w-full object-contain object-center transition duration-700 group-hover:scale-[1.03]"
+          />
+        </div>
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),transparent_42%,rgba(0,0,0,0.52))]" />
         <div className="absolute left-4 top-4 rounded-full border border-[var(--line-strong)] bg-[rgba(14,16,17,0.76)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--accent-strong)] shadow-sm">
           {logo}
