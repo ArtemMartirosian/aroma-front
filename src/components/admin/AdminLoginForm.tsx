@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginAdmin } from "@/lib/api";
+import { getApiErrorMessage, loginAdmin } from "@/lib/api";
 import { storeToken, useAdminSession } from "@/components/admin/auth";
 
 const schema = z.object({
@@ -37,8 +37,13 @@ export function AdminLoginForm() {
       const response = await loginAdmin(values.email, values.password);
       storeToken(response.accessToken);
       router.replace("/admin/dashboard");
-    } catch {
-      setError("Չհաջողվեց մուտք գործել։ Ստուգեք backend-ը և ադմինի տվյալները։");
+    } catch (error) {
+      setError(
+        getApiErrorMessage(
+          error,
+          "Չհաջողվեց մուտք գործել։ Ստուգեք backend-ը և ադմինի տվյալները։",
+        ),
+      );
     }
   }
 

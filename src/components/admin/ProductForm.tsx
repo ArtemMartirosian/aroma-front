@@ -10,6 +10,7 @@ import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { useAdminToken } from "@/components/admin/auth";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import {
+  getApiErrorMessage,
   getAdminBrands,
   getAdminCategories,
   getAdminProduct,
@@ -279,8 +280,13 @@ export function ProductForm({ productId }: { productId?: string }) {
     try {
       await saveProduct(normalizedValues, productId);
       router.push("/admin/products");
-    } catch {
-      setMessage("Չհաջողվեց պահպանել։ Ստուգեք backend-ը, JWT-ն և պարտադիր դաշտերը։");
+    } catch (error) {
+      setMessage(
+        getApiErrorMessage(
+          error,
+          "Չհաջողվեց պահպանել։ Ստուգեք backend-ը, JWT-ն և պարտադիր դաշտերը։",
+        ),
+      );
     }
   }
 

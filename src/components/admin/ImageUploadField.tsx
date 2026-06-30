@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { uploadImage } from "@/lib/api";
+import { getApiErrorMessage, uploadImage } from "@/lib/api";
 import { imageUrl } from "@/lib/images";
 
 type ImageUploadFieldProps = {
@@ -21,8 +21,8 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
     try {
       const uploaded = await uploadImage(file);
       onChange(uploaded.url);
-    } catch {
-      setError("Չհաջողվեց բեռնել նկարը։");
+    } catch (error) {
+      setError(getApiErrorMessage(error, "Չհաջողվեց բեռնել նկարը։"));
     } finally {
       setUploading(false);
     }

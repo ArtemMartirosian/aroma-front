@@ -10,6 +10,7 @@ import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import {
   deleteBrand,
   deleteCategory,
+  getApiErrorMessage,
   getAdminBrands,
   getAdminCategories,
   saveBrand,
@@ -137,16 +138,9 @@ export function TaxonomyManager({
       }
       setDescription("");
     } catch (error) {
-      const fallbackMessage =
-        typeof error === "object" &&
-        error &&
-        "response" in error &&
-        typeof error.response === "object" &&
-        error.response &&
-        "data" in error.response
-          ? JSON.stringify(error.response.data)
-          : "Ստուգեք backend-ը և JWT-ն։";
-      setMessage(`Չհաջողվեց պահպանել։ ${fallbackMessage}`);
+      setMessage(
+        getApiErrorMessage(error, "Չհաջողվեց պահպանել։ Ստուգեք backend-ը և JWT-ն։"),
+      );
     } finally {
       setIsSaving(false);
     }
@@ -159,8 +153,10 @@ export function TaxonomyManager({
       else await deleteCategory(id);
       setItems((current) => current.filter((item) => item.id !== id));
       setItemToDelete(null);
-    } catch {
-      setMessage("Չհաջողվեց ջնջել գրառումը backend-ում։");
+    } catch (error) {
+      setMessage(
+        getApiErrorMessage(error, "Չհաջողվեց ջնջել գրառումը backend-ում։"),
+      );
     } finally {
       setIsDeleting(false);
     }

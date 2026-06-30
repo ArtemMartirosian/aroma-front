@@ -14,6 +14,36 @@ export const api = axios.create({
   baseURL: API_URL,
 });
 
+export function getApiErrorMessage(error: unknown, fallback: string) {
+  if (!axios.isAxiosError(error)) {
+    return fallback;
+  }
+
+  const responseMessage = error.response?.data;
+
+  if (typeof responseMessage === "string" && responseMessage.trim()) {
+    return responseMessage;
+  }
+
+  if (
+    responseMessage &&
+    typeof responseMessage === "object" &&
+    "message" in responseMessage
+  ) {
+    const message = responseMessage.message;
+
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+
+    if (Array.isArray(message) && message.length) {
+      return message.join(", ");
+    }
+  }
+
+  return fallback;
+}
+
 api.interceptors.request.use((config) => {
   if (typeof window === "undefined") {
     return config;
