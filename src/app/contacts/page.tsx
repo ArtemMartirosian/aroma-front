@@ -23,8 +23,8 @@ export default function ContactsPage() {
           <Contact label="WhatsApp" value="+374 33 69 60 09" href="https://wa.me/37433696009" />
           <Contact
             label="Instagram"
-            value="@aroma__parfume"
-            href="https://instagram.com/aroma__parfume"
+            value="@aroma__parfumee"
+            href="https://instagram.com/aroma__parfumee"
           />
           <Contact
             label="Facebook"
