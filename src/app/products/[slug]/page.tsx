@@ -93,7 +93,7 @@ export default async function ProductPage({
           {perfumeProduct ? (
             <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Բույրի նոտաներ</p>
-              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բույրի բուրգ</h2>
+              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բույրի կառուցվածք</h2>
               <div className="mt-6 grid gap-4 md:grid-cols-3">
                 <NoteCard label="Վերին նոտաներ" value={product.topNotes || "Նշված չէ"} />
                 <NoteCard label="Միջին նոտաներ" value={product.middleNotes || "Նշված չէ"} />
