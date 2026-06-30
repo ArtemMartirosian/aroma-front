@@ -9,9 +9,26 @@ import { imageUrl } from "@/lib/images";
 import { fallbackProductImage, normalizeProductVariants } from "@/lib/product-variants";
 import { Product, ProductVariant } from "@/types/catalog";
 
-export function ProductDetails({ product }: { product: Product }) {
+export function ProductDetails({
+  product,
+  initialVariant,
+}: {
+  product: Product;
+  initialVariant?: string;
+}) {
   const variants = useMemo<ProductVariant[]>(() => normalizeProductVariants(product), [product]);
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const initialVariantIndex = useMemo(() => {
+    if (!initialVariant?.trim()) {
+      return 0;
+    }
+
+    const matchedIndex = variants.findIndex(
+      (variant) => variant.volume?.trim().toLowerCase() === initialVariant.trim().toLowerCase(),
+    );
+
+    return matchedIndex >= 0 ? matchedIndex : 0;
+  }, [initialVariant, variants]);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(initialVariantIndex);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const selectedVariant = variants[selectedVariantIndex] ?? variants[0];
   const images = selectedVariant?.images?.filter(Boolean)?.length
@@ -32,9 +49,9 @@ export function ProductDetails({ product }: { product: Product }) {
       : 0;
 
   useEffect(() => {
-    setSelectedVariantIndex(0);
+    setSelectedVariantIndex(initialVariantIndex);
     setSelectedImageIndex(0);
-  }, [product.id, variants.length]);
+  }, [initialVariantIndex, product.id, variants.length]);
 
   function selectVariant(index: number) {
     setSelectedVariantIndex(index);

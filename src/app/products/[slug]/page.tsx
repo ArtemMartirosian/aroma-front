@@ -38,12 +38,19 @@ export async function generateMetadata({
 
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ variant?: string | string[] }>;
 }) {
   const { slug } = await params;
+  const resolvedSearchParams = await searchParams;
   const product = await loadProduct(slug);
   if (!product) notFound();
+  const initialVariant =
+    typeof resolvedSearchParams.variant === "string"
+      ? resolvedSearchParams.variant
+      : resolvedSearchParams.variant?.[0];
 
   const related = product.relatedProducts?.slice(0, 3) ?? [];
   const perfumeProduct = isParfumeProduct(product);
@@ -87,7 +94,7 @@ export default async function ProductPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <ProductDetails product={product} />
+        <ProductDetails product={product} initialVariant={initialVariant} />
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.86fr]">
           {perfumeProduct ? (

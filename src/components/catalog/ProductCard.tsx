@@ -12,22 +12,13 @@ import { Product } from "@/types/catalog";
 export function ProductCard({ product }: { product: Product }) {
   const variants = useMemo(() => normalizeProductVariants(product), [product]);
   const isAccessoiresProduct = isAccessoiresCategory(product.category?.slug);
-  const defaultVariantIndex = useMemo(
-    () =>
-      variants.reduce((lowestIndex, variant, index, currentVariants) => {
-        return Number(variant.price) < Number(currentVariants[lowestIndex]?.price ?? Number.POSITIVE_INFINITY)
-          ? index
-          : lowestIndex;
-      }, 0),
-    [variants],
-  );
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState(defaultVariantIndex);
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
 
   useEffect(() => {
-    setSelectedVariantIndex(defaultVariantIndex);
-  }, [defaultVariantIndex, product.id]);
+    setSelectedVariantIndex(0);
+  }, [product.id]);
 
-  const selectedVariant = variants[selectedVariantIndex] ?? variants[defaultVariantIndex];
+  const selectedVariant = variants[selectedVariantIndex] ?? variants[0];
 
   if (!selectedVariant) {
     return null;
@@ -41,6 +32,9 @@ export function ProductCard({ product }: { product: Product }) {
   const selectedVolumeLabel = selectedVariant.volume?.trim();
   const hasVariantChoices = !isAccessoiresProduct && variants.length > 1;
   const shouldShowVolume = !isAccessoiresProduct && Boolean(selectedVolumeLabel);
+  const productHref = selectedVolumeLabel
+    ? `/products/${product.slug}?variant=${encodeURIComponent(selectedVolumeLabel)}`
+    : `/products/${product.slug}`;
   const discount =
     oldPrice && oldPrice > Number(selectedVariant.price)
       ? Math.round((1 - Number(selectedVariant.price) / oldPrice) * 100)
@@ -67,7 +61,7 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-[var(--line)] bg-[var(--surface-elevated)] transition duration-300 hover:-translate-y-1 hover:border-[var(--accent)] sm:rounded-[24px]">
       <div className="relative overflow-hidden bg-[var(--surface-muted)]">
         <Link
-          href={`/products/${product.slug}`}
+          href={productHref}
           className="relative block aspect-[3.5/4] overflow-hidden sm:aspect-[4/3]"
         >
           <Image
@@ -96,7 +90,7 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
 
         <h3 className="mt-1.5 line-clamp-3 font-serif text-[14px] leading-[1.28] text-[var(--foreground)] sm:mt-2.5 sm:min-h-[2.8rem] sm:text-[1.22rem] sm:leading-6">
-          <Link href={`/products/${product.slug}`} className="transition group-hover:text-[var(--accent-strong)]">
+          <Link href={productHref} className="transition group-hover:text-[var(--accent-strong)]">
             {product.name}
           </Link>
         </h3>
@@ -144,7 +138,7 @@ export function ProductCard({ product }: { product: Product }) {
             </div>
 
             <Link
-              href={`/products/${product.slug}`}
+              href={productHref}
               className="inline-flex h-10 w-full items-center justify-center rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3.5 text-[11px] font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)] sm:h-11 sm:w-auto sm:px-4 sm:text-xs"
             >
               Դիտել
