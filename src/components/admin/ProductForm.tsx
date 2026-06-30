@@ -275,9 +275,12 @@ export function ProductForm({ productId }: { productId?: string }) {
       }
     }
 
-    const normalizedValues: ProductValues = isAccessoiresProduct
+    const normalizedValues = isAccessoiresProduct
       ? {
           ...values,
+          price: values.variants[0]?.price,
+          oldPrice: values.variants[0]?.oldPrice,
+          volume: "",
           variants: [
             {
               ...values.variants[0],
@@ -408,7 +411,14 @@ export function ProductForm({ productId }: { productId?: string }) {
             ))}
           </Select>
           <Input label="Երկիր" placeholder="Օր.` France" {...register("country")} />
-          <Input label="Թողարկման տարի" type="number" placeholder="Օր.` 2024" {...register("releaseYear")} />
+          <Input
+            label="Թողարկման տարի"
+            type="number"
+            placeholder="Օր.` 2024"
+            {...register("releaseYear", {
+              setValueAs: (value) => (value === "" ? undefined : Number(value)),
+            })}
+          />
           <Textarea
             label="Կարճ նկարագրություն"
             placeholder="Կարճ և հստակ ներկայացում քարտի համար"
@@ -526,14 +536,18 @@ export function ProductForm({ productId }: { productId?: string }) {
                     type="number"
                     placeholder="Օր.` 39000"
                     error={errors.variants?.[index]?.price?.message}
-                    {...register(`variants.${index}.price`)}
+                    {...register(`variants.${index}.price`, {
+                      setValueAs: (value) => (value === "" ? undefined : Number(value)),
+                    })}
                   />
                   <Input
                     label="Հին գին"
                     type="number"
                     placeholder="Ըստ ցանկության"
                     error={errors.variants?.[index]?.oldPrice?.message}
-                    {...register(`variants.${index}.oldPrice`)}
+                    {...register(`variants.${index}.oldPrice`, {
+                      setValueAs: (value) => (value === "" ? undefined : Number(value)),
+                    })}
                   />
                 </div>
 
