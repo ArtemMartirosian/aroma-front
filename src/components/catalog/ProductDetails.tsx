@@ -167,9 +167,9 @@ export function ProductDetails({ product }: { product: Product }) {
                   {fragranceLabels[product.fragranceType]}
                 </span>
               ) : null}
-              {perfumeProduct ? (
+              {perfumeProduct && product.concentration ? (
                 <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
-                  {product.concentration || "Eau de Parfum"}
+                  {product.concentration}
                 </span>
               ) : null}
             </div>
