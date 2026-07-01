@@ -49,7 +49,6 @@ const productSchema = z.object({
   categoryId: z.string().min(1, "Ընտրեք կատեգորիան"),
   gender: z.enum(["male", "female", "unisex"]).optional(),
   fragranceType: z.enum(["woody", "floral", "citrus", "oriental", "fresh", "sweet", "spicy"]).optional(),
-  shortDescription: z.string().trim().min(5, "Գրեք կարճ նկարագրություն"),
   description: z.string().trim().min(10, "Գրեք ամբողջական նկարագրություն"),
   topNotes: z.string().optional(),
   middleNotes: z.string().optional(),
@@ -104,7 +103,6 @@ export function ProductForm({ productId }: { productId?: string }) {
       categoryId: "",
       gender: "unisex",
       fragranceType: "floral",
-      shortDescription: "",
       description: "",
       variants: [createEmptyVariant()],
       isFeatured: false,
@@ -223,7 +221,6 @@ export function ProductForm({ productId }: { productId?: string }) {
           categoryId: product.categoryId ?? product.category?.id ?? "",
           gender: product.gender ?? "unisex",
           fragranceType: product.fragranceType ?? undefined,
-          shortDescription: product.shortDescription ?? "",
           description: product.description ?? "",
           topNotes: product.topNotes ?? "",
           middleNotes: product.middleNotes ?? "",
@@ -418,12 +415,6 @@ export function ProductForm({ productId }: { productId?: string }) {
             {...register("releaseYear", {
               setValueAs: (value) => (value === "" ? undefined : Number(value)),
             })}
-          />
-          <Textarea
-            label="Կարճ նկարագրություն"
-            placeholder="Կարճ և հստակ ներկայացում քարտի համար"
-            error={errors.shortDescription?.message}
-            {...register("shortDescription")}
           />
           <Textarea
             label="Նկարագրություն"

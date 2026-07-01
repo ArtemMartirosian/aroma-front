@@ -30,7 +30,7 @@ export async function generateMetadata({
 
   return buildMetadata({
     title: product.name,
-    description: product.shortDescription || product.description,
+    description: product.description,
     path: `/products/${product.slug}`,
     image,
   });

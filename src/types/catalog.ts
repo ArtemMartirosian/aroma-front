@@ -57,7 +57,6 @@ export type Product = {
   gender?: Gender;
   fragranceType?: FragranceType;
   description: string;
-  shortDescription: string;
   isFeatured: boolean;
   isNew: boolean;
   isActive: boolean;
