@@ -53,7 +53,24 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       <HomeHero />
 
-      <Section title="Հանրաճանաչ ապրանքներ" href="/catalog">
+        <Section title="Կատեգորիաներ" href="/catalog">
+            <div className="grid gap-4 md:grid-cols-4">
+                {categories.map((category) => (
+                    <Link
+                        href={`/catalog?category=${category.slug}`}
+                        key={category.id}
+                        className="rounded-[24px] border border-[var(--line)] bg-[var(--surface-elevated)] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_26px_60px_rgba(0,0,0,0.34)]"
+                    >
+                        <p className="text-lg font-semibold text-[var(--foreground)]">{category.name}</p>
+                        <p className="mt-2 text-sm leading-6 text-[var(--text-muted)]">{category.description}</p>
+                    </Link>
+                ))}
+            </div>
+            {!categories.length ? <EmptyState text="Կատեգորիաները դեռ չեն բեռնվել backend-ից։" /> : null}
+        </Section>
+
+
+        <Section title="Հանրաճանաչ ապրանքներ" href="/catalog">
         {featured.length ? (
           <HomeProductCarousel products={featured} />
         ) : (
@@ -83,22 +100,6 @@ export default async function Home() {
         ) : (
           <EmptyState text="Աքսեսուարների բաժինը կլցվի backend-ից կամ ադմինից ավելացված ապրանքներով։" />
         )}
-      </Section>
-
-      <Section title="Կատեգորիաներ" href="/catalog">
-        <div className="grid gap-4 md:grid-cols-4">
-          {categories.map((category) => (
-            <Link
-              href={`/catalog?category=${category.slug}`}
-              key={category.id}
-            className="rounded-[24px] border border-[var(--line)] bg-[var(--surface-elevated)] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_26px_60px_rgba(0,0,0,0.34)]"
-            >
-              <p className="text-lg font-semibold text-[var(--foreground)]">{category.name}</p>
-              <p className="mt-2 text-sm leading-6 text-[var(--text-muted)]">{category.description}</p>
-            </Link>
-          ))}
-        </div>
-        {!categories.length ? <EmptyState text="Կատեգորիաները դեռ չեն բեռնվել backend-ից։" /> : null}
       </Section>
 
       <Section title="Բրենդներ" href="/brands">
