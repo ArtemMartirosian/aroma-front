@@ -49,7 +49,7 @@ export function SiteFooter() {
             <SocialLink href="tel:+37433696009" label="Հեռախոս">
               <PhoneIcon />
             </SocialLink>
-            <SocialLink href="https://instagram.com/aroma__parfume" label="Instagram">
+            <SocialLink href="https://instagram.com/aroma___parfumee" label="Instagram">
               <InstagramIcon />
             </SocialLink>
             <SocialLink href="https://www.facebook.com/profile.php?id=61572896413532" label="Facebook">
@@ -58,7 +58,7 @@ export function SiteFooter() {
           </div>
           <p className="mt-4">WhatsApp: +374 33 69 60 09</p>
           <p>Հեռախոս՝ +374 33 69 60 09</p>
-          <p>Instagram: @aroma__parfume</p>
+          <p>Instagram: @aroma___parfumee</p>
           <p>Facebook: Aroma Parfume</p>
           <p>Առաքում՝ անվճար</p>
         </div>
