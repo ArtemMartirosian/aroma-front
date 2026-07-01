@@ -51,7 +51,7 @@ export default function ContactsPage() {
               Գրել WhatsApp-ով
             </a>
             <a
-              href="https://instagram.com/aroma__parfume"
+              href="https://instagram.com/aroma___parfumee"
               target="_blank"
               rel="noreferrer"
               className="inline-flex rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
