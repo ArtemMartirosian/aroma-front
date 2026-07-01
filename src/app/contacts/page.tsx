@@ -4,7 +4,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Կոնտակտներ",
   description:
-    "Կապվեք Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի հետ WhatsApp-ով, հեռախոսով կամ Instagram-ով։ Արագ պատվերներ և անվճար առաքում Հայաստանում։",
+    "Կապվեք Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի հետ WhatsApp-ով, Viber-ով, հեռախոսով, Instagram-ով կամ TikTok-ով։ Արագ պատվերներ և անվճար առաքում Հայաստանում։",
   path: "/contacts",
 });
 
@@ -21,10 +21,16 @@ export default function ContactsPage() {
         <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_18px_44px_rgba(0,0,0,0.26)]">
           <Contact label="Հեռախոս" value="+374 33 69 60 09" href="tel:+37433696009" />
           <Contact label="WhatsApp" value="+374 33 69 60 09" href="https://wa.me/37433696009" />
+          <Contact label="Viber" value="+374 33 69 60 09" href="viber://chat?number=%2B37433696009" />
           <Contact
             label="Instagram"
             value="@aroma___parfumee"
             href="https://instagram.com/aroma___parfumee"
+          />
+          <Contact
+            label="TikTok"
+            value="@aroma_parfume_"
+            href="https://www.tiktok.com/@aroma_parfume_"
           />
           <Contact
             label="Facebook"
@@ -39,9 +45,9 @@ export default function ContactsPage() {
             Պատվերը ձևակերպվում է հեշտ և հարմար
           </h2>
           <p className="mt-4 leading-7 text-[var(--text-soft)]">
-            WhatsApp-ով, Instagram-ով կամ հեռախոսով կարող եք ճշտել ապրանքի
-            տարբերակը, առկայությունն ու առաքման մանրամասները։ Մենք օգնում ենք
-            ընտրության հարցում և կազմակերպում անվճար առաքումը։
+            WhatsApp-ով, Viber-ով, Instagram-ով, TikTok-ով կամ հեռախոսով կարող
+            եք ճշտել ապրանքի տարբերակը, առկայությունն ու առաքման մանրամասները։
+            Մենք օգնում ենք ընտրության հարցում և կազմակերպում անվճար առաքումը։
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a
@@ -51,12 +57,26 @@ export default function ContactsPage() {
               Գրել WhatsApp-ով
             </a>
             <a
+              href="viber://chat?number=%2B37433696009"
+              className="inline-flex rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+            >
+              Գրել Viber-ով
+            </a>
+            <a
               href="https://instagram.com/aroma___parfumee"
               target="_blank"
               rel="noreferrer"
               className="inline-flex rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
             >
               Գրել Instagram-ում
+            </a>
+            <a
+              href="https://www.tiktok.com/@aroma_parfume_"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
+            >
+               Դիտել TikTok-ը
             </a>
           </div>
         </div>

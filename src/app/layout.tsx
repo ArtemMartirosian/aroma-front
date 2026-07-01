@@ -63,9 +63,9 @@ export const metadata: Metadata = {
     images: [absoluteUrl("/images/perfume-hero.png")],
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: "/images/aroma-logo.png",
+    shortcut: "/images/aroma-logo.png",
+    apple: "/images/aroma-logo.png",
   },
 };
 

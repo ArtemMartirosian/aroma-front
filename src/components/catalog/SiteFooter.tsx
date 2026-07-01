@@ -46,19 +46,27 @@ export function SiteFooter() {
             <SocialLink href="https://wa.me/37433696009" label="WhatsApp">
               <WhatsAppIcon />
             </SocialLink>
+            <SocialLink href="viber://chat?number=%2B37433696009" label="Viber">
+              <ViberIcon />
+            </SocialLink>
             <SocialLink href="tel:+37433696009" label="Հեռախոս">
               <PhoneIcon />
             </SocialLink>
             <SocialLink href="https://instagram.com/aroma___parfumee" label="Instagram">
               <InstagramIcon />
             </SocialLink>
+            <SocialLink href="https://www.tiktok.com/@aroma_parfume_" label="TikTok">
+              <TikTokIcon />
+            </SocialLink>
             <SocialLink href="https://www.facebook.com/profile.php?id=61572896413532" label="Facebook">
               <FacebookIcon />
             </SocialLink>
           </div>
           <p className="mt-4">WhatsApp: +374 33 69 60 09</p>
+          <p>Viber: +374 33 69 60 09</p>
           <p>Հեռախոս՝ +374 33 69 60 09</p>
           <p>Instagram: @aroma___parfumee</p>
+          <p>TikTok: @aroma_parfume_</p>
           <p>Facebook: Aroma Parfume</p>
           <p>Առաքում՝ անվճար</p>
         </div>
@@ -128,6 +136,22 @@ function WhatsAppIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-current">
       <path d="M19.1 4.9A9.44 9.44 0 0 0 12.3 2C7 2 2.7 6.3 2.7 11.6c0 1.7.4 3.3 1.3 4.8L2.5 22l5.8-1.5c1.4.7 2.7 1 4.1 1 5.3 0 9.6-4.3 9.6-9.6 0-2.6-1-5-2.9-7Zm-6.7 15c-1.2 0-2.5-.3-3.6-1l-.3-.2-3.4.9.9-3.3-.2-.3a7.1 7.1 0 0 1-1.1-3.8c0-4.1 3.3-7.4 7.4-7.4 2 0 3.8.8 5.2 2.2a7.35 7.35 0 0 1 2.2 5.2c0 4.1-3.3 7.4-7.1 7.4Zm4.1-5.6c-.2-.1-1.3-.7-1.5-.7-.2-.1-.3-.1-.4.1l-.6.7c-.1.1-.2.2-.4.1-.2-.1-.8-.3-1.5-.9-.6-.5-1-1.1-1.1-1.3-.1-.2 0-.3.1-.4l.3-.3c.1-.1.1-.2.2-.3 0-.1.1-.2 0-.3 0-.1-.4-1-.6-1.4-.2-.4-.3-.3-.4-.3h-.4c-.1 0-.3 0-.4.2-.1.2-.6.6-.6 1.5s.6 1.7.7 1.8c.1.1 1.2 1.9 3 2.7 1.8.8 1.8.5 2.1.5.3 0 1-.4 1.1-.7.1-.3.1-.7.1-.7 0-.1-.2-.1-.4-.2Z" />
+    </svg>
+  );
+}
+
+function ViberIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-current">
+      <path d="M12 2.5c-4.9 0-8.8 3.2-8.8 7.6 0 2.7 1.5 5 4 6.4V21l3.2-2.1c.5.1 1 .1 1.6.1 4.9 0 8.8-3.2 8.8-7.6S16.9 2.5 12 2.5Zm4.3 9.9c-.2.5-1 .9-1.4 1-.4.1-.9.1-1.5-.1-.4-.1-.8-.3-1.4-.6-2.4-1-4-3.4-4.1-3.5-.1-.1-1-1.3-1-2.5 0-1.2.6-1.8.8-2 .2-.2.4-.3.6-.3h.5c.2 0 .4 0 .5.4.2.4.7 1.7.8 1.8.1.2.1.3 0 .5-.1.2-.2.3-.3.5l-.4.4c-.1.1-.2.2-.1.4.1.2.5.9 1.1 1.5.8.7 1.4 1 1.6 1.1.2.1.3 0 .4-.1l.6-.7c.1-.2.3-.2.5-.1.2.1 1.5.7 1.8.8.3.1.5.2.5.3.1.1.1.6-.1 1.1Z" />
+    </svg>
+  );
+}
+
+function TikTokIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-current">
+      <path d="M14.8 3c.3 1.6 1.2 2.9 2.6 3.7 1 .6 2 .9 3.1.9v2.7c-1.4 0-2.8-.4-4-.9v5.1c0 3.2-2.6 5.8-5.8 5.8S4.9 17.7 4.9 14.5s2.6-5.8 5.8-5.8c.3 0 .7 0 1 .1v2.8c-.3-.1-.6-.1-1-.1-1.6 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3V3h3.1Z" />
     </svg>
   );
 }
