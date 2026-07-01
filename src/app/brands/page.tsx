@@ -56,7 +56,7 @@ export default async function BrandsPage() {
             href="/catalog"
             className="inline-flex items-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
           >
-            Բացել ամբողջ կատալոգը
+              Դիտել ամբողջ կատալոգը
             <span aria-hidden="true">/</span>
           </Link>
         </div>

@@ -46,7 +46,7 @@ export default function NotFound() {
               href="/catalog"
               className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
             >
-              Բացել կատալոգը
+                Դիտել կատալոգը
             </Link>
           </div>
 
