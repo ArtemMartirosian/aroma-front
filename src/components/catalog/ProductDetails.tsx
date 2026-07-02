@@ -3,10 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { formatPrice, fragranceLabels, genderLabels } from "@/lib/dictionaries";
+import { useLocale } from "@/components/catalog/LocaleProvider";
+import { formatPrice, getFragranceLabels, getGenderLabels } from "@/lib/dictionaries";
 import { isAccessoiresCategory, isParfumeProduct } from "@/lib/category-groups";
 import { imageUrl } from "@/lib/images";
+import { getLocalizedField } from "@/lib/localized";
 import { fallbackProductImage, normalizeProductVariants } from "@/lib/product-variants";
+import { localizePath } from "@/lib/routing";
 import { Product, ProductVariant } from "@/types/catalog";
 
 export function ProductDetails({
@@ -16,7 +19,10 @@ export function ProductDetails({
   product: Product;
   initialVariant?: string;
 }) {
+  const { locale, messages } = useLocale();
   const variants = useMemo<ProductVariant[]>(() => normalizeProductVariants(product), [product]);
+  const genderLabels = useMemo(() => getGenderLabels(locale), [locale]);
+  const fragranceLabels = useMemo(() => getFragranceLabels(locale), [locale]);
   const initialVariantIndex = useMemo(() => {
     if (!initialVariant?.trim()) {
       return 0;
@@ -39,6 +45,14 @@ export function ProductDetails({
   const selectedImage = images[selectedImageIndex] ?? images[0] ?? fallbackProductImage;
   const perfumeProduct = isParfumeProduct(product);
   const isAccessoiresProduct = isAccessoiresCategory(product.category?.slug);
+  const productName = getLocalizedField(product, "name", locale) || product.name;
+  const productDescription = getLocalizedField(product, "description", locale) || product.description;
+  const brandName = product.brand ? getLocalizedField(product.brand, "name", locale) || product.brand.name : "Aroma Parfume";
+  const categoryName = product.category ? getLocalizedField(product.category, "name", locale) || product.category.name : "";
+  const topNotes = getLocalizedField(product, "topNotes", locale);
+  const middleNotes = getLocalizedField(product, "middleNotes", locale);
+  const baseNotes = getLocalizedField(product, "baseNotes", locale);
+  const concentration = getLocalizedField(product, "concentration", locale) || product.concentration;
   const selectedVolumeLabel = selectedVariant?.volume?.trim();
   const hasVariantChoices = !isAccessoiresProduct && variants.length > 1;
   const shouldShowVolume = !isAccessoiresProduct && Boolean(selectedVolumeLabel);
@@ -81,21 +95,21 @@ export function ProductDetails({
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(195,164,111,0.12),transparent_28%),linear-gradient(135deg,rgba(21,24,25,0.92),rgba(29,33,34,0.84))]" />
       <div className="relative">
         <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm font-medium text-[var(--text-muted)]">
-          <Link href="/" className="transition hover:text-[var(--accent-strong)]">
-            Գլխավոր
+          <Link href={localizePath(locale, "/")} className="transition hover:text-[var(--accent-strong)]">
+            {messages.product.breadcrumbHome}
           </Link>
           <BreadcrumbArrow />
-          <Link href="/catalog" className="transition hover:text-[var(--accent-strong)]">
-            Կատալոգ
+          <Link href={localizePath(locale, "/catalog")} className="transition hover:text-[var(--accent-strong)]">
+            {messages.product.breadcrumbCatalog}
           </Link>
           {product.category?.name && product.category?.slug ? (
             <>
               <BreadcrumbArrow />
               <Link
-                href={`/catalog?category=${encodeURIComponent(product.category.slug)}`}
+                href={localizePath(locale, `/catalog?category=${encodeURIComponent(product.category.slug)}`)}
                 className="transition hover:text-[var(--accent-strong)]"
               >
-                {product.category.name}
+                {categoryName}
               </Link>
             </>
           ) : null}
@@ -105,31 +119,31 @@ export function ProductDetails({
               <Link
                 href={
                   product.brand?.slug
-                    ? `/catalog?brand=${encodeURIComponent(product.brand.slug)}`
-                    : "/brands"
+                    ? localizePath(locale, `/catalog?brand=${encodeURIComponent(product.brand.slug)}`)
+                    : localizePath(locale, "/brands")
                 }
                 className="transition hover:text-[var(--accent-strong)]"
               >
-                {product.brand.name}
+                {brandName}
               </Link>
             </>
           ) : null}
           <BreadcrumbArrow />
-          <span className="text-[var(--foreground)]">{product.name}</span>
+          <span className="text-[var(--foreground)]">{productName}</span>
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
             <div className="relative aspect-[1/1.02] overflow-hidden rounded-[30px] border border-[var(--line)] bg-[var(--surface-muted)] shadow-[0_24px_65px_rgba(0,0,0,0.3)]">
               <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2 sm:left-6 sm:top-6">
-                {product.isNew ? <Badge>նոր</Badge> : null}
-                {product.isFeatured ? <Badge tone="dark">հիթ</Badge> : null}
+                {product.isNew ? <Badge>{messages.product.new}</Badge> : null}
+                {product.isFeatured ? <Badge tone="dark">{messages.product.hit}</Badge> : null}
                 {discount ? <Badge tone="sale">-{discount}%</Badge> : null}
               </div>
               <Image
                 key={selectedImage}
                 src={imageUrl(selectedImage)}
-                alt={product.name}
+                alt={productName}
                 fill
                 priority
                 unoptimized
@@ -154,7 +168,7 @@ export function ProductDetails({
                 >
                   <Image
                     src={imageUrl(image)}
-                    alt={`${product.name} ${index + 1}`}
+                    alt={`${productName} ${index + 1}`}
                     fill
                     unoptimized
                     sizes="120px"
@@ -167,13 +181,13 @@ export function ProductDetails({
 
           <div className="rounded-[30px] border border-[var(--line)] bg-[rgba(24,28,29,0.88)] p-5 shadow-[0_22px_60px_rgba(0,0,0,0.28)] backdrop-blur sm:p-7 lg:p-9">
             <p className="text-xs font-bold uppercase tracking-[0.34em] text-[var(--accent)]">
-              {product.brand?.name ?? "Aroma Parfume"}
+              {brandName}
             </p>
             <h1 className="mt-4 font-serif text-4xl leading-[1.02] text-[var(--foreground)] sm:text-5xl lg:text-6xl">
-              {product.name}
+              {productName}
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--text-soft)] sm:text-lg">
-              {product.description}
+              {productDescription}
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-[var(--accent-strong)]">
@@ -189,7 +203,7 @@ export function ProductDetails({
               ) : null}
               {perfumeProduct && product.concentration ? (
                 <span className="rounded-full border border-[var(--line)] bg-[var(--accent-soft)] px-3 py-1.5">
-                  {product.concentration}
+                  {concentration}
                 </span>
               ) : null}
             </div>
@@ -197,7 +211,7 @@ export function ProductDetails({
             {hasVariantChoices ? (
               <div className="mt-8 border-y border-[var(--line)] py-6">
                 <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">
-                  {perfumeProduct ? "Ընտրեք ծավալը" : "Ընտրեք տարբերակը"}
+                  {perfumeProduct ? messages.product.chooseVolume : messages.product.chooseVariant}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {variants.map((variant, index) => (
@@ -212,7 +226,7 @@ export function ProductDetails({
                           : "touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-5 py-2.5 text-sm font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
                       }
                     >
-                      {variant.volume?.trim() || `Տարբերակ ${index + 1}`}
+                      {variant.volume?.trim() || messages.product.variant(index)}
                     </button>
                   ))}
                 </div>
@@ -220,7 +234,7 @@ export function ProductDetails({
             ) : shouldShowVolume ? (
               <div className="mt-8 border-y border-[var(--line)] py-6">
                 <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">
-                  {perfumeProduct ? "Ծավալ" : "Տարբերակ"}
+                  {perfumeProduct ? messages.product.volume : messages.product.variantLabel}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <span className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] shadow-[0_12px_28px_rgba(0,0,0,0.2)]">
@@ -232,13 +246,13 @@ export function ProductDetails({
 
             <div className="mt-6 flex flex-wrap items-end justify-between gap-5">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">Գին</p>
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--text-muted)]">{messages.product.price}</p>
                 <div className="mt-2 flex flex-wrap items-baseline gap-3">
                   <p className="text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-5xl">
-                    {formatPrice(selectedVariant?.price ?? product.price)}
+                    {formatPrice(selectedVariant?.price ?? product.price, locale)}
                   </p>
                   {oldPrice ? (
-                    <p className="text-lg text-[var(--text-muted)] line-through">{formatPrice(oldPrice)}</p>
+                    <p className="text-lg text-[var(--text-muted)] line-through">{formatPrice(oldPrice, locale)}</p>
                   ) : null}
                 </div>
               </div>
@@ -247,11 +261,11 @@ export function ProductDetails({
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
               <a
                 href={`https://wa.me/37433696009?text=${encodeURIComponent(
-                  `Բարև ձեզ, հետաքրքրում է ${product.name}${selectedVariant.volume ? ` ${selectedVariant.volume}` : ""}`,
+                  messages.product.inquiry(productName, selectedVariant.volume),
                 )}`}
                 className="inline-flex justify-center rounded-full border border-[var(--accent)] bg-[var(--accent)] px-6 py-3.5 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
               >
-                Գրել WhatsApp-ով
+                {messages.product.whatsapp}
               </a>
               <a
                 href="https://instagram.com/aroma___parfumee"
@@ -259,10 +273,10 @@ export function ProductDetails({
                 rel="noreferrer"
                 className="inline-flex justify-center rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3.5 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
               >
-                Գրել Instagram-ում
+                {messages.product.instagram}
               </a>
             </div>
-            <p className="mt-4 text-sm text-[var(--text-muted)]">Կապվեք մեզ հետ և ստացեք անվճար առաքում:</p>
+            <p className="mt-4 text-sm text-[var(--text-muted)]">{messages.product.contactDelivery}</p>
           </div>
         </div>
       </div>

@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { useAdminToken } from "@/components/admin/auth";
 import { getAdminBrands, getAdminCategories, getAdminDashboard } from "@/lib/api";
+import { adminMessages } from "@/lib/admin-copy";
 import { formatPrice } from "@/lib/dictionaries";
 import { DashboardStats } from "@/types/catalog";
 
 export function AdminDashboard() {
   const { ready } = useAdminToken();
+  const messages = adminMessages;
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [brandCount, setBrandCount] = useState(0);
   const [categoryCount, setCategoryCount] = useState(0);
@@ -32,26 +34,26 @@ export function AdminDashboard() {
         });
         setBrandCount(0);
         setCategoryCount(0);
-        setMessage("Չհաջողվեց բեռնել վահանակը backend-ից։");
+        setMessage(messages.dashboard.loadError);
       });
-  }, [ready]);
+  }, [messages.dashboard.loadError, ready]);
 
   if (!ready) return null;
 
   const cards = [
-    ["Ապրանքներ", stats?.totalProducts ?? 0],
-    ["Բրենդներ", brandCount],
-    ["Կատեգորիաներ", categoryCount],
-    ["Նորույթներ", stats?.newProducts ?? 0],
-    ["Հանրաճանաչ", stats?.featuredProducts ?? 0],
+    [messages.dashboard.totalProducts, stats?.totalProducts ?? 0],
+    [messages.dashboard.brands, brandCount],
+    [messages.dashboard.categories, categoryCount],
+    [messages.dashboard.newest, stats?.newProducts ?? 0],
+    [messages.dashboard.featured, stats?.featuredProducts ?? 0],
   ];
 
   return (
     <AdminShell>
       <div className="space-y-6">
         <div>
-          <p className="admin-kicker text-sm uppercase tracking-[0.2em]">Ընդհանուր տեսք</p>
-          <h1 className="admin-title mt-2 text-3xl font-semibold">Վահանակ</h1>
+          <p className="admin-kicker text-sm uppercase tracking-[0.2em]">{messages.dashboard.eyebrow}</p>
+          <h1 className="admin-title mt-2 text-3xl font-semibold">{messages.dashboard.title}</h1>
         </div>
         {message ? <p className="admin-notice rounded-md p-3 text-sm">{message}</p> : null}
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -63,7 +65,7 @@ export function AdminDashboard() {
           ))}
         </div>
         <div className="admin-panel rounded-[24px] p-5">
-          <h2 className="admin-title text-xl font-semibold">Վերջին ապրանքները</h2>
+          <h2 className="admin-title text-xl font-semibold">{messages.dashboard.latestProducts}</h2>
           <div className="admin-divider mt-4 divide-y">
             {(stats?.latestProducts ?? []).map((product) => (
               <div key={product.id} className="flex items-center justify-between py-3">
@@ -71,7 +73,7 @@ export function AdminDashboard() {
                   <p className="admin-title font-semibold">{product.name}</p>
                   <p className="admin-muted text-sm">{product.brand?.name}</p>
                 </div>
-                <p className="admin-title font-semibold">{formatPrice(product.price)}</p>
+                <p className="admin-title font-semibold">{formatPrice(product.price, "am")}</p>
               </div>
             ))}
           </div>

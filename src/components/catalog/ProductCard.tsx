@@ -3,16 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useLocale } from "@/components/catalog/LocaleProvider";
 import { isAccessoiresCategory } from "@/lib/category-groups";
 import { formatPrice } from "@/lib/dictionaries";
 import { imageUrl } from "@/lib/images";
+import { getLocalizedField } from "@/lib/localized";
 import { fallbackProductImage, normalizeProductVariants } from "@/lib/product-variants";
+import { localizePath } from "@/lib/routing";
 import { Product } from "@/types/catalog";
 
 export function ProductCard({ product }: { product: Product }) {
+  const { locale, messages } = useLocale();
   const variants = useMemo(() => normalizeProductVariants(product), [product]);
   const isAccessoiresProduct = isAccessoiresCategory(product.category?.slug);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  const productName = getLocalizedField(product, "name", locale) || product.name;
+  const brandName = product.brand ? getLocalizedField(product.brand, "name", locale) || product.brand.name : "";
 
   useEffect(() => {
     setSelectedVariantIndex(0);
@@ -32,9 +38,12 @@ export function ProductCard({ product }: { product: Product }) {
   const selectedVolumeLabel = selectedVariant.volume?.trim();
   const hasVariantChoices = !isAccessoiresProduct && variants.length > 1;
   const shouldShowVolume = !isAccessoiresProduct && Boolean(selectedVolumeLabel);
-  const productHref = selectedVolumeLabel
-    ? `/products/${product.slug}?variant=${encodeURIComponent(selectedVolumeLabel)}`
-    : `/products/${product.slug}`;
+  const productHref = localizePath(
+    locale,
+    selectedVolumeLabel
+      ? `/products/${product.slug}?variant=${encodeURIComponent(selectedVolumeLabel)}`
+      : `/products/${product.slug}`,
+  );
   const discount =
     oldPrice && oldPrice > Number(selectedVariant.price)
       ? Math.round((1 - Number(selectedVariant.price) / oldPrice) * 100)
@@ -66,7 +75,7 @@ export function ProductCard({ product }: { product: Product }) {
         >
           <Image
             src={imageUrl(selectedImage)}
-            alt={product.name}
+            alt={productName}
             fill
             unoptimized
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
@@ -76,8 +85,8 @@ export function ProductCard({ product }: { product: Product }) {
         </Link>
 
         <div className="absolute left-2.5 top-2.5 z-10 flex max-w-[75%] flex-wrap gap-1.5 sm:left-4 sm:top-4 sm:gap-2">
-          {product.isFeatured ? <Badge tone="dark">հիթ</Badge> : null}
-          {product.isNew ? <Badge tone="green">նոր</Badge> : null}
+          {product.isFeatured ? <Badge tone="dark">{messages.product.hit}</Badge> : null}
+          {product.isNew ? <Badge tone="green">{messages.product.new}</Badge> : null}
           {discount ? <Badge tone="red">-{discount}%</Badge> : null}
         </div>
       </div>
@@ -85,13 +94,13 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex flex-1 flex-col p-2.5 sm:p-4">
         <div className="flex items-center justify-between gap-3">
           <p className="min-w-0 truncate text-[9px] font-semibold uppercase tracking-[0.26em] text-[var(--accent)] sm:text-[11px]">
-            {product.brand?.name}
+            {brandName}
           </p>
         </div>
 
         <h3 className="mt-1.5 line-clamp-3 font-serif text-[14px] leading-[1.28] text-[var(--foreground)] sm:mt-2.5 sm:min-h-[2.8rem] sm:text-[1.22rem] sm:leading-6">
           <Link href={productHref} className="transition group-hover:text-[var(--accent-strong)]">
-            {product.name}
+            {productName}
           </Link>
         </h3>
 
@@ -112,7 +121,7 @@ export function ProductCard({ product }: { product: Product }) {
                     : "shrink-0 touch-manipulation rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-2 py-1 text-[10px] font-semibold text-[var(--text-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)] sm:px-3 sm:text-xs"
                 }
               >
-                {variant.volume?.trim() || `Տարբերակ ${index + 1}`}
+                {variant.volume?.trim() || messages.product.variant(index)}
               </button>
             ))}
           </div>
@@ -129,11 +138,11 @@ export function ProductCard({ product }: { product: Product }) {
             <div className="min-w-0">
               {oldPrice ? (
                 <p className="text-[10px] text-[var(--text-muted)] line-through sm:text-[11px]">
-                  {formatPrice(oldPrice)}
+                  {formatPrice(oldPrice, locale)}
                 </p>
               ) : null}
               <p className="mt-1 text-[17px] font-semibold leading-none tracking-tight text-[var(--foreground)] sm:text-[1.45rem]">
-                {formatPrice(selectedVariant.price)}
+                {formatPrice(selectedVariant.price, locale)}
               </p>
             </div>
 
@@ -141,7 +150,7 @@ export function ProductCard({ product }: { product: Product }) {
               href={productHref}
               className="inline-flex h-10 w-full items-center justify-center rounded-full border border-[var(--accent)] bg-[var(--accent)] px-3.5 text-[11px] font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)] sm:h-11 sm:w-auto sm:px-4 sm:text-xs"
             >
-              Դիտել
+              {messages.product.view}
             </Link>
           </div>
         </div>

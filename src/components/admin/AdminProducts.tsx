@@ -6,6 +6,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { useAdminToken } from "@/components/admin/auth";
 import { deleteProduct, getAdminProducts } from "@/lib/api";
+import { adminMessages } from "@/lib/admin-copy";
 import { formatPrice } from "@/lib/dictionaries";
 import { imageUrl } from "@/lib/images";
 import { normalizeProductVariants } from "@/lib/product-variants";
@@ -23,6 +24,7 @@ function getProductPreviewImage(product: Product) {
 
 export function AdminProducts() {
   const { ready } = useAdminToken();
+  const messages = adminMessages;
   const [products, setProducts] = useState<Product[]>([]);
   const [message, setMessage] = useState("");
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
@@ -36,7 +38,7 @@ export function AdminProducts() {
       })
       .catch(() => {
         setProducts([]);
-        setMessage("Չհաջողվեց բեռնել ապրանքները backend-ից։");
+        setMessage(messages.products.loadError);
       });
   }
 
@@ -56,7 +58,7 @@ export function AdminProducts() {
       setProductToDelete(null);
       setMessage("");
     } catch {
-      setMessage("Չհաջողվեց ջնջել ապրանքը backend-ում։");
+      setMessage(messages.products.deleteError);
     } finally {
       setIsDeleting(false);
     }
@@ -69,14 +71,14 @@ export function AdminProducts() {
       <div className="admin-panel rounded-[24px] p-5">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <p className="admin-kicker text-sm uppercase tracking-[0.2em]">Ապրանքներ</p>
-            <h1 className="admin-title mt-2 text-3xl font-semibold">Ապրանքներ</h1>
+            <p className="admin-kicker text-sm uppercase tracking-[0.2em]">{messages.products.title}</p>
+            <h1 className="admin-title mt-2 text-3xl font-semibold">{messages.products.title}</h1>
           </div>
           <Link
             href="/admin/products/create"
             className="admin-button-primary rounded-full px-5 py-3 text-sm font-semibold transition"
           >
-            Ստեղծել ապրանք
+            {messages.products.create}
           </Link>
         </div>
         {message ? <p className="admin-notice mt-4 rounded-md p-3 text-sm">{message}</p> : null}
@@ -84,16 +86,18 @@ export function AdminProducts() {
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="admin-divider border-b admin-muted">
               <tr>
-                <th className="py-3">Նկարներ</th>
-                <th className="py-3">Անվանում</th>
-                <th>Բրենդ</th>
-                <th>Գին</th>
-                <th className="text-right">Գործողություններ</th>
+                <th className="py-3">{messages.products.tableImage}</th>
+                <th className="py-3">{messages.products.tableName}</th>
+                <th>{messages.products.tableBrand}</th>
+                <th>{messages.products.tablePrice}</th>
+                <th className="text-right">{messages.products.tableActions}</th>
               </tr>
             </thead>
             <tbody className="admin-divider divide-y">
               {products.map((product) => {
                 const previewImage = getProductPreviewImage(product);
+                const productName = product.name;
+                const brandName = product.brand?.name ?? "";
 
                 return (
                   <tr key={product.id}>
@@ -102,29 +106,29 @@ export function AdminProducts() {
                         {previewImage ? (
                           <img
                             src={imageUrl(previewImage)}
-                            alt={product.name}
+                            alt={productName}
                             className="h-14 w-14 rounded-xl border border-black/10 object-cover"
                           />
                         ) : (
                           <div className="admin-muted flex h-14 w-14 items-center justify-center rounded-xl border border-dashed border-black/15 text-xs">
-                            Նկար չկա
+                            {messages.common.imageMissing}
                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="admin-title py-4 font-semibold">{product.name}</td>
-                    <td className="admin-text">{product.brand?.name}</td>
-                    <td className="admin-title">{formatPrice(product.price)}</td>
+                    <td className="admin-title py-4 font-semibold">{productName}</td>
+                    <td className="admin-text">{brandName}</td>
+                    <td className="admin-title">{formatPrice(product.price, "am")}</td>
                     <td className="text-right">
                       <Link className="font-semibold text-blue-600 hover:text-blue-700" href={`/admin/products/edit/${product.id}`}>
-                        Խմբագրել
+                        {messages.common.edit}
                       </Link>
                       <button
                         type="button"
                         onClick={() => setProductToDelete(product)}
                         className="ml-4 font-semibold text-zinc-500 transition hover:text-red-700"
                       >
-                        Ջնջել
+                        {messages.common.delete}
                       </button>
                     </td>
                   </tr>
@@ -133,20 +137,20 @@ export function AdminProducts() {
             </tbody>
           </table>
           {!products.length ? (
-            <div className="admin-muted py-8 text-center text-sm">Ապրանքները չեն բեռնվել backend-ից։</div>
+            <div className="admin-muted py-8 text-center text-sm">{messages.products.loadError}</div>
           ) : null}
         </div>
       </div>
       <ConfirmDialog
         open={Boolean(productToDelete)}
-        title="Ջնջե՞լ ապրանքը"
+        title={messages.products.deleteTitle}
         description={
           productToDelete
-            ? `Դուք պատրաստվում եք ջնջել «${productToDelete.name}» ապրանքը։ Այս գործողությունը շարունակե՞լ։`
+            ? messages.products.deleteDescription(productToDelete.name)
             : ""
         }
         isSubmitting={isDeleting}
-        confirmLabel="Այո, ջնջել"
+        confirmLabel={messages.common.yesDelete}
         onConfirm={confirmDelete}
         onCancel={() => setProductToDelete(null)}
       />

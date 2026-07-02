@@ -16,6 +16,7 @@ import {
   saveBrand,
   saveCategory,
 } from "@/lib/api";
+import { adminMessages } from "@/lib/admin-copy";
 import { imageUrl } from "@/lib/images";
 import { Brand, Category } from "@/types/catalog";
 
@@ -51,11 +52,16 @@ export function TaxonomyManager({
 }: TaxonomyManagerProps) {
   const router = useRouter();
   const { ready } = useAdminToken();
+  const messages = adminMessages;
   const isBrands = mode === "brands";
   const [items, setItems] = useState<Array<Brand | Category>>([]);
   const [name, setName] = useState("");
+  const [nameRu, setNameRu] = useState("");
+  const [nameEn, setNameEn] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
+  const [descriptionRu, setDescriptionRu] = useState("");
+  const [descriptionEn, setDescriptionEn] = useState("");
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<Brand | Category | null>(null);
@@ -71,7 +77,11 @@ export function TaxonomyManager({
           const currentItem = loadedItems.find((item) => item.id === entityId);
           if (currentItem) {
             setName(currentItem.name ?? "");
+            setNameRu(currentItem.nameRu ?? "");
+            setNameEn(currentItem.nameEn ?? "");
             setDescription(currentItem.description ?? "");
+            setDescriptionRu(currentItem.descriptionRu ?? "");
+            setDescriptionEn(currentItem.descriptionEn ?? "");
             setImage("image" in currentItem ? currentItem.image ?? "" : "");
             setFormInitialized(true);
           }
@@ -80,9 +90,9 @@ export function TaxonomyManager({
       })
       .catch(() => {
         setItems([]);
-        setMessage(`Չհաջողվեց բեռնել ${isBrands ? "բրենդները" : "կատեգորիաները"} backend-ից։`);
+        setMessage(isBrands ? messages.taxonomy.loadBrandsError : messages.taxonomy.loadCategoriesError);
       });
-  }, [entityId, formInitialized, isBrands]);
+  }, [entityId, formInitialized, isBrands, messages.taxonomy.loadBrandsError, messages.taxonomy.loadCategoriesError]);
 
   useEffect(() => {
     if (ready) loadItems();
@@ -95,13 +105,17 @@ export function TaxonomyManager({
   async function createItem() {
     const trimmedName = name.trim();
     if (!trimmedName) {
-      setMessage("Մուտքագրեք անվանումը։");
+      setMessage(messages.taxonomy.enterName);
       return;
     }
     const payload = isBrands
       ? {
           name: trimmedName,
+          nameRu,
+          nameEn,
           description,
+          descriptionRu,
+          descriptionEn,
           image,
           logo: trimmedName
             .split(" ")
@@ -113,7 +127,11 @@ export function TaxonomyManager({
         }
       : {
           name: trimmedName,
+          nameRu,
+          nameEn,
           description,
+          descriptionRu,
+          descriptionEn,
           isActive: true,
         };
     setIsSaving(true);
@@ -133,13 +151,17 @@ export function TaxonomyManager({
         setItems((current) => [...current, created]);
       }
       setName("");
+      setNameRu("");
+      setNameEn("");
       if (isBrands) {
         setImage("");
       }
       setDescription("");
+      setDescriptionRu("");
+      setDescriptionEn("");
     } catch (error) {
       setMessage(
-        getApiErrorMessage(error, "Չհաջողվեց պահպանել։ Ստուգեք backend-ը և JWT-ն։"),
+        getApiErrorMessage(error, messages.taxonomy.saveError),
       );
     } finally {
       setIsSaving(false);
@@ -155,7 +177,7 @@ export function TaxonomyManager({
       setItemToDelete(null);
     } catch (error) {
       setMessage(
-        getApiErrorMessage(error, "Չհաջողվեց ջնջել գրառումը backend-ում։"),
+        getApiErrorMessage(error, messages.taxonomy.deleteError),
       );
     } finally {
       setIsDeleting(false);
@@ -164,10 +186,10 @@ export function TaxonomyManager({
 
   if (!ready) return null;
 
-  const pageTitle = title ?? (isBrands ? "Բրենդներ" : "Կատեգորիաներ");
-  const primaryActionLabel = actionLabel ?? (isBrands ? "Ստեղծել բրենդ" : "Ստեղծել կատեգորիա");
+  const pageTitle = title ?? (isBrands ? messages.taxonomy.brandsTitle : messages.taxonomy.categoriesTitle);
+  const primaryActionLabel = actionLabel ?? (isBrands ? messages.taxonomy.createBrand : messages.taxonomy.createCategory);
   const submitButtonLabel =
-    submitLabel ?? (entityId ? "Պահպանել փոփոխությունները" : "Ավելացնել");
+    submitLabel ?? (entityId ? messages.taxonomy.saveChanges : messages.taxonomy.add);
 
   return (
     <AdminShell>
@@ -175,7 +197,7 @@ export function TaxonomyManager({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="admin-kicker text-sm uppercase tracking-[0.2em]">
-              {isBrands ? "Բրենդներ" : "Կատեգորիաներ"}
+              {isBrands ? messages.taxonomy.brandsTitle : messages.taxonomy.categoriesTitle}
             </p>
             <h1 className="admin-title mt-2 text-3xl font-semibold">{pageTitle}</h1>
           </div>
@@ -185,7 +207,7 @@ export function TaxonomyManager({
                 href={backHref}
                 className="admin-button-secondary rounded-full px-5 py-2.5 text-sm font-semibold transition"
               >
-                {backLabel ?? "Վերադառնալ"}
+                {backLabel ?? (isBrands ? messages.common.backToBrands : messages.common.backToCategories)}
               </Link>
             ) : null}
             {createHref ? (
@@ -201,32 +223,58 @@ export function TaxonomyManager({
         {message ? <p className="admin-notice mt-4 rounded-md p-3 text-sm">{message}</p> : null}
         {showCreateForm ? (
           <>
-            <div className="mt-6 grid gap-3 md:grid-cols-[240px_1fr_auto]">
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
               <input
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                placeholder="Անվանում"
+                placeholder={messages.taxonomy.nameAm}
+                className="admin-input rounded-xl px-3 py-2.5 outline-none"
+              />
+              <input
+                value={nameRu}
+                onChange={(event) => setNameRu(event.target.value)}
+                placeholder={messages.taxonomy.nameRu}
+                className="admin-input rounded-xl px-3 py-2.5 outline-none"
+              />
+              <input
+                value={nameEn}
+                onChange={(event) => setNameEn(event.target.value)}
+                placeholder={messages.taxonomy.nameEn}
                 className="admin-input rounded-xl px-3 py-2.5 outline-none"
               />
               <input
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder="Նկարագրություն"
+                placeholder={messages.taxonomy.descriptionAm}
                 className="admin-input rounded-xl px-3 py-2.5 outline-none"
               />
+              <input
+                value={descriptionRu}
+                onChange={(event) => setDescriptionRu(event.target.value)}
+                placeholder={messages.taxonomy.descriptionRu}
+                className="admin-input rounded-xl px-3 py-2.5 outline-none"
+              />
+              <input
+                value={descriptionEn}
+                onChange={(event) => setDescriptionEn(event.target.value)}
+                placeholder={messages.taxonomy.descriptionEn}
+                className="admin-input rounded-xl px-3 py-2.5 outline-none"
+              />
+            </div>
+            <div className="mt-3">
               <button
                 type="button"
                 onClick={createItem}
                 disabled={isSaving}
                 className="admin-button-primary rounded-xl px-5 py-2.5 text-sm font-semibold transition disabled:opacity-60"
               >
-                {isSaving ? "Պահպանում..." : submitButtonLabel}
+                {isSaving ? messages.common.saving : submitButtonLabel}
               </button>
             </div>
             {isBrands ? (
               <div className="mt-3">
                 <ImageUploadField
-                  label="Բրենդի նկար"
+                  label={messages.taxonomy.brandImage}
                   value={image}
                   onChange={setImage}
                 />
@@ -251,7 +299,7 @@ export function TaxonomyManager({
                     />
                   ) : isBrands ? (
                     <div className="admin-muted flex h-16 w-24 items-center justify-center rounded-xl border border-dashed border-black text-xs">
-                      Նկար չկա
+                      {messages.common.imageMissing}
                     </div>
                   ) : null}
                   <div>
@@ -261,20 +309,20 @@ export function TaxonomyManager({
                 </div>
                 <div className="flex shrink-0 items-center gap-4 sm:gap-5">
                   <Link
-                    href={isBrands ? `/admin/brands/edit/${item.id}` : `/admin/categories/edit/${item.id}`}
-                    className="font-semibold text-blue-600 transition hover:text-blue-700"
-                  >
-                    Խմբագրել
+                  href={isBrands ? `/admin/brands/edit/${item.id}` : `/admin/categories/edit/${item.id}`}
+                  className="font-semibold text-blue-600 transition hover:text-blue-700"
+                >
+                    {messages.common.edit}
                   </Link>
                   {isProtectedCategory(item) ? (
-                    <span className="admin-muted text-sm font-semibold">Պաշտպանված</span>
+                    <span className="admin-muted text-sm font-semibold">{messages.taxonomy.protected}</span>
                   ) : (
                     <button
                       type="button"
                       onClick={() => setItemToDelete(item)}
                       className="font-semibold text-red-700 transition hover:text-black"
                     >
-                      Ջնջել
+                      {messages.common.delete}
                     </button>
                   )}
                 </div>
@@ -282,7 +330,7 @@ export function TaxonomyManager({
             ))}
             {!items.length ? (
               <div className="admin-muted py-8 text-center text-sm">
-                {isBrands ? "Բրենդները" : "Կատեգորիաները"} չեն բեռնվել backend-ից։
+                {isBrands ? messages.taxonomy.emptyBrands : messages.taxonomy.emptyCategories}
               </div>
             ) : null}
           </div>
@@ -290,14 +338,14 @@ export function TaxonomyManager({
       </div>
       <ConfirmDialog
         open={Boolean(itemToDelete)}
-        title={isBrands ? "Ջնջե՞լ բրենդը" : "Ջնջե՞լ կատեգորիան"}
+        title={isBrands ? messages.taxonomy.deleteBrandTitle : messages.taxonomy.deleteCategoryTitle}
         description={
           itemToDelete
-            ? `Դուք պատրաստվում եք ջնջել «${itemToDelete.name}»-ը։ Այս գործողությունը շարունակե՞լ։`
+            ? messages.taxonomy.deleteDescription(itemToDelete.name)
             : ""
         }
         isSubmitting={isDeleting}
-        confirmLabel="Այո, ջնջել"
+        confirmLabel={messages.common.yesDelete}
         onConfirm={() => itemToDelete && removeItem(itemToDelete.id)}
         onCancel={() => setItemToDelete(null)}
       />

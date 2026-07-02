@@ -1,5 +1,7 @@
 "use client";
 
+import { adminMessages } from "@/lib/admin-copy";
+
 type ConfirmDialogProps = {
   open: boolean;
   title: string;
@@ -15,12 +17,14 @@ export function ConfirmDialog({
   open,
   title,
   description,
-  confirmLabel = "Ջնջել",
-  cancelLabel = "Չեղարկել",
+  confirmLabel,
+  cancelLabel,
   isSubmitting = false,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const messages = adminMessages;
+
   if (!open) {
     return null;
   }
@@ -29,7 +33,7 @@ export function ConfirmDialog({
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/45 px-4 py-6 backdrop-blur-sm">
       <div className="admin-panel w-full max-w-md rounded-[28px] p-6 shadow-[0_30px_90px_rgba(17,24,39,0.16)]">
         <p className="admin-kicker text-sm font-semibold uppercase tracking-[0.24em]">
-          Հաստատում
+          {messages.common.confirm}
         </p>
         <h2 className="admin-title mt-3 text-2xl font-semibold">{title}</h2>
         <p className="admin-muted mt-3 text-sm leading-7">{description}</p>
@@ -41,7 +45,7 @@ export function ConfirmDialog({
             disabled={isSubmitting}
             className="admin-button-secondary rounded-full px-5 py-2.5 text-sm font-semibold transition disabled:opacity-60"
           >
-            {cancelLabel}
+            {cancelLabel ?? messages.common.cancel}
           </button>
           <button
             type="button"
@@ -49,7 +53,7 @@ export function ConfirmDialog({
             disabled={isSubmitting}
             className="admin-button-primary rounded-full px-5 py-2.5 text-sm font-semibold transition disabled:opacity-60"
           >
-            {isSubmitting ? "Ջնջում..." : confirmLabel}
+            {isSubmitting ? messages.common.saving : confirmLabel ?? messages.common.delete}
           </button>
         </div>
       </div>

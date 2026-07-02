@@ -2,18 +2,28 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandCard } from "@/components/catalog/BrandCard";
 import { API_URL } from "@/lib/api";
+import { getRequestLocale } from "@/lib/i18n";
 import { getMockBrands } from "@/lib/mock-catalog";
+import { localizePath } from "@/lib/routing";
 import { buildMetadata } from "@/lib/seo";
+import { getTranslations } from "@/lib/translations";
 import { Brand, ProductsResponse } from "@/types/catalog";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Բրենդներ",
-  description:
-    "Բացահայտեք Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի բրենդները՝ օծանելիքի, կոսմետիկայի և աքսեսուարների ընտրված հավաքածուներով մեկ էջում։",
-  path: "/brands",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
+
+  return buildMetadata({
+    locale,
+    title: messages.brands.metadataTitle,
+    description: messages.brands.metadataDescription,
+    path: "/brands",
+  });
+}
 
 export default async function BrandsPage() {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
   const brands = await loadBrands();
   const totalProducts = brands.reduce((sum, brand) => sum + (brand.productCount ?? brand.products?.length ?? 0), 0);
 
@@ -24,18 +34,18 @@ export default async function BrandsPage() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(195,164,111,0.14),transparent_26%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.04),transparent_24%)]" />
           <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">Բրենդների հավաքածու</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">{messages.brands.eyebrow}</p>
               <h1 className="mt-4 font-serif text-4xl leading-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
-                Բրենդներ՝ ընտրված գեղեցկության տեսականիով
+                {messages.brands.title}
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--text-soft)] sm:text-lg">
-                Մեկ վիտրինայում հավաքել ենք սիրելի բրենդները՝ օծանելիքից մինչև կոսմետիկա և աքսեսուարներ։
+                {messages.brands.description}
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:min-w-[320px]">
-              <StatCard label="Բրենդ" value={String(brands.length)} />
-              <StatCard label="Ապրանք" value={String(totalProducts)} />
+              <StatCard label={messages.brands.brandsStat} value={String(brands.length)} />
+              <StatCard label={messages.brands.productsStat} value={String(totalProducts)} />
             </div>
           </div>
         </section>
@@ -47,16 +57,16 @@ export default async function BrandsPage() {
         </div>
         {!brands.length ? (
           <div className="mt-8 rounded-[28px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-10 text-center text-[var(--text-muted)] shadow-[0_16px_36px_rgba(0,0,0,0.24)]">
-            Բրենդները դեռ չեն բեռնվել backend-ից։
+            {messages.brands.empty}
           </div>
         ) : null}
 
         <div className="mt-10 flex justify-center">
           <Link
-            href="/catalog"
+            href={localizePath(locale, "/catalog")}
             className="inline-flex items-center gap-2 rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] shadow-[0_10px_24px_rgba(0,0,0,0.24)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
           >
-              Դիտել ամբողջ կատալոգը
+            {messages.brands.viewCatalog}
             <span aria-hidden="true">/</span>
           </Link>
         </div>

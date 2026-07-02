@@ -6,9 +6,7 @@ export default function CreateCategoryPage() {
       mode="categories"
       showItems={false}
       redirectAfterCreate="/admin/categories"
-      title="Ստեղծել կատեգորիա"
       backHref="/admin/categories"
-      backLabel="Վերադառնալ կատեգորիաներ"
     />
   );
 }

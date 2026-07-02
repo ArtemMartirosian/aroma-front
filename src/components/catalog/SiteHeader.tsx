@@ -3,16 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const links = [
-  { href: "/catalog", label: "Կատալոգ" },
-  { href: "/brands", label: "Բրենդներ" },
-  { href: "/about", label: "Մեր մասին" },
-  { href: "/contacts", label: "Կոնտակտներ" },
-];
+import { LanguageSwitcher } from "@/components/catalog/LanguageSwitcher";
+import { useLocale } from "@/components/catalog/LocaleProvider";
+import { localizePath } from "@/lib/routing";
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { locale, messages } = useLocale();
+
+  const links = [
+    { href: localizePath(locale, "/catalog"), label: messages.nav.catalog },
+    { href: localizePath(locale, "/brands"), label: messages.nav.brands },
+    { href: localizePath(locale, "/about"), label: messages.nav.about },
+    { href: localizePath(locale, "/contacts"), label: messages.nav.contacts },
+  ];
 
   if (pathname.startsWith("/admin")) {
     return null;
@@ -20,8 +24,8 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[rgba(14,16,17,0.84)] backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-5 sm:justify-between sm:px-6 lg:px-8">
-        <Link href="/" className="shrink-0 flex items-center gap-7 sm:gap-6">
+      <div className="relative mx-auto flex max-w-7xl items-center  px-4 md:pl-6 pl-8 py-5 sm:justify-between sm:px-6 lg:px-8">
+        <Link href={localizePath(locale, "/")} className="shrink-0 flex items-center gap-7 sm:gap-6">
           <Image
             src="/images/aroma-logo.png"
             alt="Aroma Parfume"
@@ -42,19 +46,27 @@ export function SiteHeader() {
             </span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-8 text-sm font-medium text-[var(--text-soft)] md:flex">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href} className="transition hover:text-[var(--accent-strong)]">
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-        <Link
-          href="/contacts"
-          className="md:flex hidden rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
-        >
-          Կապ
-        </Link>
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 md:hidden">
+          <LanguageSwitcher />
+        </div>
+        <div className="ml-auto hidden items-center gap-8 md:flex">
+          <nav className="flex items-center gap-8 text-sm font-medium text-[var(--text-soft)]">
+            {links.map((link) => (
+              <Link key={link.href} href={link.href} className="transition hover:text-[var(--accent-strong)]">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="flex items-center gap-3">
+              {/*<Link*/}
+              {/*    href={localizePath(locale, "/contacts")}*/}
+              {/*    className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"*/}
+              {/*>*/}
+              {/*    {messages.nav.contactShort}*/}
+              {/*</Link>*/}
+            <LanguageSwitcher />
+          </div>
+        </div>
       </div>
     </header>
   );

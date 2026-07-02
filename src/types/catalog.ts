@@ -13,10 +13,14 @@ export type Sillage = "soft" | "medium" | "strong" | "very_strong";
 export type Brand = {
   id: string;
   name: string;
+  nameRu?: string;
+  nameEn?: string;
   slug: string;
   logo?: string;
   image?: string;
   description?: string;
+  descriptionRu?: string;
+  descriptionEn?: string;
   productCount?: number;
   isActive: boolean;
   products?: Product[];
@@ -27,8 +31,12 @@ export type Brand = {
 export type Category = {
   id: string;
   name: string;
+  nameRu?: string;
+  nameEn?: string;
   slug: string;
   description?: string;
+  descriptionRu?: string;
+  descriptionEn?: string;
   isProtected?: boolean;
   isActive: boolean;
   products?: Product[];
@@ -46,6 +54,8 @@ export type ProductVariant = {
 export type Product = {
   id: string;
   name: string;
+  nameRu?: string;
+  nameEn?: string;
   slug: string;
   brandId: string;
   brand?: Brand;
@@ -57,15 +67,25 @@ export type Product = {
   gender?: Gender;
   fragranceType?: FragranceType;
   description: string;
+  descriptionRu?: string;
+  descriptionEn?: string;
   isFeatured: boolean;
   isNew: boolean;
   isActive: boolean;
   topNotes?: string;
+  topNotesRu?: string;
+  topNotesEn?: string;
   middleNotes?: string;
+  middleNotesRu?: string;
+  middleNotesEn?: string;
   baseNotes?: string;
+  baseNotesRu?: string;
+  baseNotesEn?: string;
   longevity?: Longevity;
   sillage?: Sillage;
   concentration?: string;
+  concentrationRu?: string;
+  concentrationEn?: string;
   country?: string;
   releaseYear?: number;
   variants?: ProductVariant[];

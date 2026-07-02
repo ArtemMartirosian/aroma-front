@@ -13,10 +13,7 @@ export default async function EditBrandPage({
       entityId={id}
       showItems={false}
       redirectAfterCreate="/admin/brands"
-      title="Խմբագրել բրենդը"
-      submitLabel="Պահպանել փոփոխությունները"
       backHref="/admin/brands"
-      backLabel="Վերադառնալ բրենդներ"
     />
   );
 }

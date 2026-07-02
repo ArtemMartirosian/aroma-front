@@ -5,8 +5,11 @@ import { ProductDetails } from "@/components/catalog/ProductDetails";
 import { API_URL } from "@/lib/api";
 import { isAccessoiresCategory, isParfumeProduct } from "@/lib/category-groups";
 import { longevityLabels, sillageLabels } from "@/lib/dictionaries";
+import { getRequestLocale } from "@/lib/i18n";
 import { getMockProductBySlug } from "@/lib/mock-catalog";
+import { localizePath } from "@/lib/routing";
 import { SITE_NAME, absoluteUrl, buildMetadata } from "@/lib/seo";
+import { getTranslations } from "@/lib/translations";
 import { Product } from "@/types/catalog";
 
 export async function generateMetadata({
@@ -15,12 +18,15 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
   const product = await loadProduct(slug);
 
   if (!product) {
     return buildMetadata({
-      title: "Ապրանք չի գտնվել",
-      description: "Պահանջվող ապրանքը չի գտնվել Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի կատալոգում։",
+      locale,
+      title: messages.product.notFoundTitle,
+      description: messages.product.notFoundDescription,
       path: `/products/${slug}`,
       noIndex: true,
     });
@@ -29,6 +35,7 @@ export async function generateMetadata({
   const image = product.variants?.[0]?.images?.[0] ?? "/images/perfume-hero.png";
 
   return buildMetadata({
+    locale,
     title: product.name,
     description: product.description,
     path: `/products/${product.slug}`,
@@ -44,6 +51,7 @@ export default async function ProductPage({
   searchParams: Promise<{ variant?: string | string[] }>;
 }) {
   const { slug } = await params;
+  const locale = await getRequestLocale();
   const resolvedSearchParams = await searchParams;
   const product = await loadProduct(slug);
   if (!product) notFound();
@@ -73,7 +81,7 @@ export default async function ProductPage({
       priceCurrency: "AMD",
       price: Number(variant.price),
       availability: "https://schema.org/InStock",
-      url: absoluteUrl(`/products/${product.slug}`),
+      url: absoluteUrl(localizePath(locale, `/products/${product.slug}`)),
       itemCondition: "https://schema.org/NewCondition",
       sku: isAccessoiresProduct || !variant.volume ? `${product.slug}-${index + 1}` : `${product.slug}-${variant.volume}`,
       description: isAccessoiresProduct || !variant.volume ? product.name : `${product.name} ${variant.volume}`,
@@ -83,9 +91,9 @@ export default async function ProductPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Գլխավոր", item: absoluteUrl("/") },
-      { "@type": "ListItem", position: 2, name: "Կատալոգ", item: absoluteUrl("/catalog") },
-      { "@type": "ListItem", position: 3, name: product.name, item: absoluteUrl(`/products/${product.slug}`) },
+      { "@type": "ListItem", position: 1, name: "Գլխավոր", item: absoluteUrl(localizePath(locale, "/")) },
+      { "@type": "ListItem", position: 2, name: "Կատալոգ", item: absoluteUrl(localizePath(locale, "/catalog")) },
+      { "@type": "ListItem", position: 3, name: product.name, item: absoluteUrl(localizePath(locale, `/products/${product.slug}`)) },
     ],
   };
 

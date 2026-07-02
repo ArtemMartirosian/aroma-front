@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useLocale } from "@/components/catalog/LocaleProvider";
+import { localizePath } from "@/lib/routing";
 
 const heroSlides = [
   "/images/perfume-hero.png",
@@ -13,6 +15,7 @@ const heroSlides = [
 
 export function HomeHero() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const { locale, messages } = useLocale();
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -47,28 +50,26 @@ export function HomeHero() {
       <div className="relative mx-auto flex min-h-[680px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--accent)]">
-            Օծանելիք, կոսմետիկա և աքսեսուարներ
+            {messages.hero.eyebrow}
           </p>
           <h1 className="mt-5 text-5xl font-semibold leading-tight text-[var(--foreground)] md:text-7xl">
-            Գտեք ձեր սիրելի գեղեցկության ընտրանին
+            {messages.hero.title}
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--text-soft)]">
-            Ժամանակակից օնլայն կատալոգ՝ օծանելիք, կոսմետիկա և աքսեսուարներ
-            մեկ վայրում։ Համեմատեք բրենդները, որակը, տարբերակներն ու գները և արագ
-            կապ հաստատեք պատվերի համար։
+            {messages.hero.description}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/catalog"
+              href={localizePath(locale, "/catalog")}
               className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
             >
-              Դիտել կատալոգը
+              {messages.hero.catalogCta}
             </Link>
             <Link
-              href="/contacts"
+              href={localizePath(locale, "/contacts")}
               className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
             >
-              Կապ
+              {messages.hero.contactCta}
             </Link>
           </div>
 
@@ -81,7 +82,7 @@ export function HomeHero() {
                 className={`h-2.5 rounded-full transition-all ${
                   index === activeSlide ? "w-8 bg-[var(--accent)]" : "w-2.5 bg-white/35 hover:bg-white/50"
                 }`}
-                aria-label={`Սլայդ ${index + 1}`}
+                aria-label={messages.hero.slideAria(index)}
               />
             ))}
           </div>

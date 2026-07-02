@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useLocale } from "@/components/catalog/LocaleProvider";
 import { ProductCard } from "@/components/catalog/ProductCard";
-import { fragranceOptions, genderOptions } from "@/lib/dictionaries";
+import { getFragranceOptions, getGenderOptions } from "@/lib/dictionaries";
 import { getBrands, getCategories, getProducts } from "@/lib/api";
+import { getLocalizedField } from "@/lib/localized";
 import { Brand, Category, FragranceType, Gender, Product } from "@/types/catalog";
 import { isAccessoiresCategory, isCosmeticsCategory } from "@/lib/category-groups";
 
@@ -16,6 +18,9 @@ export function CatalogClient() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { locale, messages } = useLocale();
+  const genderOptions = useMemo(() => getGenderOptions(locale), [locale]);
+  const fragranceOptions = useMemo(() => getFragranceOptions(locale), [locale]);
   const urlState = useMemo(() => readCatalogQuery(searchParams), [searchParams]);
   const [products, setProducts] = useState<Product[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -44,10 +49,10 @@ export function CatalogClient() {
         setProducts([]);
         setBrands([]);
         setCategories([]);
-        setLoadError("Չհաջողվեց բեռնել տվյալները backend-ից։ Ստուգեք, որ API-ն գործարկված է։");
+        setLoadError(messages.catalog.loadError);
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [messages.catalog.loadError]);
 
   useEffect(() => {
     setSearch(urlState.search);
@@ -102,7 +107,10 @@ export function CatalogClient() {
           ? product.variants.map((variant) => variant.volume)
           : [product.volume];
         return (
-          (!normalizedSearch || product.name.toLowerCase().includes(normalizedSearch)) &&
+          (!normalizedSearch ||
+            [product.name, product.nameRu, product.nameEn, product.brand?.name, product.brand?.nameRu, product.brand?.nameEn]
+              .filter(Boolean)
+              .some((value) => String(value).toLowerCase().includes(normalizedSearch))) &&
           (!brand || product.brand?.slug === brand) &&
           (!category || product.category?.slug === category) &&
           (!gender || product.gender === gender) &&
@@ -153,10 +161,10 @@ export function CatalogClient() {
       <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] pb-5">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--accent)]">
-            Ֆիլտրեր
+            {messages.catalog.filters}
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--text-muted)]">
-            {activeFilters ? `${activeFilters} ակտիվ` : "Ընտրեք պարամետրերը"}
+            {activeFilters ? messages.catalog.active(activeFilters) : messages.catalog.chooseParams}
           </p>
         </div>
         {activeFilters ? (
@@ -165,14 +173,14 @@ export function CatalogClient() {
             onClick={resetFilters}
             className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs font-semibold text-[var(--foreground)] shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
           >
-            Զրոյացնել
+            {messages.catalog.reset}
           </button>
         ) : null}
       </div>
 
       <div className="mt-5 space-y-4">
         <label className="block">
-          <span className="text-sm font-semibold text-[var(--foreground)]">Որոնում</span>
+          <span className="text-sm font-semibold text-[var(--foreground)]">{messages.catalog.search}</span>
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
@@ -180,21 +188,21 @@ export function CatalogClient() {
             className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--accent)]"
           />
         </label>
-        <FilterSelect label="Բրենդ" value={brand} onChange={setBrand}>
+        <FilterSelect label={messages.catalog.brand} value={brand} onChange={setBrand} allLabel={messages.catalog.all}>
           {brands.map((item) => (
             <option key={item.id} value={item.slug}>
-              {item.name}
+              {getLocalizedField(item, "name", locale) || item.name}
             </option>
           ))}
         </FilterSelect>
-        <FilterSelect label="Կատեգորիա" value={category} onChange={setCategory}>
+        <FilterSelect label={messages.catalog.category} value={category} onChange={setCategory} allLabel={messages.catalog.all}>
           {categories.map((item) => (
             <option key={item.id} value={item.slug}>
-              {item.name}
+              {getLocalizedField(item, "name", locale) || item.name}
             </option>
           ))}
         </FilterSelect>
-        <FilterSelect label="Սեռ" value={gender} onChange={(value) => setGender(value as Gender | "")}>
+        <FilterSelect label={messages.catalog.gender} value={gender} onChange={(value) => setGender(value as Gender | "")} allLabel={messages.catalog.all}>
           {genderOptions.map(([value, label]) => (
             <option key={value} value={value}>
               {label}
@@ -203,9 +211,10 @@ export function CatalogClient() {
         </FilterSelect>
         {(!category || (!isCosmeticsCategory(category) && !isAccessoiresCategory(category))) ? (
           <FilterSelect
-            label="Բույրի տեսակ"
+            label={messages.catalog.fragranceType}
             value={fragranceType}
             onChange={(value) => setFragranceType(value as FragranceType | "")}
+            allLabel={messages.catalog.all}
           >
             {fragranceOptions.map(([value, label]) => (
               <option key={value} value={value}>
@@ -215,7 +224,7 @@ export function CatalogClient() {
           </FilterSelect>
         ) : null}
         {!isAccessoiresCategory(category) ? (
-          <FilterSelect label="Ծավալ" value={volume} onChange={setVolume}>
+          <FilterSelect label={messages.catalog.volume} value={volume} onChange={setVolume} allLabel={messages.catalog.all}>
             {volumes.map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -224,7 +233,7 @@ export function CatalogClient() {
           </FilterSelect>
         ) : null}
         <label className="block">
-          <span className="text-sm font-semibold text-[var(--foreground)]">Գինը մինչև</span>
+          <span className="text-sm font-semibold text-[var(--foreground)]">{messages.catalog.maxPrice}</span>
           <input
             value={maxPrice}
             onChange={(event) => setMaxPrice(event.target.value)}
@@ -265,35 +274,34 @@ export function CatalogClient() {
                   Aroma Parfume
                 </p>
                 <h1 className="mt-4 font-serif text-4xl leading-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
-                  Գեղեցկության կատալոգ
+                  {messages.catalog.heroTitle}
                 </h1>
                 <p className="mt-5 max-w-2xl text-sm leading-8 text-[var(--text-soft)] sm:text-lg">
-                  Ընտրեք parfume, cosmetics կամ accessoires, համեմատեք բրենդներն ու տարբերակները։
-                  Բոլոր պատվերները ձևակերպվում են օնլայն, իսկ առաքումն անվճար է։
+                  {messages.catalog.heroDescription}
                 </p>
               </div>
 
               <div className="flex flex-col gap-4 lg:min-w-[320px] lg:items-end">
                 <div className="grid grid-cols-2 gap-3 sm:min-w-[320px]">
                   <CatalogMetric
-                    label="Ապրանքներ"
+                    label={messages.catalog.productsMetric}
                     value={isLoading ? "..." : String(filteredProducts.length)}
                   />
-                  <CatalogMetric label="Առաքում" value="Անվճար" />
+                  <CatalogMetric label={messages.catalog.deliveryMetric} value={messages.catalog.freeDelivery} />
                 </div>
 
                 <label className="block min-w-[240px]">
-                  <span className="text-sm font-semibold text-[var(--foreground)]">Տեսակավորում</span>
+                  <span className="text-sm font-semibold text-[var(--foreground)]">{messages.catalog.sort}</span>
                   <div className="relative mt-2">
                     <select
                       value={sort}
                       onChange={(event) => setSort(event.target.value as Sort)}
                       className="w-full appearance-none rounded-2xl border border-[var(--line)] bg-[var(--surface-muted)] px-4 py-3 pr-12 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--accent)]"
                     >
-                      <option value="new">Նորերը</option>
-                      <option value="price_asc">Ըստ գնի՝ էժանից</option>
-                      <option value="price_desc">Ըստ գնի՝ թանկից</option>
-                      <option value="popular">Հանրաճանաչ</option>
+                      <option value="new">{messages.catalog.sortNew}</option>
+                      <option value="price_asc">{messages.catalog.sortPriceAsc}</option>
+                      <option value="price_desc">{messages.catalog.sortPriceDesc}</option>
+                      <option value="popular">{messages.catalog.sortPopular}</option>
                     </select>
                     <SelectChevron />
                   </div>
@@ -309,7 +317,7 @@ export function CatalogClient() {
               onClick={() => setIsFiltersOpen((current) => !current)}
               className="flex w-full items-center justify-between rounded-[24px] border border-[var(--line)] bg-[linear-gradient(180deg,rgba(21,24,25,0.95),rgba(29,33,34,0.92))] px-5 py-4 text-left font-semibold text-[var(--foreground)] shadow-[0_18px_44px_rgba(0,0,0,0.28)] backdrop-blur"
             >
-              <span>Ֆիլտրեր</span>
+              <span>{messages.catalog.filters}</span>
               <span className="flex items-center gap-2">
                 {activeFilters ? (
                   <span className="rounded-full bg-[var(--accent-soft)] px-2.5 py-1 text-xs font-semibold text-[var(--accent-strong)]">
@@ -350,8 +358,8 @@ export function CatalogClient() {
             {activeFilters ? (
               <div className="mb-6 rounded-[24px] border border-[var(--line)] bg-[rgba(21,24,25,0.78)] p-3 shadow-[0_16px_40px_rgba(0,0,0,0.22)] backdrop-blur">
                 <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[var(--text-soft)]">
-                  {brand ? <ActiveChip>{brands.find((item) => item.slug === brand)?.name}</ActiveChip> : null}
-                  {category ? <ActiveChip>{categories.find((item) => item.slug === category)?.name}</ActiveChip> : null}
+                  {brand ? <ActiveChip>{getLocalizedField(brands.find((item) => item.slug === brand), "name", locale)}</ActiveChip> : null}
+                  {category ? <ActiveChip>{getLocalizedField(categories.find((item) => item.slug === category), "name", locale)}</ActiveChip> : null}
                   {gender ? <ActiveChip>{genderOptions.find(([value]) => value === gender)?.[1]}</ActiveChip> : null}
                   {fragranceType ? <ActiveChip>{fragranceOptions.find(([value]) => value === fragranceType)?.[1]}</ActiveChip> : null}
                   {volume ? <ActiveChip>{volume}</ActiveChip> : null}
@@ -361,7 +369,7 @@ export function CatalogClient() {
                     onClick={resetFilters}
                     className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs font-semibold text-[var(--foreground)] shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
                   >
-                    Զրոյացնել բոլորը
+                    {messages.catalog.resetAll}
                   </button>
                 </div>
               </div>
@@ -375,16 +383,16 @@ export function CatalogClient() {
                   visibleProducts.map((product) => <ProductCard key={product.id} product={product} />)
                 ) : (
                   <div className="col-span-full rounded-[28px] border border-dashed border-[var(--line)] bg-[var(--surface-elevated)] p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.24)]">
-                    <p className="text-xl font-semibold text-[var(--foreground)]">Ոչինչ չի գտնվել</p>
+                    <p className="text-xl font-semibold text-[var(--foreground)]">{messages.catalog.nothingFound}</p>
                     <p className="mt-2 text-[var(--text-soft)]">
-                      Փորձեք փոխել ֆիլտրերը կամ զրոյացնել որոնումը։
+                      {messages.catalog.tryDifferentFilters}
                     </p>
                     <button
                       type="button"
                       onClick={resetFilters}
                       className="mt-5 rounded-full border border-[var(--accent)] bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
                     >
-                      Զրոյացնել ֆիլտրերը
+                      {messages.catalog.resetFilters}
                     </button>
                   </div>
                 )}
@@ -396,7 +404,7 @@ export function CatalogClient() {
                     onClick={showMoreProducts}
                     className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-[#171717] transition hover:border-[var(--accent-strong)] hover:bg-[var(--accent-strong)]"
                   >
-                      Տեսնել ավելին
+                    {messages.catalog.showMore}
                   </button>
                 </div>
               ) : null}
@@ -412,11 +420,13 @@ function FilterSelect({
   label,
   value,
   onChange,
+  allLabel,
   children,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  allLabel: string;
   children: React.ReactNode;
 }) {
   return (
@@ -428,7 +438,7 @@ function FilterSelect({
           onChange={(event) => onChange(event.target.value)}
           className="w-full appearance-none rounded-2xl border border-[var(--line)] bg-[var(--surface-muted)] px-4 py-3 pr-12 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--accent)]"
         >
-          <option value="">Բոլորը</option>
+          <option value="">{allLabel}</option>
           {children}
         </select>
         <SelectChevron />

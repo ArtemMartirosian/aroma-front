@@ -1,25 +1,33 @@
 import type { Metadata } from "next";
+import { getRequestLocale } from "@/lib/i18n";
 import { buildMetadata } from "@/lib/seo";
+import { getTranslations } from "@/lib/translations";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Կոնտակտներ",
-  description:
-    "Կապվեք Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի հետ WhatsApp-ով, Viber-ով, հեռախոսով, Instagram-ով կամ TikTok-ով։ Արագ պատվերներ և անվճար առաքում Հայաստանում։",
-  path: "/contacts",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
 
-export default function ContactsPage() {
+  return buildMetadata({
+    locale,
+    title: messages.contacts.metadataTitle,
+    description: messages.contacts.metadataDescription,
+    path: "/contacts",
+  });
+}
+
+export default async function ContactsPage() {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Կոնտակտներ</p>
-      <h1 className="mt-2 text-4xl font-semibold text-[var(--foreground)]">Կոնտակտներ</h1>
+      <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">{messages.contacts.eyebrow}</p>
+      <h1 className="mt-2 text-4xl font-semibold text-[var(--foreground)]">{messages.contacts.title}</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-[var(--text-soft)]">
-        Գրեք կամ զանգահարեք մեզ, որպեսզի ընտրեք օծանելիք, կոսմետիկա կամ
-        աքսեսուարներ և արագ ձևակերպեք առաքումը։
+        {messages.contacts.description}
       </p>
       <div className="mt-8 grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
         <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_18px_44px_rgba(0,0,0,0.26)]">
-          <Contact label="Հեռախոս" value="+374 33 69 60 09" href="tel:+37433696009" />
+          <Contact label={messages.contacts.phone} value="+374 33 69 60 09" href="tel:+37433696009" />
           <Contact label="WhatsApp" value="+374 33 69 60 09" href="https://wa.me/37433696009" />
           <Contact label="Viber" value="+374 33 69 60 09" href="viber://chat?number=%2B37433696009" />
           <Contact
@@ -37,30 +45,28 @@ export default function ContactsPage() {
             value="Aroma Parfume"
             href="https://www.facebook.com/profile.php?id=61572896413532"
           />
-          <Contact label="Առաքում" value="Անվճար" />
+          <Contact label={messages.contacts.delivery} value={messages.contacts.free} />
         </div>
         <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-8 shadow-[0_18px_44px_rgba(0,0,0,0.26)]">
-          <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Արագ կապ</p>
+          <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">{messages.contacts.quickContact}</p>
           <h2 className="mt-3 text-3xl font-semibold text-[var(--foreground)]">
-            Պատվերը ձևակերպվում է հեշտ և հարմար
+            {messages.contacts.quickTitle}
           </h2>
           <p className="mt-4 leading-7 text-[var(--text-soft)]">
-            WhatsApp-ով, Viber-ով, Instagram-ով, TikTok-ով կամ հեռախոսով կարող
-            եք ճշտել ապրանքի տարբերակը, առկայությունն ու առաքման մանրամասները։
-            Մենք օգնում ենք ընտրության հարցում և կազմակերպում անվճար առաքումը։
+            {messages.contacts.quickDescription}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href="https://wa.me/37433696009"
               className="inline-flex rounded-full border border-[var(--accent)] bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-[#171717] transition hover:bg-[var(--accent-strong)] hover:border-[var(--accent-strong)]"
             >
-              Գրել WhatsApp-ով
+              {messages.contacts.writeWhatsApp}
             </a>
             <a
               href="viber://chat?number=%2B37433696009"
               className="inline-flex rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
             >
-              Գրել Viber-ով
+              {messages.contacts.writeViber}
             </a>
             <a
               href="https://instagram.com/aroma___parfumee"
@@ -68,7 +74,7 @@ export default function ContactsPage() {
               rel="noreferrer"
               className="inline-flex rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
             >
-              Գրել Instagram-ում
+              {messages.contacts.writeInstagram}
             </a>
             <a
               href="https://www.tiktok.com/@aroma_parfume_"
@@ -76,7 +82,7 @@ export default function ContactsPage() {
               rel="noreferrer"
               className="inline-flex rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
             >
-               Դիտել TikTok-ը
+              {messages.contacts.viewTikTok}
             </a>
           </div>
         </div>

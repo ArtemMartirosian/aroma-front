@@ -16,56 +16,79 @@ import {
   getAdminProduct,
   saveProduct,
 } from "@/lib/api";
+import { adminMessages, type AdminMessages } from "@/lib/admin-copy";
 import {
-  fragranceOptions,
-  genderOptions,
-  longevityOptions,
-  sillageOptions,
+  getFragranceOptions,
+  getGenderOptions,
+  getLongevityOptions,
+  getSillageOptions,
 } from "@/lib/dictionaries";
 import { isAccessoiresCategory } from "@/lib/category-groups";
 import { Brand, Category } from "@/types/catalog";
 
-const requiredNumber = z.preprocess(
-  (value) => (value === "" || value === null || value === undefined ? undefined : Number(value)),
-  z.number({ message: "Պարտադիր դաշտ է" }).min(0, "Չի կարող լինել բացասական"),
-);
+function createRequiredNumber(messages: AdminMessages) {
+  return z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : Number(value)),
+    z.number({ message: messages.products.requiredField }).min(0, messages.products.nonNegative),
+  );
+}
 
-const optionalNumber = z.preprocess(
-  (value) => (value === "" || value === null || value === undefined ? undefined : Number(value)),
-  z.number().min(0, "Չի կարող լինել բացասական").optional(),
-);
+function createOptionalNumber(messages: AdminMessages) {
+  return z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : Number(value)),
+    z.number().min(0, messages.products.nonNegative).optional(),
+  );
+}
 
-const variantSchema = z.object({
-  volume: z.string().optional().default(""),
-  price: requiredNumber,
-  oldPrice: optionalNumber,
-  images: z.array(z.string().min(1)).min(1, "Ավելացրեք առնվազն մեկ նկար"),
-});
+function createProductSchema(messages: AdminMessages) {
+  const requiredNumber = createRequiredNumber(messages);
+  const optionalNumber = createOptionalNumber(messages);
 
-const productSchema = z.object({
-  name: z.string().trim().min(2, "Մուտքագրեք ապրանքի անվանումը"),
-  slug: z.string().optional(),
-  brandId: z.string().min(1, "Ընտրեք բրենդը"),
-  categoryId: z.string().min(1, "Ընտրեք կատեգորիան"),
-  gender: z.enum(["male", "female", "unisex"]).optional(),
-  fragranceType: z.enum(["woody", "floral", "citrus", "oriental", "fresh", "sweet", "spicy"]).optional(),
-  description: z.string().trim().min(10, "Գրեք ամբողջական նկարագրություն"),
-  topNotes: z.string().optional(),
-  middleNotes: z.string().optional(),
-  baseNotes: z.string().optional(),
-  longevity: z.enum(["low", "medium", "high", "very_high"]).optional(),
-  sillage: z.enum(["soft", "medium", "strong", "very_strong"]).optional(),
-  concentration: z.string().optional(),
-  country: z.string().optional(),
-  releaseYear: optionalNumber,
-  variants: z.array(variantSchema).min(1),
-  isFeatured: z.boolean(),
-  isNew: z.boolean(),
-  isActive: z.boolean(),
-});
+  const variantSchema = z.object({
+    volume: z.string().optional().default(""),
+    price: requiredNumber,
+    oldPrice: optionalNumber,
+    images: z.array(z.string().min(1)).min(1, messages.products.variantImagesError),
+  });
 
-type ProductInput = z.input<typeof productSchema>;
-type ProductValues = z.output<typeof productSchema>;
+  return z.object({
+    name: z.string().trim().min(2, messages.products.nameRequired),
+    nameRu: z.string().optional(),
+    nameEn: z.string().optional(),
+    slug: z.string().optional(),
+    brandId: z.string().min(1, messages.products.chooseBrand),
+    categoryId: z.string().min(1, messages.products.chooseCategory),
+    gender: z.enum(["male", "female", "unisex"]).optional(),
+    fragranceType: z.enum(["woody", "floral", "citrus", "oriental", "fresh", "sweet", "spicy"]).optional(),
+    description: z.string().trim().min(10, messages.products.descriptionRequired),
+    descriptionRu: z.string().optional(),
+    descriptionEn: z.string().optional(),
+    topNotes: z.string().optional(),
+    topNotesRu: z.string().optional(),
+    topNotesEn: z.string().optional(),
+    middleNotes: z.string().optional(),
+    middleNotesRu: z.string().optional(),
+    middleNotesEn: z.string().optional(),
+    baseNotes: z.string().optional(),
+    baseNotesRu: z.string().optional(),
+    baseNotesEn: z.string().optional(),
+    longevity: z.enum(["low", "medium", "high", "very_high"]).optional(),
+    sillage: z.enum(["soft", "medium", "strong", "very_strong"]).optional(),
+    concentration: z.string().optional(),
+    concentrationRu: z.string().optional(),
+    concentrationEn: z.string().optional(),
+    country: z.string().optional(),
+    releaseYear: optionalNumber,
+    variants: z.array(variantSchema).min(1),
+    isFeatured: z.boolean(),
+    isNew: z.boolean(),
+    isActive: z.boolean(),
+  });
+}
+
+type ProductSchema = ReturnType<typeof createProductSchema>;
+type ProductInput = z.input<ProductSchema>;
+type ProductValues = z.output<ProductSchema>;
 type PendingDelete =
   | { type: "variant"; index: number; label: string }
   | { type: "image"; index: number; imageIndex: number; label: string };
@@ -81,6 +104,12 @@ function createEmptyVariant() {
 
 export function ProductForm({ productId }: { productId?: string }) {
   const router = useRouter();
+  const messages = adminMessages;
+  const productSchema = createProductSchema(messages);
+  const genderOptions = getGenderOptions("am");
+  const fragranceOptions = getFragranceOptions("am");
+  const longevityOptions = getLongevityOptions("am");
+  const sillageOptions = getSillageOptions("am");
   const { ready, token } = useAdminToken();
   const [brands, setBrands] = useState<Brand[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -99,11 +128,27 @@ export function ProductForm({ productId }: { productId?: string }) {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
+      nameRu: "",
+      nameEn: "",
       brandId: "",
       categoryId: "",
       gender: "unisex",
       fragranceType: "floral",
       description: "",
+      descriptionRu: "",
+      descriptionEn: "",
+      topNotes: "",
+      topNotesRu: "",
+      topNotesEn: "",
+      middleNotes: "",
+      middleNotesRu: "",
+      middleNotesEn: "",
+      baseNotes: "",
+      baseNotesRu: "",
+      baseNotesEn: "",
+      concentration: "",
+      concentrationRu: "",
+      concentrationEn: "",
       variants: [createEmptyVariant()],
       isFeatured: false,
       isNew: false,
@@ -217,17 +262,29 @@ export function ProductForm({ productId }: { productId?: string }) {
 
         reset({
           name: product.name ?? "",
+          nameRu: product.nameRu ?? "",
+          nameEn: product.nameEn ?? "",
           brandId: product.brandId ?? product.brand?.id ?? "",
           categoryId: product.categoryId ?? product.category?.id ?? "",
           gender: product.gender ?? "unisex",
           fragranceType: product.fragranceType ?? undefined,
           description: product.description ?? "",
+          descriptionRu: product.descriptionRu ?? "",
+          descriptionEn: product.descriptionEn ?? "",
           topNotes: product.topNotes ?? "",
+          topNotesRu: product.topNotesRu ?? "",
+          topNotesEn: product.topNotesEn ?? "",
           middleNotes: product.middleNotes ?? "",
+          middleNotesRu: product.middleNotesRu ?? "",
+          middleNotesEn: product.middleNotesEn ?? "",
           baseNotes: product.baseNotes ?? "",
+          baseNotesRu: product.baseNotesRu ?? "",
+          baseNotesEn: product.baseNotesEn ?? "",
           longevity: product.longevity ?? undefined,
           sillage: product.sillage ?? undefined,
           concentration: product.concentration ?? "",
+          concentrationRu: product.concentrationRu ?? "",
+          concentrationEn: product.concentrationEn ?? "",
           country: product.country ?? "",
           releaseYear: product.releaseYear ?? undefined,
           isFeatured: Boolean(product.isFeatured),
@@ -245,8 +302,8 @@ export function ProductForm({ productId }: { productId?: string }) {
         setCategories([]);
         setMessage(
           productId
-            ? "Չհաջողվեց բեռնել ապրանքի տվյալները backend-ից։"
-            : "Չհաջողվեց բեռնել բրենդներն ու կատեգորիաները backend-ից։",
+            ? messages.products.loadFormError
+            : messages.products.loadMetaError,
         );
       } finally {
         if (!cancelled) {
@@ -260,14 +317,14 @@ export function ProductForm({ productId }: { productId?: string }) {
     return () => {
       cancelled = true;
     };
-  }, [productId, ready, replace, reset, setValue, token]);
+  }, [messages.products.loadFormError, messages.products.loadMetaError, productId, ready, replace, reset, setValue, token]);
 
   async function onSubmit(values: ProductValues) {
     setMessage("");
     if (!isAccessoiresProduct) {
       const hasEmptyVolume = values.variants.some((variant) => !variant.volume?.trim());
       if (hasEmptyVolume) {
-        setMessage("Տարբերակների համար նշեք ծավալը կամ չափը։");
+        setMessage(messages.products.invalidVariantVolume);
         return;
       }
     }
@@ -300,7 +357,7 @@ export function ProductForm({ productId }: { productId?: string }) {
       setMessage(
         getApiErrorMessage(
           error,
-          "Չհաջողվեց պահպանել։ Ստուգեք backend-ը, JWT-ն և պարտադիր դաշտերը։",
+          messages.products.saveError,
         ),
       );
     }
@@ -309,8 +366,8 @@ export function ProductForm({ productId }: { productId?: string }) {
   function onInvalidSubmit() {
     setMessage(
       isAccessoiresProduct
-        ? "Լրացրեք պարտադիր դաշտերը։ Աքսեսուարի համար նշեք գինը և առնվազն մեկ նկար։"
-        : "Լրացրեք պարտադիր դաշտերը։ Տարբերակի համար նշեք չափը, գինը և առնվազն մեկ նկար։",
+        ? messages.products.invalidAccessory
+        : messages.products.invalidProduct,
     );
   }
 
@@ -354,10 +411,10 @@ export function ProductForm({ productId }: { productId?: string }) {
     return (
       <AdminShell>
         <div className="admin-panel rounded-[24px] p-5">
-          <p className="admin-kicker text-sm uppercase tracking-[0.2em]">Խմբագրել ապրանքը</p>
-          <h1 className="admin-title mt-2 text-3xl font-semibold">Բեռնվում են տվյալները...</h1>
+          <p className="admin-kicker text-sm uppercase tracking-[0.2em]">{messages.products.editTitle}</p>
+          <h1 className="admin-title mt-2 text-3xl font-semibold">{messages.common.loading}</h1>
           <p className="admin-muted mt-4 text-sm">
-            Սպասեք մի պահ, բեռնում ենք ապրանքի ընթացիկ տվյալները։
+            {messages.products.loadingCurrent}
           </p>
         </div>
       </AdminShell>
@@ -371,45 +428,47 @@ export function ProductForm({ productId }: { productId?: string }) {
         className="admin-panel rounded-[24px] p-5"
       >
         <p className="admin-kicker text-sm uppercase tracking-[0.2em]">
-          {productId ? "Խմբագրել ապրանքը" : "Ստեղծել ապրանք"}
+          {productId ? messages.products.editTitle : messages.products.createTitle}
         </p>
         <h1 className="admin-title mt-2 text-3xl font-semibold">
-          {productId ? "Խմբագրել ապրանքը" : "Ստեղծել ապրանք"}
+          {productId ? messages.products.editTitle : messages.products.createTitle}
         </h1>
         {message ? <p className="admin-notice mt-4 rounded-md p-3 text-sm">{message}</p> : null}
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <Input
-            label="Անվանում"
+            label={messages.products.nameAm}
             placeholder="Օր.` Chanel Coco Mademoiselle"
             error={errors.name?.message}
             {...register("name")}
           />
-          <Select label="Բրենդ" error={errors.brandId?.message} {...register("brandId")}>
-            <option value="">Ընտրեք բրենդը</option>
+          <Input label={messages.products.nameRu} {...register("nameRu")} />
+          <Input label={messages.products.nameEn} {...register("nameEn")} />
+          <Select label={messages.products.brand} error={errors.brandId?.message} {...register("brandId")}>
+            <option value="">{messages.products.chooseBrand}</option>
             {brands.map((brand) => (
               <option key={brand.id} value={brand.id}>
                 {brand.name}
               </option>
             ))}
           </Select>
-          <Select label="Կատեգորիա" error={errors.categoryId?.message} {...register("categoryId")}>
-            <option value="">Ընտրեք կատեգորիան</option>
+          <Select label={messages.products.category} error={errors.categoryId?.message} {...register("categoryId")}>
+            <option value="">{messages.products.chooseCategory}</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
             ))}
           </Select>
-          <Select label="Սեռ" {...register("gender")}>
+          <Select label={messages.products.gender} {...register("gender")}>
             {genderOptions.map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
           </Select>
-          <Input label="Երկիր" placeholder="Օր.` France" {...register("country")} />
+          <Input label={messages.products.country} placeholder="Օր.` France" {...register("country")} />
           <Input
-            label="Թողարկման տարի"
+            label={messages.products.releaseYear}
             type="number"
             placeholder="Օր.` 2024"
             {...register("releaseYear", {
@@ -417,22 +476,26 @@ export function ProductForm({ productId }: { productId?: string }) {
             })}
           />
           <Textarea
-            label="Նկարագրություն"
+            label={messages.products.descriptionAm}
             placeholder="Ամբողջական նկարագրություն ապրանքի էջի համար"
             error={errors.description?.message}
             {...register("description")}
           />
+          <Textarea label={messages.products.descriptionRu} {...register("descriptionRu")} />
+          <Textarea label={messages.products.descriptionEn} {...register("descriptionEn")} />
           {isParfumeProduct ? (
             <>
-              <Select label="Բույրի տեսակ" {...register("fragranceType")}>
+              <Select label={messages.products.fragranceType} {...register("fragranceType")}>
                 {fragranceOptions.map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
                   </option>
                 ))}
               </Select>
-              <Input label="Կոնցենտրացիա" {...register("concentration")} />
-              <Select label="Երկարակեցություն" {...register("longevity")}>
+              <Input label={messages.products.concentrationAm} {...register("concentration")} />
+              <Input label={messages.products.concentrationRu} {...register("concentrationRu")} />
+              <Input label={messages.products.concentrationEn} {...register("concentrationEn")} />
+              <Select label={messages.products.longevity} {...register("longevity")}>
                 <option value="">Նշված չէ</option>
                 {longevityOptions.map(([value, label]) => (
                   <option key={value} value={value}>
@@ -440,7 +503,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                   </option>
                 ))}
               </Select>
-              <Select label="Շլեյֆ" {...register("sillage")}>
+              <Select label={messages.products.sillage} {...register("sillage")}>
                 <option value="">Նշված չէ</option>
                 {sillageOptions.map(([value, label]) => (
                   <option key={value} value={value}>
@@ -448,9 +511,15 @@ export function ProductForm({ productId }: { productId?: string }) {
                   </option>
                 ))}
               </Select>
-              <Input label="Վերին նոտաներ" {...register("topNotes")} />
-              <Input label="Միջին նոտաներ" {...register("middleNotes")} />
-              <Input label="Բազային նոտաներ" {...register("baseNotes")} />
+              <Input label={messages.products.topNotesAm} {...register("topNotes")} />
+              <Input label={messages.products.topNotesRu} {...register("topNotesRu")} />
+              <Input label={messages.products.topNotesEn} {...register("topNotesEn")} />
+              <Input label={messages.products.middleNotesAm} {...register("middleNotes")} />
+              <Input label={messages.products.middleNotesRu} {...register("middleNotesRu")} />
+              <Input label={messages.products.middleNotesEn} {...register("middleNotesEn")} />
+              <Input label={messages.products.baseNotesAm} {...register("baseNotes")} />
+              <Input label={messages.products.baseNotesRu} {...register("baseNotesRu")} />
+              <Input label={messages.products.baseNotesEn} {...register("baseNotesEn")} />
             </>
           ) : null}
         </div>
@@ -458,12 +527,12 @@ export function ProductForm({ productId }: { productId?: string }) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="admin-title text-lg font-semibold">
-                {isAccessoiresProduct ? "Ապրանքի տվյալներ" : "Ապրանքի տարբերակներ"}
+                {isAccessoiresProduct ? messages.products.variantSectionAccessory : messages.products.variantSectionProduct}
               </h2>
               <p className="admin-muted mt-1 text-sm">
                 {isAccessoiresProduct
-                  ? "Աքսեսուարի համար պահվում է մեկ գին և մի քանի նկար։"
-                  : "Սկզբում ավելացվում է մեկ դատարկ տարբերակ։ Եթե պետք լինի, հետո կարող եք ավելացնել ևս տարբերակներ։"}
+                  ? messages.products.variantSectionAccessoryHint
+                  : messages.products.variantSectionProductHint}
               </p>
             </div>
             {!isAccessoiresProduct ? (
@@ -472,7 +541,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                 onClick={() => append(createEmptyVariant())}
                 className="admin-button-secondary rounded-full px-4 py-2 text-sm font-semibold transition"
               >
-                Ավելացնել տարբերակ
+                {messages.products.addVariant}
               </button>
             ) : null}
           </div>
@@ -491,10 +560,10 @@ export function ProductForm({ productId }: { productId?: string }) {
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div>
                     <p className="admin-title text-sm font-semibold">
-                      {isAccessoiresProduct ? "Հիմնական տարբերակ" : `Տարբերակ ${index + 1}`}
+                      {isAccessoiresProduct ? messages.products.variantPrimary : messages.products.variantNumber(index)}
                     </p>
                     <p className="admin-muted text-xs">
-                      {isAccessoiresProduct ? "Նշեք գինը և ավելացրեք նկարներ" : "Օր.` 50ml, 100ml, set"}
+                      {isAccessoiresProduct ? messages.products.variantHintAccessory : messages.products.variantHintProduct}
                     </p>
                   </div>
                   {!isAccessoiresProduct && fields.length > 1 ? (
@@ -509,21 +578,21 @@ export function ProductForm({ productId }: { productId?: string }) {
                       }
                       className="admin-button-secondary rounded-full px-4 py-2 text-sm font-semibold transition hover:text-red-700"
                     >
-                      Ջնջել տարբերակը
+                      {messages.products.deleteVariant}
                     </button>
                   ) : null}
                 </div>
                 <div className={`grid gap-3 ${isAccessoiresProduct ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
                   {!isAccessoiresProduct ? (
                     <Input
-                      label="Տարբերակ / չափ"
+                      label={messages.products.variantVolume}
                       placeholder="Օր.` 50ml"
                       error={errors.variants?.[index]?.volume?.message}
                       {...register(`variants.${index}.volume`)}
                     />
                   ) : null}
                   <Input
-                    label="Գին"
+                    label={messages.products.price}
                     type="number"
                     placeholder="Օր.` 39000"
                     error={errors.variants?.[index]?.price?.message}
@@ -532,7 +601,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                     })}
                   />
                   <Input
-                    label="Հին գին"
+                    label={messages.products.oldPrice}
                     type="number"
                     placeholder="Ըստ ցանկության"
                     error={errors.variants?.[index]?.oldPrice?.message}
@@ -544,7 +613,7 @@ export function ProductForm({ productId }: { productId?: string }) {
 
                 <div className="admin-divider mt-4 border-t pt-4">
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                    <h3 className="admin-title text-sm font-semibold">Նկարներ այս տարբերակի համար</h3>
+                    <h3 className="admin-title text-sm font-semibold">{messages.products.imagesForVariant}</h3>
                     <button
                       type="button"
                       onClick={() =>
@@ -555,14 +624,14 @@ export function ProductForm({ productId }: { productId?: string }) {
                       }
                       className="admin-button-secondary rounded-full px-4 py-2 text-sm font-semibold transition"
                     >
-                      Ավելացնել նկար
+                      {messages.products.addImage}
                     </button>
                   </div>
                   <div className="space-y-3">
                     {variantImages.map((image, imageIndex) => (
                       <div key={`${field.id}-${imageIndex}`} className="grid gap-3 lg:grid-cols-[1fr_auto]">
                         <ImageUploadField
-                          label={`Նկար ${imageIndex + 1}`}
+                          label={messages.products.imageLabel(imageIndex)}
                           value={image}
                           onChange={(value) => updateVariantImage(index, imageIndex, value)}
                         />
@@ -579,7 +648,7 @@ export function ProductForm({ productId }: { productId?: string }) {
                             }
                             className="admin-button-secondary h-fit rounded-full px-4 py-2 text-sm font-semibold transition hover:text-red-700 lg:self-center"
                           >
-                            Ջնջել նկարը
+                            {messages.products.deleteImage}
                           </button>
                         ) : null}
                       </div>
@@ -597,32 +666,32 @@ export function ProductForm({ productId }: { productId?: string }) {
           </div>
         </div>
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <Checkbox label="Հանրաճանաչ" {...register("isFeatured")} />
-          <Checkbox label="Նորույթ" {...register("isNew")} />
-          <Checkbox label="Ցուցադրել" {...register("isActive")} />
+          <Checkbox label={messages.products.featured} {...register("isFeatured")} />
+          <Checkbox label={messages.products.isNew} {...register("isNew")} />
+          <Checkbox label={messages.products.active} {...register("isActive")} />
         </div>
         <button
           disabled={isSubmitting}
           className="admin-button-primary mt-6 rounded-full px-6 py-3 text-sm font-semibold transition disabled:opacity-60"
         >
-          {isSubmitting ? "Պահպանում..." : "Պահպանել"}
+          {isSubmitting ? messages.common.saving : messages.common.save}
         </button>
       </form>
       <ConfirmDialog
         open={Boolean(pendingDelete)}
         title={
           pendingDelete?.type === "variant"
-            ? "Ջնջե՞լ տարբերակը"
-            : "Ջնջե՞լ նկարը"
+            ? messages.products.deleteVariantTitle
+            : messages.products.deleteImageTitle
         }
         description={
           pendingDelete?.type === "variant"
-            ? `Դուք պատրաստվում եք ջնջել «${pendingDelete.label}» տարբերակը։ Շարունակե՞լ։`
+            ? messages.products.deleteVariantDescription(pendingDelete.label)
             : pendingDelete
-              ? `Դուք պատրաստվում եք ջնջել «${pendingDelete.label}» տարբերակի նկարը։ Շարունակե՞լ։`
+              ? messages.products.deleteImageDescription
               : ""
         }
-        confirmLabel="Այո, ջնջել"
+        confirmLabel={messages.common.yesDelete}
         onConfirm={confirmDeleteAction}
         onCancel={() => setPendingDelete(null)}
       />

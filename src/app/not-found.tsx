@@ -1,16 +1,27 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { getRequestLocale } from "@/lib/i18n";
+import { localizePath } from "@/lib/routing";
+import { buildMetadata } from "@/lib/seo";
+import { getTranslations } from "@/lib/translations";
 
-export const metadata: Metadata = {
-  title: "Էջը չի գտնվել",
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
 
-export default function NotFound() {
+  return buildMetadata({
+    locale,
+    title: messages.notFound.title,
+    description: messages.notFound.description,
+    noIndex: true,
+  });
+}
+
+export default async function NotFound() {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
+
   return (
     <section className="relative min-h-[78vh] overflow-hidden bg-transparent">
       <Image
@@ -29,31 +40,31 @@ export default function NotFound() {
             404
           </p>
           <h1 className="mt-4 font-serif text-5xl leading-tight text-[var(--foreground)] sm:text-6xl">
-            Էջը չի գտնվել
+            {messages.notFound.title}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--text-soft)] sm:text-lg">
-            Հնարավոր է հղումը սխալ է, էջը տեղափոխվել է, կամ այդ հասցեն այլևս գոյություն չունի։
+            {messages.notFound.description}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/"
+              href={localizePath(locale, "/")}
               className="rounded-full border border-[var(--accent)] bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-[#171717] transition hover:bg-[var(--accent-strong)] hover:border-[var(--accent-strong)]"
             >
-              Գլխավոր էջ
+              {messages.notFound.home}
             </Link>
             <Link
-              href="/catalog"
+              href={localizePath(locale, "/catalog")}
               className="rounded-full border border-[var(--line-strong)] bg-[var(--surface-muted)] px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--accent)] hover:text-[var(--accent-strong)]"
             >
-                Դիտել կատալոգը
+              {messages.notFound.catalog}
             </Link>
           </div>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <InfoCard title="Կատալոգ" text="Դիտեք ամբողջ գեղեցկության հավաքածուն մեկ էջում։" href="/catalog" />
-            <InfoCard title="Բրենդներ" text="Բացեք բրենդների էջը և ընտրեք սիրելի տունը։" href="/brands" />
-            <InfoCard title="Կոնտակտներ" text="Գրեք մեզ WhatsApp-ով կամ Instagram-ում։" href="/contacts" />
+            <InfoCard title={messages.notFound.catalogCardTitle} text={messages.notFound.catalogCardText} href={localizePath(locale, "/catalog")} />
+            <InfoCard title={messages.notFound.brandsCardTitle} text={messages.notFound.brandsCardText} href={localizePath(locale, "/brands")} />
+            <InfoCard title={messages.notFound.contactsCardTitle} text={messages.notFound.contactsCardText} href={localizePath(locale, "/contacts")} />
           </div>
         </div>
       </div>

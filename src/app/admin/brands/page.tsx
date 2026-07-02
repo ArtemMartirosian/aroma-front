@@ -6,7 +6,6 @@ export default function AdminBrandsPage() {
       mode="brands"
       showCreateForm={false}
       createHref="/admin/brands/create"
-      actionLabel="Ստեղծել բրենդ"
     />
   );
 }

@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "@/components/catalog/LocaleProvider";
 import { imageUrl } from "@/lib/images";
+import { getLocalizedField } from "@/lib/localized";
+import { localizePath } from "@/lib/routing";
 import { Brand } from "@/types/catalog";
 
 type BrandCardProps = {
@@ -10,10 +13,13 @@ type BrandCardProps = {
 };
 
 export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
-  const href = `/catalog?brand=${brand.slug}`;
-  const logo = brand.logo || brand.name.slice(0, 2).toUpperCase();
+  const { locale, messages } = useLocale();
+  const href = localizePath(locale, `/catalog?brand=${brand.slug}`);
+  const brandName = getLocalizedField(brand, "name", locale) || brand.name;
+  const logo = brand.logo || brandName.slice(0, 2).toUpperCase();
   const description =
-    brand.description || "Ընտրված բույրերի հավաքածու՝ արտահայտիչ բնավորությամբ և գեղեցիկ շլեյֆով։";
+    getLocalizedField(brand, "description", locale) ||
+    "Selected fragrances";
   const productCount = brand.productCount ?? brand.products?.length ?? 0;
 
   if (variant === "showcase") {
@@ -28,7 +34,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imageUrl(brand.image)}
-                alt={brand.name}
+                alt={brandName}
                 className="h-full w-full object-contain object-center transition duration-700 group-hover:scale-[1.03]"
               />
             </div>
@@ -40,9 +46,9 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
 
           <div className="flex flex-col justify-between gap-6 p-6 sm:p-8">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[var(--accent)]">Տուն</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[var(--accent)]">{messages.brands.brandsStat}</p>
               <h2 className="mt-3 font-serif text-3xl leading-tight text-[var(--foreground)] sm:text-[2.2rem]">
-                {brand.name}
+                {brandName}
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--text-soft)] sm:text-base">
                 {description}
@@ -52,14 +58,14 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--line)] pt-5">
               <div className="flex flex-wrap gap-2">
                 <span className="rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs font-semibold text-[var(--text-soft)]">
-                  {productCount} ապրանք
+                  {productCount} {messages.brands.productsStat.toLowerCase()}
                 </span>
                 <span className="rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs font-semibold text-[var(--text-soft)]">
-                  Լյուքս բույրեր
+                  {messages.home.brands}
                 </span>
               </div>
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--foreground)] transition group-hover:text-[var(--accent-strong)]">
-                Դիտել բույրերը
+                {messages.brands.viewCatalog}
                 <ArrowMark />
               </span>
             </div>
@@ -79,7 +85,7 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imageUrl(brand.image)}
-            alt={brand.name}
+            alt={brandName}
             className="h-full w-full object-contain object-center transition duration-700 group-hover:scale-[1.03]"
           />
         </div>
@@ -88,8 +94,8 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
           {logo}
         </div>
         <div className="absolute inset-x-0 bottom-0 p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-white/75">Լյուքս բրենդ</p>
-          <p className="mt-2 font-serif text-2xl leading-none text-white">{brand.name}</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-white/75">{messages.home.brands}</p>
+          <p className="mt-2 font-serif text-2xl leading-none text-white">{brandName}</p>
         </div>
       </div>
 
@@ -99,11 +105,11 @@ export function BrandCard({ brand, variant = "compact" }: BrandCardProps) {
           </p>
         <div className="mt-4 flex flex-col items-start gap-3 border-t border-[var(--line)] pt-4 sm:flex-row sm:items-center sm:justify-between">
           <span className="rounded-full border border-[var(--line)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs font-semibold text-[var(--text-soft)]">
-            {productCount} ապրանք
+            {productCount} {messages.brands.productsStat.toLowerCase()}
           </span>
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--foreground)] transition group-hover:text-[var(--accent-strong)]">
-            <span className="md:hidden">Կատալոգ</span>
-            <span className="hidden md:inline">Կատալոգ</span>
+            <span className="md:hidden">{messages.nav.catalog}</span>
+            <span className="hidden md:inline">{messages.nav.catalog}</span>
             <ArrowMark />
           </span>
         </div>

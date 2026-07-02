@@ -2,16 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const tabs = [
-  { href: "/", label: "Գլխավոր", icon: HomeIcon },
-  { href: "/catalog", label: "Կատալոգ", icon: CatalogIcon },
-  { href: "/brands", label: "Բրենդներ", icon: BrandIcon },
-  { href: "/contacts", label: "Կապ", icon: ContactIcon },
-];
+import { useLocale } from "@/components/catalog/LocaleProvider";
+import { localizePath, stripLocaleFromPathname } from "@/lib/routing";
 
 export function MobileTabBar() {
   const pathname = usePathname();
+  const { locale, messages } = useLocale();
+  const normalizedPathname = stripLocaleFromPathname(pathname || "/");
+
+  const tabs = [
+    { href: "/", label: messages.nav.home, icon: HomeIcon },
+    { href: "/catalog", label: messages.nav.catalog, icon: CatalogIcon },
+    { href: "/brands", label: messages.nav.brands, icon: BrandIcon },
+    { href: "/contacts", label: messages.nav.contactShort, icon: ContactIcon },
+  ];
 
   if (pathname.startsWith("/admin")) {
     return null;
@@ -23,14 +27,15 @@ export function MobileTabBar() {
         {tabs.map((tab) => {
           const isActive =
             tab.href === "/"
-              ? pathname === "/"
-              : pathname === tab.href || pathname.startsWith(`${tab.href}/`) || pathname.startsWith(`${tab.href}?`);
+              ? normalizedPathname === "/"
+              : normalizedPathname === tab.href || normalizedPathname.startsWith(`${tab.href}/`) || normalizedPathname.startsWith(`${tab.href}?`);
           const Icon = tab.icon;
+          const href = localizePath(locale, tab.href);
 
           return (
             <Link
-              key={tab.href}
-              href={tab.href}
+              key={href}
+              href={href}
               className={
                 isActive
                   ? "flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[22px] bg-[var(--accent-soft)] px-2 py-2 text-[var(--accent-strong)]"

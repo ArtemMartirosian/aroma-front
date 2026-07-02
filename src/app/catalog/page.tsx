@@ -1,14 +1,21 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { CatalogClient } from "@/components/catalog/CatalogClient";
+import { getRequestLocale } from "@/lib/i18n";
 import { buildMetadata } from "@/lib/seo";
+import { getTranslations } from "@/lib/translations";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Կատալոգ",
-  description:
-    "Դիտեք Aroma Parfume, կոսմետիկա և աքսեսուարներ-ի օծանելիքի, կոսմետիկայի և աքսեսուարների կատալոգը՝ ֆիլտրերով ըստ բրենդի, տեսակի, ծավալի և գնի։",
-  path: "/catalog",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
+
+  return buildMetadata({
+    locale,
+    title: messages.catalog.metadataTitle,
+    description: messages.catalog.metadataDescription,
+    path: "/catalog",
+  });
+}
 
 export default function CatalogPage() {
   return (

@@ -6,24 +6,23 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getApiErrorMessage, loginAdmin } from "@/lib/api";
+import { adminMessages } from "@/lib/admin-copy";
 import { storeToken, useAdminSession } from "@/components/admin/auth";
-
-const schema = z.object({
-  email: z.string().email("Մուտքագրեք email-ը"),
-  password: z.string().min(6, "Նվազագույնը 6 նիշ"),
-});
-
-type LoginValues = z.infer<typeof schema>;
 
 export function AdminLoginForm() {
   const router = useRouter();
   const { hydrated, token } = useAdminSession();
+  const messages = adminMessages;
+  const schema = z.object({
+    email: z.string().email(messages.login.emailError),
+    password: z.string().min(6, messages.login.passwordError),
+  });
   const [error, setError] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginValues>({
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       email: "",
@@ -31,7 +30,7 @@ export function AdminLoginForm() {
     },
   });
 
-  async function onSubmit(values: LoginValues) {
+  async function onSubmit(values: z.infer<typeof schema>) {
     setError("");
     try {
       const response = await loginAdmin(values.email, values.password);
@@ -41,7 +40,7 @@ export function AdminLoginForm() {
       setError(
         getApiErrorMessage(
           error,
-          "Չհաջողվեց մուտք գործել։ Ստուգեք backend-ը և ադմինի տվյալները։",
+          messages.login.failed,
         ),
       );
     }
@@ -62,10 +61,10 @@ export function AdminLoginForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="admin-panel mx-auto my-16 max-w-md rounded-[28px] p-6"
     >
-      <p className="admin-kicker text-sm uppercase tracking-[0.2em]">Ադմինի մուտք</p>
-      <h1 className="admin-title mt-2 text-3xl font-semibold">Մուտք ադմին վահանակ</h1>
+      <p className="admin-kicker text-sm uppercase tracking-[0.2em]">{messages.login.eyebrow}</p>
+      <h1 className="admin-title mt-2 text-3xl font-semibold">{messages.login.title}</h1>
       <label className="mt-6 block">
-        <span className="admin-text text-sm font-medium">Էլ. փոստ</span>
+        <span className="admin-text text-sm font-medium">{messages.login.email}</span>
         <input
           {...register("email")}
           className="admin-input mt-2 rounded-xl px-3 py-2.5 outline-none"
@@ -73,7 +72,7 @@ export function AdminLoginForm() {
         {errors.email ? <span className="text-sm text-[var(--sale-strong)]">{errors.email.message}</span> : null}
       </label>
       <label className="mt-4 block">
-        <span className="admin-text text-sm font-medium">Գաղտնաբառ</span>
+        <span className="admin-text text-sm font-medium">{messages.login.password}</span>
         <input
           {...register("password")}
           type="password"
@@ -88,7 +87,7 @@ export function AdminLoginForm() {
         disabled={isSubmitting}
         className="admin-button-primary mt-6 w-full rounded-full px-5 py-3 text-sm font-semibold transition disabled:opacity-60"
       >
-        {isSubmitting ? "Մուտք..." : "Մուտք գործել"}
+        {isSubmitting ? messages.login.submitting : messages.login.submit}
       </button>
     </form>
   );

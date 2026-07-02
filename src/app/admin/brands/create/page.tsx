@@ -6,9 +6,7 @@ export default function CreateBrandPage() {
       mode="brands"
       showItems={false}
       redirectAfterCreate="/admin/brands"
-      title="Ստեղծել բրենդ"
       backHref="/admin/brands"
-      backLabel="Վերադառնալ բրենդներ"
     />
   );
 }

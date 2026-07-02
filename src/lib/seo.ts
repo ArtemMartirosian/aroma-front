@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { Locale, localeOgLang } from "@/lib/locale-config";
+import { localizePath } from "@/lib/routing";
+import { getTranslations } from "@/lib/translations";
 
 const fallbackSiteUrl = "http://localhost:3000";
 
@@ -6,35 +9,45 @@ const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
 export const SITE_URL = (rawSiteUrl || fallbackSiteUrl).replace(/\/$/, "");
 export const SITE_NAME = "Aroma Parfume, cosmetics & accessoires";
-export const DEFAULT_TITLE = "Aroma Parfume, cosmetics & accessoires | Գեղեցկության օնլայն կատալոգ";
-export const DEFAULT_DESCRIPTION =
-  "Aroma Parfume, cosmetics & accessoires-ի օնլայն կատալոգը՝ parfume, cosmetics և accessoires տեսականիով, ընտրված բրենդներով, գներով և անվճար առաքմամբ։";
 export const DEFAULT_OG_IMAGE = "/images/perfume-hero.png";
 
 export function absoluteUrl(path = "/") {
   return new URL(path, SITE_URL).toString();
 }
 
+export function getDefaultSeo(locale: Locale) {
+  const messages = getTranslations(locale);
+  return {
+    title: messages.site.defaultTitle,
+    description: messages.site.defaultDescription,
+    keywords: [...messages.site.keywords],
+  };
+}
+
 export function buildMetadata({
+  locale,
   title,
-  description = DEFAULT_DESCRIPTION,
+  description,
   path = "/",
   image = DEFAULT_OG_IMAGE,
   noIndex = false,
 }: {
+  locale: Locale;
   title: string;
   description?: string;
   path?: string;
   image?: string;
   noIndex?: boolean;
 }): Metadata {
-  const fullTitle = title === DEFAULT_TITLE ? title : `${title} | ${SITE_NAME}`;
-  const canonical = absoluteUrl(path);
+  const defaults = getDefaultSeo(locale);
+  const resolvedDescription = description ?? defaults.description;
+  const fullTitle = title === defaults.title ? title : `${title} | ${SITE_NAME}`;
+  const canonical = absoluteUrl(localizePath(locale, path));
   const ogImage = absoluteUrl(image);
 
   return {
     title: fullTitle,
-    description,
+    description: resolvedDescription,
     alternates: {
       canonical,
     },
@@ -42,9 +55,9 @@ export function buildMetadata({
       type: "website",
       url: canonical,
       title: fullTitle,
-      description,
+      description: resolvedDescription,
       siteName: SITE_NAME,
-      locale: "hy_AM",
+      locale: localeOgLang[locale],
       images: [
         {
           url: ogImage,
@@ -57,7 +70,7 @@ export function buildMetadata({
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
-      description,
+      description: resolvedDescription,
       images: [ogImage],
     },
     robots: noIndex

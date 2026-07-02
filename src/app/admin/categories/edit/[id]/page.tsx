@@ -13,10 +13,7 @@ export default async function EditCategoryPage({
       entityId={id}
       showItems={false}
       redirectAfterCreate="/admin/categories"
-      title="Խմբագրել կատեգորիան"
-      submitLabel="Պահպանել փոփոխությունները"
       backHref="/admin/categories"
-      backLabel="Վերադառնալ կատեգորիաներ"
     />
   );
 }

@@ -5,33 +5,44 @@ import { HomeHero } from "@/components/catalog/HomeHero";
 import { HomeProductCarousel } from "@/components/catalog/HomeProductCarousel";
 import { API_URL } from "@/lib/api";
 import { accessoiresCategorySlugs, cosmeticsCategorySlugs } from "@/lib/category-groups";
+import { getRequestLocale } from "@/lib/i18n";
+import { getLocalizedField } from "@/lib/localized";
 import { getMockBrands, getMockCategories, getMockProducts } from "@/lib/mock-catalog";
+import { localizePath } from "@/lib/routing";
 import { SITE_NAME, absoluteUrl, buildMetadata } from "@/lib/seo";
+import { getTranslations } from "@/lib/translations";
 import { Brand, Category, Product, ProductsResponse } from "@/types/catalog";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Գեղեցկության օնլայն կատալոգ",
-  description:
-    "Գտեք օծանելիք, կոսմետիկա և աքսեսուարներ Aroma Parfume, կոսմետիկա և աքսեսուարներ-ում՝ ընտրված բրենդներով, գներով և անվճար առաքմամբ։",
-  path: "/",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
+
+  return buildMetadata({
+    locale,
+    title: messages.home.metadataTitle,
+    description: messages.home.metadataDescription,
+    path: "/",
+  });
+}
 
 export default async function Home() {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
   const { featured, newest, cosmetics, accessoires, brands, categories } = await loadHomeData();
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: SITE_NAME,
-    url: absoluteUrl("/"),
+    url: absoluteUrl(localizePath(locale, "/")),
     logo: absoluteUrl("/images/aroma-logo.png"),
-    sameAs: ["https://instagram.com/aroma__parfume"],
+    sameAs: ["https://instagram.com/aroma___parfumee"],
     contactPoint: [
       {
         "@type": "ContactPoint",
         telephone: "+37433696009",
         contactType: "customer service",
         areaServed: "AM",
-        availableLanguage: ["hy", "ru"],
+        availableLanguage: ["am", "ru", "en"],
       },
     ],
   };
@@ -39,10 +50,10 @@ export default async function Home() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: SITE_NAME,
-    url: absoluteUrl("/"),
+    url: absoluteUrl(localizePath(locale, "/")),
     potentialAction: {
       "@type": "SearchAction",
-      target: `${absoluteUrl("/catalog")}?search={search_term_string}`,
+      target: `${absoluteUrl(localizePath(locale, "/catalog"))}?search={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };
@@ -53,79 +64,75 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       <HomeHero />
 
-        <Section title="Կատեգորիաներ" href="/catalog">
+        <Section title={messages.home.categories} href={localizePath(locale, "/catalog")} viewAllLabel={messages.home.viewAll}>
             <div className="grid gap-4 md:grid-cols-4">
                 {categories.map((category) => (
                     <Link
-                        href={`/catalog?category=${category.slug}`}
+                        href={localizePath(locale, `/catalog?category=${category.slug}`)}
                         key={category.id}
                         className="rounded-[24px] border border-[var(--line)] bg-[var(--surface-elevated)] p-5 shadow-[0_18px_45px_rgba(0,0,0,0.28)] transition hover:-translate-y-1 hover:border-[var(--accent)] hover:shadow-[0_26px_60px_rgba(0,0,0,0.34)]"
                     >
-                        <p className="text-lg font-semibold text-[var(--foreground)]">{category.name}</p>
-                        <p className="mt-2 text-sm leading-6 text-[var(--text-muted)]">{category.description}</p>
+                        <p className="text-lg font-semibold text-[var(--foreground)]">
+                          {getLocalizedField(category, "name", locale) || category.name}
+                        </p>
+                        <p className="mt-2 text-sm leading-6 text-[var(--text-muted)]">
+                          {getLocalizedField(category, "description", locale) || category.description}
+                        </p>
                     </Link>
                 ))}
             </div>
-            {!categories.length ? <EmptyState text="Կատեգորիաները դեռ չեն բեռնվել backend-ից։" /> : null}
+            {!categories.length ? <EmptyState text={messages.home.categoriesEmpty} /> : null}
         </Section>
 
 
-        <Section title="Հանրաճանաչ ապրանքներ" href="/catalog">
+        <Section title={messages.home.featured} href={localizePath(locale, "/catalog")} viewAllLabel={messages.home.viewAll}>
         {featured.length ? (
           <HomeProductCarousel products={featured} />
         ) : (
-          <EmptyState text="Հանրաճանաչ ապրանքները կհայտնվեն backend-ից տվյալների բեռնումից հետո։" />
+          <EmptyState text={messages.home.featuredEmpty} />
         )}
       </Section>
 
-      <Section title="Նոր տեսականի" href="/catalog">
+      <Section title={messages.home.newest} href={localizePath(locale, "/catalog")} viewAllLabel={messages.home.viewAll}>
         {newest.length ? (
           <HomeProductCarousel products={newest} />
         ) : (
-          <EmptyState text="Նոր ապրանքները կհայտնվեն backend-ից տվյալների բեռնումից հետո։" />
+          <EmptyState text={messages.home.newestEmpty} />
         )}
       </Section>
 
-      <Section title="Կոսմետիկա" href="/catalog?category=cosmetics">
+      <Section title={messages.home.cosmetics} href={localizePath(locale, "/catalog?category=cosmetics")} viewAllLabel={messages.home.viewAll}>
         {cosmetics.length ? (
           <HomeProductCarousel products={cosmetics} />
         ) : (
-          <EmptyState text="Կոսմետիկայի բաժինը կլցվի backend-ից կամ ադմինից ավելացված ապրանքներով։" />
+          <EmptyState text={messages.home.cosmeticsEmpty} />
         )}
       </Section>
 
-      <Section title="Աքսեսուարներ" href="/catalog?category=accessoires">
+      <Section title={messages.home.accessoires} href={localizePath(locale, "/catalog?category=accessoires")} viewAllLabel={messages.home.viewAll}>
         {accessoires.length ? (
           <HomeProductCarousel products={accessoires} />
         ) : (
-          <EmptyState text="Աքսեսուարների բաժինը կլցվի backend-ից կամ ադմինից ավելացված ապրանքներով։" />
+          <EmptyState text={messages.home.accessoiresEmpty} />
         )}
       </Section>
 
-      <Section title="Բրենդներ" href="/brands">
+      <Section title={messages.home.brands} href={localizePath(locale, "/brands")} viewAllLabel={messages.home.viewAll}>
         {brands.length ? <HomeBrandCarousel brands={brands} /> : null}
-        {!brands.length ? <EmptyState text="Բրենդները դեռ չեն բեռնվել backend-ից։" /> : null}
+        {!brands.length ? <EmptyState text={messages.home.brandsEmpty} /> : null}
       </Section>
 
       <section className="bg-transparent">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-8">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">Մեր մասին</p>
+            <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">{messages.home.aboutEyebrow}</p>
             <h2 className="mt-3 text-4xl font-semibold text-[var(--foreground)]">
-              Օգնում ենք ընտրել օծանելիք, կոսմետիկա և աքսեսուարներ՝ ըստ ոճի ու առիթի
+              {messages.home.aboutTitle}
             </h2>
           </div>
           <div className="space-y-4 text-[var(--text-soft)]">
-            <p>
-              Aroma Parfume, կոսմետիկա և աքսեսուարներ-ը հավաքել է
-              գեղեցկության ընտրանին մեկ հարմար կատալոգում, որտեղ հեշտ է
-              համեմատել բրենդները, տեսակները, ծավալներն ու գները։
-            </p>
-            <p>
-              Յուրաքանչյուր ապրանքի էջից կարող եք անմիջապես կապ հաստատել մեզ հետ,
-              ճշտել մանրամասները և ձևակերպել պատվերը WhatsApp-ով կամ
-              Instagram-ով՝ անվճար առաքմամբ։
-            </p>
+            <p>{messages.home.aboutTextOne}</p>
+            <p>{messages.home.aboutTextTwo}</p>
           </div>
         </div>
       </section>
@@ -222,10 +229,12 @@ async function loadHomeData(): Promise<{
 function Section({
   title,
   href,
+  viewAllLabel,
   children,
 }: {
   title: string;
   href: string;
+  viewAllLabel: string;
   children: React.ReactNode;
 }) {
   return (
@@ -233,7 +242,7 @@ function Section({
       <div className="mb-8 flex items-end justify-between gap-4">
         <h2 className="text-3xl font-semibold text-[var(--foreground)]">{title}</h2>
         <Link href={href} className="text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-strong)]">
-          Դիտել բոլորը
+          {viewAllLabel}
         </Link>
       </div>
       {children}

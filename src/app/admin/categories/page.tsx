@@ -6,7 +6,6 @@ export default function AdminCategoriesPage() {
       mode="categories"
       showCreateForm={false}
       createHref="/admin/categories/create"
-      actionLabel="Ստեղծել կատեգորիա"
     />
   );
 }

@@ -3,9 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLocale } from "@/components/catalog/LocaleProvider";
+import { localizePath } from "@/lib/routing";
 
 export function SiteFooter() {
   const pathname = usePathname();
+  const { locale, messages } = useLocale();
 
   if (pathname.startsWith("/admin")) {
     return null;
@@ -26,22 +29,33 @@ export function SiteFooter() {
               />
           </div>
           <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--text-soft)]">
-            Օնլայն գեղեցկության կատալոգ՝ օծանելիք, կոսմետիկա և աքսեսուարներ
-            տեսականիով։ Ընտրեք ձեզ հարմար տարբերակը, կապվեք մեզ հետ և ստացեք
-            անվճար առաքում։
+            {messages.footer.description}
           </p>
-        </div>
-        <div className="text-sm text-[var(--text-soft)]">
-          <p className="font-semibold text-[var(--foreground)]">Նավիգացիա</p>
-          <div className="mt-3 flex flex-col gap-2">
-            <Link href="/catalog">Կատալոգ</Link>
-            <Link href="/brands">Բրենդներ</Link>
-            <Link href="/about">Մեր մասին</Link>
-            <Link href="/contacts">Կոնտակտներ</Link>
+          <div className="mt-5 max-w-sm text-sm text-[var(--text-soft)]">
+            <p className="font-semibold text-[var(--foreground)]">{messages.footer.partners}</p>
+            <div className="mt-2 flex flex-col gap-1.5">
+              <FooterTextLink
+                href="https://instagram.com/aroma___parfumee"
+                label="Aroma Parfume - @aroma___parfumee"
+              />
+              <FooterTextLink
+                href="https://instagram.com/aroma_auto___"
+                label="Aroma Auto - @aroma_auto___"
+              />
+            </div>
           </div>
         </div>
         <div className="text-sm text-[var(--text-soft)]">
-          <p className="font-semibold text-[var(--foreground)]">Կապ</p>
+          <p className="font-semibold text-[var(--foreground)]">{messages.footer.navigation}</p>
+          <div className="mt-3 flex flex-col gap-2">
+            <Link href={localizePath(locale, "/catalog")}>{messages.nav.catalog}</Link>
+            <Link href={localizePath(locale, "/brands")}>{messages.nav.brands}</Link>
+            <Link href={localizePath(locale, "/about")}>{messages.nav.about}</Link>
+            <Link href={localizePath(locale, "/contacts")}>{messages.nav.contacts}</Link>
+          </div>
+        </div>
+        <div className="text-sm text-[var(--text-soft)]">
+          <p className="font-semibold text-[var(--foreground)]">{messages.footer.contact}</p>
           <div className="mt-3 flex flex-wrap gap-3">
             <SocialLink href="https://wa.me/37433696009" label="WhatsApp">
               <WhatsAppIcon />
@@ -49,7 +63,7 @@ export function SiteFooter() {
             <SocialLink href="viber://chat?number=%2B37433696009" label="Viber">
               <ViberIcon />
             </SocialLink>
-            <SocialLink href="tel:+37433696009" label="Հեռախոս">
+            <SocialLink href="tel:+37433696009" label={messages.footer.phone}>
               <PhoneIcon />
             </SocialLink>
             <SocialLink href="https://instagram.com/aroma___parfumee" label="Instagram">
@@ -62,19 +76,21 @@ export function SiteFooter() {
               <FacebookIcon />
             </SocialLink>
           </div>
-          <p className="mt-4">WhatsApp: +374 33 69 60 09</p>
-          <p>Viber: +374 33 69 60 09</p>
-          <p>Հեռախոս՝ +374 33 69 60 09</p>
-          <p>Instagram: @aroma___parfumee</p>
-          <p>TikTok: @aroma_parfume_</p>
-          <p>Facebook: Aroma Parfume</p>
-          <p>Առաքում՝ անվճար</p>
+          <div className="mt-4 space-y-1.5">
+            <FooterTextLink href="https://wa.me/37433696009" label="WhatsApp: +374 33 69 60 09" />
+            <FooterTextLink href="viber://chat?number=%2B37433696009" label="Viber: +374 33 69 60 09" />
+            <FooterTextLink href="tel:+37433696009" label={`${messages.footer.phone}: +374 33 69 60 09`} external={false} />
+            <FooterTextLink href="https://instagram.com/aroma___parfumee" label="Instagram: @aroma___parfumee" />
+            <FooterTextLink href="https://www.tiktok.com/@aroma_parfume_" label="TikTok: @aroma_parfume_" />
+            <FooterTextLink href="https://www.facebook.com/profile.php?id=61572896413532" label="Facebook: Aroma Parfume" />
+          </div>
+          <p>{messages.footer.delivery}</p>
         </div>
       </div>
       <div className="border-t border-[var(--line)]">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-xs text-[var(--text-muted)] sm:px-6 sm:text-sm lg:px-8">
           <p>
-            Կայքի մշակումը՝{" "}
+            {messages.footer.builtBy}{" "}
             <a
               href="https://digitalize.am"
               target="_blank"
@@ -110,6 +126,27 @@ function SocialLink({
       className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--surface-muted)] text-[var(--foreground)] shadow-[0_10px_24px_rgba(0,0,0,0.22)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
     >
       {children}
+    </a>
+  );
+}
+
+function FooterTextLink({
+  href,
+  label,
+  external = true,
+}: {
+  href: string;
+  label: string;
+  external?: boolean;
+}) {
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noreferrer" : undefined}
+      className="block transition hover:text-[var(--accent)]"
+    >
+      {label}
     </a>
   );
 }
