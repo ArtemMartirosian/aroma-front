@@ -52,6 +52,7 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
   const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
   const resolvedSearchParams = await searchParams;
   const product = await loadProduct(slug);
   if (!product) notFound();
@@ -91,8 +92,8 @@ export default async function ProductPage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Գլխավոր", item: absoluteUrl(localizePath(locale, "/")) },
-      { "@type": "ListItem", position: 2, name: "Կատալոգ", item: absoluteUrl(localizePath(locale, "/catalog")) },
+      { "@type": "ListItem", position: 1, name: messages.product.breadcrumbHome, item: absoluteUrl(localizePath(locale, "/")) },
+      { "@type": "ListItem", position: 2, name: messages.product.breadcrumbCatalog, item: absoluteUrl(localizePath(locale, "/catalog")) },
       { "@type": "ListItem", position: 3, name: product.name, item: absoluteUrl(localizePath(locale, `/products/${product.slug}`)) },
     ],
   };
@@ -107,18 +108,18 @@ export default async function ProductPage({
         <section className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.86fr]">
           {perfumeProduct ? (
             <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Բույրի նոտաներ</p>
-              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բույրի կառուցվածք</h2>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">{messages.product.noteEyebrow}</p>
+              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">{messages.product.noteTitle}</h2>
               <div className="mt-6 grid gap-4 md:grid-cols-3">
-                <NoteCard label="Վերին նոտաներ" value={product.topNotes || "Նշված չէ"} />
-                <NoteCard label="Միջին նոտաներ" value={product.middleNotes || "Նշված չէ"} />
-                <NoteCard label="Բազային նոտաներ" value={product.baseNotes || "Նշված չէ"} />
+                <NoteCard label={messages.product.topNotes} value={product.topNotes || messages.product.notSpecified} />
+                <NoteCard label={messages.product.middleNotes} value={product.middleNotes || messages.product.notSpecified} />
+                <NoteCard label={messages.product.baseNotes} value={product.baseNotes || messages.product.notSpecified} />
               </div>
             </div>
           ) : (
             <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Ապրանքի մասին</p>
-              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Նկարագրություն</h2>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">{messages.product.productAboutEyebrow}</p>
+              <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">{messages.product.descriptionTitle}</h2>
               <p className="mt-6 text-base leading-8 text-[var(--text-soft)]">
                 {product.description}
               </p>
@@ -126,17 +127,17 @@ export default async function ProductPage({
           )}
 
           <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-elevated)] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Մանրամասներ</p>
-            <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Բնութագրեր</h2>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">{messages.product.detailsEyebrow}</p>
+            <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">{messages.product.specificationsTitle}</h2>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               {perfumeProduct ? (
                 <>
-                  <Info label="Երկարակեցություն" value={product.longevity ? longevityLabels[product.longevity] : "Միջին"} />
-                  <Info label="Շլեյֆ" value={product.sillage ? sillageLabels[product.sillage] : "Միջին"} />
+                  <Info label={messages.product.longevity} value={product.longevity ? longevityLabels[product.longevity] : messages.product.medium} />
+                  <Info label={messages.product.sillage} value={product.sillage ? sillageLabels[product.sillage] : messages.product.medium} />
                 </>
               ) : null}
-              <Info label="Երկիր" value={product.country || "Նշված չէ"} />
-              <Info label="Տարի" value={product.releaseYear ? String(product.releaseYear) : "Նշված չէ"} />
+              <Info label={messages.product.country} value={product.country || messages.product.notSpecified} />
+              <Info label={messages.product.year} value={product.releaseYear ? String(product.releaseYear) : messages.product.notSpecified} />
             </div>
           </div>
         </section>
@@ -145,8 +146,8 @@ export default async function ProductPage({
           <section className="py-14">
             <div className="mb-8 flex items-end justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">Ձեզ կարող է դուր գալ նաև</p>
-                <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">Նման ապրանքներ</h2>
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">{messages.product.youMayLike}</p>
+                <h2 className="mt-2 text-3xl font-semibold text-[var(--foreground)]">{messages.product.similarProducts}</h2>
               </div>
             </div>
             <HomeProductCarousel products={related} />

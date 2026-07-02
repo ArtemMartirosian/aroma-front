@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { API_URL } from "@/lib/api";
-import { SUPPORTED_LOCALES } from "@/lib/locale-config";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, localeIntl } from "@/lib/locale-config";
 import { getMockBrands, getMockProducts } from "@/lib/mock-catalog";
 import { localizePath } from "@/lib/routing";
 import { SITE_URL } from "@/lib/seo";
@@ -16,30 +16,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: "daily",
       priority: locale === "am" ? 1 : 0.9,
+      alternates: buildAlternates("/"),
     },
     {
       url: `${SITE_URL}${localizePath(locale, "/catalog")}`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.9,
+      alternates: buildAlternates("/catalog"),
     },
     {
       url: `${SITE_URL}${localizePath(locale, "/brands")}`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.8,
+      alternates: buildAlternates("/brands"),
     },
     {
       url: `${SITE_URL}${localizePath(locale, "/about")}`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
+      alternates: buildAlternates("/about"),
     },
     {
       url: `${SITE_URL}${localizePath(locale, "/contacts")}`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
+      alternates: buildAlternates("/contacts"),
     },
   ]);
 
@@ -49,6 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: brand.updatedAt ? new Date(brand.updatedAt) : now,
       changeFrequency: "weekly",
       priority: 0.7,
+      alternates: buildAlternates(`/catalog?brand=${encodeURIComponent(brand.slug)}`),
     })),
   );
 
@@ -58,10 +64,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: product.updatedAt ? new Date(product.updatedAt) : now,
       changeFrequency: "weekly",
       priority: 0.8,
+      alternates: buildAlternates(`/products/${product.slug}`),
     })),
   );
 
   return [...staticRoutes, ...brandRoutes, ...productRoutes];
+}
+
+function buildAlternates(path: string) {
+  return {
+    languages: {
+      ...Object.fromEntries(
+        SUPPORTED_LOCALES.map((locale) => [localeIntl[locale], `${SITE_URL}${localizePath(locale, path)}`]),
+      ),
+      "x-default": `${SITE_URL}${localizePath(DEFAULT_LOCALE, path)}`,
+    },
+  };
 }
 
 async function loadProducts() {

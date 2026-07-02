@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { CatalogClient } from "@/components/catalog/CatalogClient";
 import { getRequestLocale } from "@/lib/i18n";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, localizedAbsoluteUrl } from "@/lib/seo";
 import { getTranslations } from "@/lib/translations";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -17,11 +17,24 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function CatalogPage() {
+export default async function CatalogPage() {
+  const locale = await getRequestLocale();
+  const messages = getTranslations(locale);
+  const catalogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: messages.catalog.metadataTitle,
+    description: messages.catalog.metadataDescription,
+    url: localizedAbsoluteUrl(locale, "/catalog"),
+  };
+
   return (
-    <Suspense fallback={<CatalogPageFallback />}>
-      <CatalogClient />
-    </Suspense>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(catalogJsonLd) }} />
+      <Suspense fallback={<CatalogPageFallback />}>
+        <CatalogClient />
+      </Suspense>
+    </>
   );
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Locale, localeOgLang } from "@/lib/locale-config";
+import { DEFAULT_LOCALE, Locale, SUPPORTED_LOCALES, localeIntl, localeOgLang } from "@/lib/locale-config";
 import { localizePath } from "@/lib/routing";
 import { getTranslations } from "@/lib/translations";
 
@@ -13,6 +13,21 @@ export const DEFAULT_OG_IMAGE = "/images/perfume-hero.png";
 
 export function absoluteUrl(path = "/") {
   return new URL(path, SITE_URL).toString();
+}
+
+export function localizedAbsoluteUrl(locale: Locale, path = "/") {
+  return absoluteUrl(localizePath(locale, path));
+}
+
+export function buildLanguageAlternates(path = "/") {
+  const languages = Object.fromEntries(
+    SUPPORTED_LOCALES.map((locale) => [localeIntl[locale], localizedAbsoluteUrl(locale, path)]),
+  );
+
+  return {
+    ...languages,
+    "x-default": localizedAbsoluteUrl(DEFAULT_LOCALE, path),
+  };
 }
 
 export function getDefaultSeo(locale: Locale) {
@@ -42,14 +57,17 @@ export function buildMetadata({
   const defaults = getDefaultSeo(locale);
   const resolvedDescription = description ?? defaults.description;
   const fullTitle = title === defaults.title ? title : `${title} | ${SITE_NAME}`;
-  const canonical = absoluteUrl(localizePath(locale, path));
+  const canonical = localizedAbsoluteUrl(locale, path);
   const ogImage = absoluteUrl(image);
 
   return {
-    title: fullTitle,
+    title: {
+      absolute: fullTitle,
+    },
     description: resolvedDescription,
     alternates: {
       canonical,
+      languages: buildLanguageAlternates(path),
     },
     openGraph: {
       type: "website",
@@ -58,6 +76,7 @@ export function buildMetadata({
       description: resolvedDescription,
       siteName: SITE_NAME,
       locale: localeOgLang[locale],
+      alternateLocale: SUPPORTED_LOCALES.filter((item) => item !== locale).map((item) => localeOgLang[item]),
       images: [
         {
           url: ogImage,

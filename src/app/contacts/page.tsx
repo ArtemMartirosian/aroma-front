@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getRequestLocale } from "@/lib/i18n";
-import { buildMetadata } from "@/lib/seo";
+import { SITE_NAME, absoluteUrl, buildMetadata, localizedAbsoluteUrl } from "@/lib/seo";
 import { getTranslations } from "@/lib/translations";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,8 +18,37 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactsPage() {
   const locale = await getRequestLocale();
   const messages = getTranslations(locale);
+  const contactsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: messages.contacts.metadataTitle,
+    description: messages.contacts.metadataDescription,
+    url: localizedAbsoluteUrl(locale, "/contacts"),
+    mainEntity: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: localizedAbsoluteUrl(locale, "/"),
+      logo: absoluteUrl("/images/aroma-logo.png"),
+      sameAs: [
+        "https://instagram.com/aroma___parfumee",
+        "https://www.facebook.com/profile.php?id=61572896413532",
+        "https://www.tiktok.com/@aroma_parfume_",
+      ],
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          telephone: "+37433696009",
+          contactType: "customer support",
+          availableLanguage: ["am", "ru", "en"],
+          areaServed: "AM",
+        },
+      ],
+    },
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(contactsJsonLd) }} />
       <p className="text-sm uppercase tracking-[0.2em] text-[var(--accent)]">{messages.contacts.eyebrow}</p>
       <h1 className="mt-2 text-4xl font-semibold text-[var(--foreground)]">{messages.contacts.title}</h1>
       <p className="mt-4 max-w-2xl text-lg leading-8 text-[var(--text-soft)]">

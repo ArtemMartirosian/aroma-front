@@ -3,9 +3,10 @@ import Link from "next/link";
 import { BrandCard } from "@/components/catalog/BrandCard";
 import { API_URL } from "@/lib/api";
 import { getRequestLocale } from "@/lib/i18n";
+import { getLocalizedField } from "@/lib/localized";
 import { getMockBrands } from "@/lib/mock-catalog";
 import { localizePath } from "@/lib/routing";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, localizedAbsoluteUrl } from "@/lib/seo";
 import { getTranslations } from "@/lib/translations";
 import { Brand, ProductsResponse } from "@/types/catalog";
 
@@ -26,9 +27,27 @@ export default async function BrandsPage() {
   const messages = getTranslations(locale);
   const brands = await loadBrands();
   const totalProducts = brands.reduce((sum, brand) => sum + (brand.productCount ?? brand.products?.length ?? 0), 0);
+  const brandsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: messages.brands.metadataTitle,
+    description: messages.brands.metadataDescription,
+    url: localizedAbsoluteUrl(locale, "/brands"),
+    numberOfItems: brands.length,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: brands.map((brand, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: localizedAbsoluteUrl(locale, `/catalog?brand=${encodeURIComponent(brand.slug)}`),
+        name: getLocalizedField(brand, "name", locale) || brand.name,
+      })),
+    },
+  };
 
   return (
     <div className="bg-transparent">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(brandsJsonLd) }} />
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <section className="relative overflow-hidden rounded-[34px] border border-[var(--line)] bg-[linear-gradient(135deg,rgba(21,24,25,0.98),rgba(29,33,34,0.96))] px-6 py-8 shadow-[0_28px_80px_rgba(0,0,0,0.34)] sm:px-8 sm:py-10 lg:px-10">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(195,164,111,0.14),transparent_26%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.04),transparent_24%)]" />
